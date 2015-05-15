@@ -8,12 +8,65 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jifa-core</artifactId>
     <packaging>war</packaging>
-    <name>jifa-core Maven Webapp</name>
+    <name>jifa-core</name>
     <url>http://maven.apache.org</url>
     <dependencies>
 
     </dependencies>
     <build>
         <finalName>jifa-core</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classesDirectory>target/classes</classesDirectory>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                            <outputDirectory>target/jifa-core/WEB-INF/lib</outputDirectory>
+                            <includes>
+                                <include>com/**</include>
+                            </includes>
+                            <classifier>api</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <packagingExcludes>WEB-INF/web.xml </packagingExcludes>
+                    <packagingExcludes>WEB-INF/classes/com/** </packagingExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.9</version>
+                <configuration>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>8080</port>
+                            <maxIdleTime>30000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                    <!--<webAppSourceDirectory>${project.build.directory}/${pom.artifactId}</webAppSourceDirectory>-->
+                    <systemProperties>
+                        <systemProperty>
+                            <name>jifa.jobInstanceName</name>
+                            <value>june</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
