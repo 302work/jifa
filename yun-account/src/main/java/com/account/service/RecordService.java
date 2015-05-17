@@ -23,11 +23,23 @@ public class RecordService {
     private IMasterDao dao;
 
     @DataProvider
-    public void getRecordsByAccountId(Page<Account> page, long accountId){
+    public void getRecordsByAccountId(Page<Record> page, long accountId){
         String hql = "From "+ Record.class.getName()+" where accountId=:accountId and isDeleted=:isDeleted";
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("accountId",accountId);
         params.put("isDeleted",false);
         dao.pagingQuery(page,hql,params);
+    }
+
+    /**
+     * 删除某个记账本的所有记录
+     * @param accountId
+     */
+    public void deleteRecords(Long accountId){
+        String hql = " update "+Record.class.getName()+" set isDeleted=:isDeleted where accountId=:accountId ";
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("accountId",accountId);
+        params.put("isDeleted",true);
+        dao.executeHQL(hql,params);
     }
 }

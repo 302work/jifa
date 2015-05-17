@@ -1,14 +1,19 @@
 package com.account.service;
 
 import com.account.pojo.Account;
+import com.bstek.bdf2.core.business.IUser;
+import com.bstek.bdf2.core.context.ContextHolder;
+import com.bstek.bdf2.core.exception.NoneLoginException;
 import com.bstek.dorado.annotation.DataProvider;
+import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
+import com.bstek.dorado.data.entity.EntityState;
+import com.bstek.dorado.data.entity.EntityUtils;
 import com.jifa.core.dao.interfaces.IMasterDao;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 记账本操作相关
@@ -20,6 +25,9 @@ public class AccountService {
 
     @Resource
     private IMasterDao dao;
+
+    @Resource
+    private RecordService recordService;
 
     @DataProvider
     public List<Account> getAccountsByParentId(Long accountId){
@@ -35,5 +43,45 @@ public class AccountService {
         return (List<Account>)dao.query(hql,params);
     }
 
+    /**
+     * 检查记账本底下是否有子记账本
+     * @param accountId
+     * @return
+     */
+    @Expose
+    public int checkAccount(Long accountId){
+
+        return 0;
+    }
+
+    @DataResolver
+    public void saveAccounts(Collection<Account> accounts){
+        IUser user = ContextHolder.getLoginUser();
+        if (user == null) {
+            throw new NoneLoginException("Please login first");
+        }
+        for (Account account : accounts) {
+            EntityState state = EntityUtils.getState(account);
+
+            if (state.equals(EntityState.NEW)) {
+                account.setCrTime(new Date());
+                account.setCrUser(user.getUsername());
+                dao.saveOrUpdate(account);
+            }
+            if (state.equals(EntityState.MODIFIED) || state.equals(EntityState.MOVED)) {
+                dao.saveOrUpdate(account);
+            }
+
+            if (state.equals(EntityState.DELETED)) {
+                if (checkAccount(account.getId()) == 0) {
+                    recordService.deleteRecords(account.getId());
+                    account.setIsDeleted(true);
+                    dao.saveOrUpdate(account);
+                } else {
+                    throw new RuntimeException("请先删除子分类");
+                }
+            }
+        }
+    }
 
 }

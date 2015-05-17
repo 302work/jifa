@@ -231,7 +231,7 @@
         </dependency>
         <!-- End spring test -->
 
-        <!--<dependency>
+        <dependency>
             <groupId>com.bstek.dorado</groupId>
             <artifactId>dorado-cloudo</artifactId>
             <version>${dorado-cloudo.version}</version>
@@ -241,7 +241,7 @@
                     <groupId>com.bstek.dorado</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 
