@@ -24,11 +24,11 @@
         <aspectjweaver.version>1.6.2</aspectjweaver.version>
 
         <dorado.version>8.0.0-SNAPSHOT</dorado.version>
-        <!--<dorado-cloudo.version>0.0.1-SNAPSHOT</dorado-cloudo.version>-->
+        <dorado-cloudo.version>0.0.1-SNAPSHOT</dorado-cloudo.version>
         <dorado-ueditor.version>1.0.5</dorado-ueditor.version>
         <dorado-uploader.version>1.0.4</dorado-uploader.version>
 
-        <bdf2-core.version>2.0.7</bdf2-core.version>
+        <bdf2-core.version>2.0.8-SNAPSHOT</bdf2-core.version>
         <bdf2-import.version>2.0.7</bdf2-import.version>
         <bdf2-export.version>2.0.8-SNAPSHOT</bdf2-export.version>
         <bdf2-job-daemon.version>2.0.4</bdf2-job-daemon.version>
@@ -136,17 +136,6 @@
             <artifactId>dorado-uploader</artifactId>
             <version>${dorado-uploader.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>com.bstek.dorado</groupId>
-            <artifactId>dorado-cloudo</artifactId>
-            <version>${dorado-cloudo.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>dorado-core</artifactId>
-                    <groupId>com.bstek.dorado</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
         <dependency>
             <groupId>com.bstek.dorado</groupId>
             <artifactId>dorado-ueditor</artifactId>
@@ -241,6 +230,18 @@
             <version>${springframework.version}</version>
         </dependency>
         <!-- End spring test -->
+
+        <!--<dependency>
+            <groupId>com.bstek.dorado</groupId>
+            <artifactId>dorado-cloudo</artifactId>
+            <version>${dorado-cloudo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
 
     </dependencies>
 
