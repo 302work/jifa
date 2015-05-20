@@ -32,3 +32,14 @@ ehthumbs.db
 Thumbs.db
 </span>
 .studio/
+/bin/
+
+#eclipse file
+*.log
+.classpath
+.gradle
+.project
+.settings
+/build/*
+src/main/webapp/WEB-INF/classes/
+bin
