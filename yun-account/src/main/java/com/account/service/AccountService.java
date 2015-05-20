@@ -50,8 +50,11 @@ public class AccountService {
      */
     @Expose
     public int checkAccount(Long accountId){
-
-        return 0;
+        String hql = "from "+Account.class.getName()+" where isDeleted=:isDeleted and parentAccountId=:accountId ";
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("accountId",accountId);
+        params.put("isDeleted",false);
+        return dao.queryCount(hql,params);
     }
 
     @DataResolver

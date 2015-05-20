@@ -23,7 +23,7 @@
         <redis.version>2.5.1</redis.version>
         <aspectjweaver.version>1.6.2</aspectjweaver.version>
 
-        <dorado.version>8.0.0-SNAPSHOT</dorado.version>
+        <dorado.version>7.5.0-SNAPSHOT</dorado.version>
         <dorado-cloudo.version>0.0.1-SNAPSHOT</dorado-cloudo.version>
         <dorado-ueditor.version>1.0.5</dorado-ueditor.version>
         <dorado-uploader.version>1.0.4</dorado-uploader.version>

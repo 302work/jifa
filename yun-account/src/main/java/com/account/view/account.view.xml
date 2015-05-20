@@ -5,7 +5,6 @@
   <Context/>
   <Model>
     <DataType name="Account">
-      <Property name="autoCreatePropertyDefs">true</Property>
       <Property name="creationType">com.account.pojo.Account</Property>
       <Property name="defaultDisplayProperty">name</Property>
       <Reference name="child">
@@ -19,9 +18,20 @@
         <Property name="pageSize">20</Property>
         <Property name="parameter">$${this.id}</Property>
       </Reference>
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="required">true</Property>
+        <Property name="label">名称</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+        <Property name="label">ID</Property>
+      </PropertyDef>
+      <PropertyDef name="parentAccountId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="Record">
-      <Property name="autoCreatePropertyDefs">true</Property>
       <Property name="creationType">com.account.pojo.Record</Property>
       <PropertyDef name="type">
         <Property name="dataType">Integer</Property>
@@ -61,6 +71,20 @@
         <Property name="dataType">Double</Property>
         <Property name="label">金额</Property>
         <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="accountId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="accountName">
+        <Property name="dataType">String</Property>
+        <Property name="label">账户</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="tag">
+        <Property name="dataType">String</Property>
+        <Property name="label">标签</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -138,6 +162,32 @@
     top: arg.event.pageY
   }
 });</ClientEvent>
+              <ClientEvent name="beforeCurrentChange" signature="self,arg">var node=arg.oldCurrent;
+if(node){
+	var data=node.get("data");
+	if(data &amp;&amp; data.state!=dorado.Entity.STATE_NONE){
+		alert(1);
+    view.id("updateActionSaveAccounts").execute();
+		if(data.validate()!="ok"){
+			arg.processDefault=false;
+		}
+	}
+}</ClientEvent>
+              <ClientEvent name="onDraggingSourceDrop" signature="self,arg">var draggingInfo=arg.draggingInfo;
+if(!draggingInfo){
+	return true;
+}
+var parentNode=draggingInfo.get("targetObject");
+if(!parentNode){
+	return true;
+}
+var parentId=parentNode.get("data.id");
+parentNode.get("nodes").each(function(node){
+	var data=node.get("data");
+	data.set("parentAccountId",parentId);
+});
+alert("move");
+view.id("updateActionSaveAccounts").execute();</ClientEvent>
             </DataTree>
           </Children>
           <Tools/>
@@ -150,7 +200,8 @@
         <Property name="icon"> url(&gt;skin&gt;common/icons.gif) -260px -100px</Property>
         <ClientEvent name="onClick" signature="self,arg">var dsAccount = view.id("dsAccounts");
 var entity = dsAccount.getData().insert();
-this.id("dataTreeAccount").set("currentEntity", entity);</ClientEvent>
+this.id("dataTreeAccount").set("currentEntity", entity);
+view.id("accountDialog").show();</ClientEvent>
       </MenuItem>
       <MenuItem>
         <Property name="caption">添加子分类</Property>
@@ -183,6 +234,7 @@ if (currentEntity) {
     } else {
       dorado.MessageBox.confirm("是否确定删除此分类及该分类的所有记录？", function() {
         currentEntity.remove();
+        view.id("updateActionSaveAccounts").execute();
       });
     }
   });
@@ -198,5 +250,31 @@ if (currentEntity) {
         <Property name="dataSet">dsAccounts</Property>
       </UpdateItem>
     </UpdateAction>
+    <Dialog id="accountDialog">
+      <Property name="caption">添加/编辑分类</Property>
+      <Property name="width">400</Property>
+      <Property name="height">400</Property>
+      <Buttons>
+        <Button>
+          <Property name="caption">保存</Property>
+          <Property name="action">updateActionSaveAccounts</Property>
+        </Button>
+        <Button>
+          <Property name="caption">取消</Property>
+          <ClientEvent name="onClick" signature="self,arg">view.id("accountDialog").hide();</ClientEvent>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsAccounts</Property>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

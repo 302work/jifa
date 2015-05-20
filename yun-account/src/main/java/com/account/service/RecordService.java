@@ -42,4 +42,6 @@ public class RecordService {
         params.put("isDeleted",true);
         dao.executeHQL(hql,params);
     }
+
+
 }
