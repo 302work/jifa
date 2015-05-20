@@ -323,16 +323,16 @@
                 <configuration>
                     <!-- Workaround for http://jira.codehaus.org/browse/MECLIPSE-94 -->
                     <eclipseProjectDir>.</eclipseProjectDir>
-                    <!--<additionalBuildcommands>-->
-                        <!--<buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>-->
-                        <!--<buildcommand>org.eclipse.m2e.core.maven2Builder</buildcommand>-->
-                    <!--</additionalBuildcommands>-->
-                    <!--<additionalProjectnatures>-->
-                        <!--<projectnature>org.eclipse.m2e.core.maven2Nature</projectnature>-->
-                        <!--<projectnature>org.eclipse.jdt.core.javanature</projectnature>-->
-                        <!--<projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>-->
-                        <!--<projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>-->
-                    <!--</additionalProjectnatures>-->
+                    <additionalBuildcommands>
+                        <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+                        <buildcommand>org.eclipse.m2e.core.maven2Builder</buildcommand>
+                    </additionalBuildcommands>
+                    <additionalProjectnatures>
+                        <projectnature>org.eclipse.m2e.core.maven2Nature</projectnature>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                        <projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
+                        <projectnature>org.eclipse.wst.common.modulecore.ModuleCoreNature</projectnature>
+                    </additionalProjectnatures>
                 </configuration>
             </plugin>
         </plugins>
