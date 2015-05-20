@@ -323,6 +323,9 @@
                 <configuration>
                     <!-- Workaround for http://jira.codehaus.org/browse/MECLIPSE-94 -->
                     <eclipseProjectDir>.</eclipseProjectDir>
+                    <additionalProjectnatures>
+                        <projectnature>org.eclipse.wst.common.project.facet.core.nature</projectnature>
+                    </additionalProjectnatures>
                 </configuration>
             </plugin>
         </plugins>
