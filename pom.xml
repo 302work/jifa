@@ -325,7 +325,6 @@
                     <eclipseProjectDir>.</eclipseProjectDir>
                     <additionalBuildcommands>
                         <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
-                        <buildcommand>org.eclipse.wst.validation.validationbuilder</buildcommand>
                         <buildcommand>org.eclipse.m2e.core.maven2Builder</buildcommand>
                     </additionalBuildcommands>
                     <additionalProjectnatures>
