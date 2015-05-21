@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <ViewConfig>
   <Arguments/>
   <Context/>
@@ -29,6 +28,21 @@
       </PropertyDef>
       <PropertyDef name="parentAccountId">
         <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="isDeleted">
+        <Property name="dataType">Boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="delTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="crTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="crUser">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="delUser">
+        <Property/>
       </PropertyDef>
     </DataType>
     <DataType name="Record">
@@ -86,20 +100,35 @@
         <Property name="dataType">String</Property>
         <Property name="label">标签</Property>
       </PropertyDef>
+      <PropertyDef name="isDeleted">
+        <Property name="dataType">Boolean</Property>
+      </PropertyDef>
+      <PropertyDef name="delTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="crTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="crUser">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="delUser">
+        <Property/>
+      </PropertyDef>
     </DataType>
   </Model>
   <View layout="padding:20">
     <DataSet id="dsAccounts">
       <Property name="dataProvider">accountService#getAccountsByParentId</Property>
       <Property name="dataType">[Account]</Property>
-      <Property name="readOnly">true</Property>
+      <Property name="readOnly">false</Property>
     </DataSet>
     <SplitPanel>
       <Property name="position">200</Property>
       <MainControl>
         <Panel layout="padding:1">
           <Property name="caption">明细</Property>
-          <Property name="icon">url(&gt;skin&gt;common/icons.gif) -180px -140px</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -180px -140px</Property>
           <Buttons/>
           <Children>
             <ToolBar>
@@ -107,12 +136,12 @@
               <Separator/>
               <ToolBarButton>
                 <Property name="caption">导出</Property>
-                <Property name="icon">url(&gt;skin&gt;common/icons.gif) -180px -120px</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
               </ToolBarButton>
               <Separator/>
               <ToolBarButton>
                 <Property name="caption">打印</Property>
-                <Property name="icon">url(&gt;skin&gt;common/icons.gif) -120px -20px</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -120px -20px</Property>
               </ToolBarButton>
             </ToolBar>
             <DataGrid>
@@ -142,10 +171,44 @@
       <SideControl>
         <Panel layout="padding:1">
           <Property name="caption">分类</Property>
-          <Property name="icon">url(&gt;skin&gt;common/icons.gif) -260px -40px</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -260px -40px</Property>
           <Buttons/>
           <Children>
             <DataTree id="dataTreeAccount">
+              <ClientEvent name="onContextMenu">view.id(&quot;menuAccounts&quot;).show({
+  position: {
+    left: arg.event.pageX,
+    top: arg.event.pageY
+  }
+});</ClientEvent>
+              <ClientEvent name="beforeCurrentChange">/**
+var node=arg.oldCurrent;
+if(node){
+	var data=node.get(&quot;data&quot;);
+	if(data &amp;&amp; data.state!=dorado.Entity.STATE_NONE){
+		alert(1);
+    view.id(&quot;updateActionSaveAccounts&quot;).execute();
+		if(data.validate()!=&quot;ok&quot;){
+			arg.processDefault=false;
+		}
+	}
+}
+**/</ClientEvent>
+              <ClientEvent name="onDraggingSourceDrop">var draggingInfo=arg.draggingInfo;
+if(!draggingInfo){
+	return true;
+}
+var parentNode=draggingInfo.get(&quot;targetObject&quot;);
+if(!parentNode){
+	return true;
+}
+var parentId=parentNode.get(&quot;data.id&quot;);
+parentNode.get(&quot;nodes&quot;).each(function(node){
+	var data=node.get(&quot;data&quot;);
+	data.set(&quot;parentAccountId&quot;,parentId);
+});
+alert(&quot;move&quot;);
+view.id(&quot;updateActionSaveAccounts&quot;).execute();</ClientEvent>
               <Property name="currentNodeDataPath">CURRENT_ACCOUNT</Property>
               <Property name="dataSet">dsAccounts</Property>
               <BindingConfigs>
@@ -156,38 +219,6 @@
                   <Property name="recursive">true</Property>
                 </BindingConfig>
               </BindingConfigs>
-              <ClientEvent name="onContextMenu" signature="self,arg">view.id("menuAccounts").show({
-  position: {
-    left: arg.event.pageX,
-    top: arg.event.pageY
-  }
-});</ClientEvent>
-              <ClientEvent name="beforeCurrentChange" signature="self,arg">var node=arg.oldCurrent;
-if(node){
-	var data=node.get("data");
-	if(data &amp;&amp; data.state!=dorado.Entity.STATE_NONE){
-		alert(1);
-    view.id("updateActionSaveAccounts").execute();
-		if(data.validate()!="ok"){
-			arg.processDefault=false;
-		}
-	}
-}</ClientEvent>
-              <ClientEvent name="onDraggingSourceDrop" signature="self,arg">var draggingInfo=arg.draggingInfo;
-if(!draggingInfo){
-	return true;
-}
-var parentNode=draggingInfo.get("targetObject");
-if(!parentNode){
-	return true;
-}
-var parentId=parentNode.get("data.id");
-parentNode.get("nodes").each(function(node){
-	var data=node.get("data");
-	data.set("parentAccountId",parentId);
-});
-alert("move");
-view.id("updateActionSaveAccounts").execute();</ClientEvent>
             </DataTree>
           </Children>
           <Tools/>
@@ -196,49 +227,67 @@ view.id("updateActionSaveAccounts").execute();</ClientEvent>
     </SplitPanel>
     <Menu id="menuAccounts">
       <MenuItem>
-        <Property name="caption">添加一级分类</Property>
-        <Property name="icon"> url(&gt;skin&gt;common/icons.gif) -260px -100px</Property>
-        <ClientEvent name="onClick" signature="self,arg">var dsAccount = view.id("dsAccounts");
+        <ClientEvent name="onClick">var dsAccount = view.id(&quot;dsAccounts&quot;);
 var entity = dsAccount.getData().insert();
-this.id("dataTreeAccount").set("currentEntity", entity);
-view.id("accountDialog").show();</ClientEvent>
+this.id(&quot;dataTreeAccount&quot;).set(&quot;currentEntity&quot;, entity);
+view.id(&quot;accountDialog&quot;).show();</ClientEvent>
+        <Property name="caption">添加一级分类</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -260px -100px</Property>
       </MenuItem>
       <MenuItem>
-        <Property name="caption">添加子分类</Property>
-        <Property name="icon"> url(&gt;skin&gt;common/icons.gif) -280px -120px</Property>
-        <ClientEvent name="onClick" signature="self,arg">var treeAccount = this.id("dataTreeAccount");
-var currentEntity = treeAccount.get("currentEntity");
+        <ClientEvent name="onClick">var treeAccount = this.id(&quot;dataTreeAccount&quot;);
+var currentEntity = treeAccount.get(&quot;currentEntity&quot;);
 
-var currentNode = view.get("#dataTreeAccount.currentNode");
+var currentNode = view.get(&quot;#dataTreeAccount.currentNode&quot;);
 if(!currentNode){
-	dorado.MessageBox.alert("请先选中一个父分类!");
+	dorado.MessageBox.alert(&quot;请先选中一个父分类!&quot;);
 	return;
 }
 
 if (currentEntity) {
-	   newEntity = currentEntity.createChild("child", {
-        parentAccountId: currentEntity.get("id")
+	   newEntity = currentEntity.createChild(&quot;child&quot;, {
+        parentAccountId: currentEntity.get(&quot;id&quot;)
     });
-	console.log(currentEntity);
-    treeAccount.get("currentNode").expand();
-    treeAccount.set("currentEntity", newEntity);
+    treeAccount.get(&quot;currentNode&quot;).expand();
+    treeAccount.set(&quot;currentEntity&quot;, newEntity);
+	debugger;
+	view.id(&quot;accountDialog&quot;).show();
+	//newEntity.setState(dorado.Entity.STATE_NEW);
+	//view.id(&quot;accountForm&quot;).set(&quot;entity&quot;,newEntity);
+	
 }
-</ClientEvent>      </MenuItem>      <MenuItem>        <Property name="caption">删除分类</Property>
-        <Property name="icon"> url(&gt;skin&gt;common/icons.gif) -40px -0px</Property>
-        <ClientEvent name="onClick" signature="self,arg">var treeAccount = this.id("dataTreeAccount");
-var currentEntity = treeAccount.get("currentEntity");
+
+
+</ClientEvent>
+        <Property name="caption">添加子分类</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -280px -120px</Property>
+      </MenuItem>
+      <MenuItem>
+        <Property name="caption">修改分类</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -120px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var treeAccount = this.id(&quot;dataTreeAccount&quot;);
+var currentEntity = treeAccount.get(&quot;currentEntity&quot;);
 if (currentEntity) {
-  view.id("ajaxActionCheckAccountChildren").set("parameter", currentEntity.get("id")).execute(function(count) {
-    if (count &gt; 0) {
-      dorado.MessageBox.alert("请先删除子分类");
+  view.id(&quot;ajaxActionCheckAccountChildren&quot;).set(&quot;parameter&quot;, currentEntity.get(&quot;id&quot;)).execute(function(count) {
+    if (count > 0) {
+      dorado.MessageBox.alert(&quot;请先删除子分类&quot;);
     } else {
-      dorado.MessageBox.confirm("是否确定删除此分类及该分类的所有记录？", function() {
+      dorado.MessageBox.confirm(&quot;是否确定删除此分类及该分类的所有记录？&quot;, function() {
         currentEntity.remove();
-        view.id("updateActionSaveAccounts").execute();
+        view.id(&quot;updateActionSaveAccounts&quot;).execute();
       });
     }
   });
 }</ClientEvent>
+        <Property name="caption">删除分类</Property>
+        <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">view.id(&quot;menuAccounts&quot;).hide();</ClientEvent>
+        <Property name="caption">取消</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
       </MenuItem>
     </Menu>
     <AjaxAction id="ajaxActionCheckAccountChildren">
@@ -246,28 +295,38 @@ if (currentEntity) {
     </AjaxAction>
     <UpdateAction id="updateActionSaveAccounts">
       <Property name="dataResolver">accountService#saveAccounts</Property>
+      <Property name="executingMessage">系统正在保存</Property>
+      <Property name="successMessage">数据保存成功</Property>
       <UpdateItem>
         <Property name="dataSet">dsAccounts</Property>
       </UpdateItem>
     </UpdateAction>
     <Dialog id="accountDialog">
-      <Property name="caption">添加/编辑分类</Property>
+      <Property name="caption">添加/修改分类</Property>
       <Property name="width">400</Property>
-      <Property name="height">400</Property>
+      <Property name="height">200</Property>
+      <Property name="icon">url(>skin>common/icons.gif) -0px -120px</Property>
       <Buttons>
         <Button>
+          <ClientEvent name="onClick">view.id(&quot;updateActionSaveAccounts&quot;).execute(function(){
+	view.id(&quot;accountDialog&quot;).hide();
+});</ClientEvent>
           <Property name="caption">保存</Property>
           <Property name="action">updateActionSaveAccounts</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -20px -0px</Property>
         </Button>
         <Button>
+          <ClientEvent name="onClick">view.id(&quot;accountDialog&quot;).hide();</ClientEvent>
           <Property name="caption">取消</Property>
-          <ClientEvent name="onClick" signature="self,arg">view.id("accountDialog").hide();</ClientEvent>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
         </Button>
       </Buttons>
       <Children>
-        <AutoForm>
+        <AutoForm id="accountForm">
+          <Property name="createPrivateDataSet">false</Property>
           <Property name="dataSet">dsAccounts</Property>
-          <AutoFormElement>
+          <Property name="dataPath">!CURRENT_ACCOUNT</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
             <Property name="name">name</Property>
             <Property name="property">name</Property>
             <Editor/>

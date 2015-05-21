@@ -10,9 +10,11 @@ import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.jifa.core.dao.interfaces.IMasterDao;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+
 import java.util.*;
 
 /**
@@ -29,7 +31,8 @@ public class AccountService {
     @Resource
     private RecordService recordService;
 
-    @DataProvider
+    @SuppressWarnings("unchecked")
+	@DataProvider
     public List<Account> getAccountsByParentId(Long accountId){
         Map<String,Object> params = new HashMap<String,Object>();
         String hql = "From "+ Account.class.getName()+" where isDeleted=:isDeleted ";
@@ -69,6 +72,7 @@ public class AccountService {
             if (state.equals(EntityState.NEW)) {
                 account.setCrTime(new Date());
                 account.setCrUser(user.getUsername());
+                account.setIsDeleted(false);
                 dao.saveOrUpdate(account);
             }
             if (state.equals(EntityState.MODIFIED) || state.equals(EntityState.MOVED)) {

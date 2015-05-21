@@ -43,3 +43,4 @@ Thumbs.db
 /build/*
 src/main/webapp/WEB-INF/classes/
 bin
+.rules

@@ -3,6 +3,7 @@ package com.account.pojo;
 import com.jifa.core.pojo.IPojo;
 
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -10,6 +11,7 @@ import java.util.Date;
  * @author june
  * 2015年05月17日 12:37
  */
+@SuppressWarnings("serial")
 @Entity
 @Table(name=Account.TABLENAME)
 public class Account implements IPojo{
@@ -23,7 +25,7 @@ public class Account implements IPojo{
     @Column(length=50,nullable = false)
     private String name;//名称
 
-    @Column(length = 1,columnDefinition="tinyint default 0")
+    @Column(length = 1,columnDefinition="tinyint default 0",nullable = false)
     private Boolean isDeleted;//是否删除了
 
     @Column
