@@ -135,6 +135,12 @@
             <groupId>com.bstek.dorado</groupId>
             <artifactId>dorado-uploader</artifactId>
             <version>${dorado-uploader.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.bstek.dorado</groupId>

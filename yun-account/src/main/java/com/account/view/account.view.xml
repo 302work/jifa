@@ -20,7 +20,7 @@
       <PropertyDef name="name">
         <Property name="dataType">String</Property>
         <Property name="required">true</Property>
-        <Property name="label">名称</Property>
+        <Property name="label">分类名称</Property>
       </PropertyDef>
       <PropertyDef name="id">
         <Property name="dataType">Long</Property>
@@ -39,10 +39,17 @@
         <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="crUser">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="delUser">
-        <Property/>
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="sortFlag">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="label">备注</Property>
       </PropertyDef>
     </DataType>
     <DataType name="Record">
@@ -95,6 +102,7 @@
       </PropertyDef>
       <PropertyDef name="remark">
         <Property name="dataType">String</Property>
+        <Property name="label">备注</Property>
       </PropertyDef>
       <PropertyDef name="tag">
         <Property name="dataType">String</Property>
@@ -110,33 +118,119 @@
         <Property name="dataType">Date</Property>
       </PropertyDef>
       <PropertyDef name="crUser">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="delUser">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
     </DataType>
   </Model>
   <View layout="padding:20">
+    <Action id="actionAdd">
+      <Property name="caption">添加新分类</Property>
+      <Property name="icon">url(>skin>common/icons.gif) -280px -100px</Property>
+      <Property name="tip">点击树的空白处，不选中任何分类，就可以添加顶层分类了。</Property>
+    </Action>
+    <Action id="actionMove">
+      <Property name="tags">onCurrentNode</Property>
+      <Property name="disabled">true</Property>
+      <Property name="caption">移动分类</Property>
+      <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+    </Action>
+    <Action id="actionRemove">
+      <Property name="disabled">true</Property>
+      <Property name="tags">onCurrentNode</Property>
+      <Property name="caption">删除分类</Property>
+      <Property name="icon">url(>skin>common/icons.gif) -300px -100px</Property>
+      <Property name="confirmMessage">如果删除分类，该分类下的记录也会一并删除，是否确定删除？</Property>
+    </Action>
+    <Action id="actionCancel">
+      <Property name="disabled">true</Property>
+      <Property name="tags">onDirtyNode</Property>
+      <Property name="caption">取消</Property>
+      <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
+    </Action>
+    <UpdateAction id="actionSaveAll">
+      <Property name="dataResolver">accountService#saveAccounts</Property>
+      <Property name="executingMessage">系统正在保存</Property>
+      <Property name="successMessage">数据保存成功</Property>
+      <Property name="caption">保存所有</Property>
+      <Property name="icon">url(>skin>common/icons.gif) -160px -20px</Property>
+      <Property name="tags">onDirty</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsAccounts</Property>
+      </UpdateItem>
+    </UpdateAction>
     <DataSet id="dsAccounts">
       <Property name="dataProvider">accountService#getAccountsByParentId</Property>
       <Property name="dataType">[Account]</Property>
       <Property name="readOnly">false</Property>
     </DataSet>
+    <ToolBar>
+      <ToolBarButton>
+        <Property name="action">actionAdd</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionMove</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionRemove</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionCancel</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionSaveAll</Property>
+      </ToolBarButton>
+    </ToolBar>
     <SplitPanel>
       <Property name="position">200</Property>
       <MainControl>
-        <Panel layout="padding:1">
-          <Property name="caption">明细</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -180px -140px</Property>
-          <Buttons/>
-          <Children>
+        <CardBook id="cardbook">
+          <Container>
+            <DataGrid>
+              <DataColumn>
+                <Property name="caption">测试</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+          <Container>
+            <AutoForm id="accountForm">
+              <Property name="createPrivateDataSet">false</Property>
+              <Property name="dataSet">dsAccounts</Property>
+              <Property name="dataPath">!CURRENT_ACCOUNT</Property>
+              <Property name="cols">*</Property>
+              <AutoFormElement>
+                <Property name="name">name</Property>
+                <Property name="property">name</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">remark</Property>
+                <Property name="property">remark</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
             <ToolBar>
-              <DataPilot/>
+              <DataPilot>
+                <Property name="itemCodes">pages,pageSize,+,-,x</Property>
+                <Property name="dataPath">!CURRENT_ACCOUNT.records</Property>
+                <Property name="dataSet">dsAccounts</Property>
+              </DataPilot>
               <Separator/>
               <ToolBarButton>
                 <Property name="caption">导出</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+                <Property name="action">export2ReportAction1</Property>
               </ToolBarButton>
               <Separator/>
               <ToolBarButton>
@@ -144,9 +238,11 @@
                 <Property name="icon">url(>skin>common/icons.gif) -120px -20px</Property>
               </ToolBarButton>
             </ToolBar>
-            <DataGrid>
+            <DataGrid id="recordDataGrid">
               <Property name="dataPath">!CURRENT_ACCOUNT.records</Property>
               <Property name="dataSet">dsAccounts</Property>
+              <Property name="allowNoCurrent">true</Property>
+              <Property name="appendOnLastEnter">true</Property>
               <DataColumn>
                 <Property name="property">name</Property>
                 <Editor/>
@@ -157,183 +253,68 @@
               </DataColumn>
               <DataColumn>
                 <Property name="property">type</Property>
+                <Property name="editable">false</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
                 <Property name="property">doDate</Property>
+                <Property name="editable">false</Property>
                 <Editor/>
               </DataColumn>
+              <DataColumn name="accountName">
+                <Property name="property">accountName</Property>
+              </DataColumn>
+              <DataColumn name="tag">
+                <Property name="property">tag</Property>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+              </DataColumn>
             </DataGrid>
-          </Children>
-          <Tools/>
-        </Panel>
+            <Export2ReportAction id="export2ReportAction1">
+              <Property name="executingMessage">正在导出...</Property>
+              <Property name="fileName">record</Property>
+              <Property name="showTitle">true</Property>
+              <Property name="titleName">记录明细</Property>
+              <Property name="maxSize">10000</Property>
+              <Property name="confirmMessage">确定导出这些记录吗？</Property>
+              <Property name="dataScope">serverAll</Property>
+              <Property name="template">recordDataGrid</Property>
+            </Export2ReportAction>
+          </Container>
+        </CardBook>
       </MainControl>
       <SideControl>
-        <Panel layout="padding:1">
-          <Property name="caption">分类</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -260px -40px</Property>
-          <Buttons/>
-          <Children>
-            <DataTree id="dataTreeAccount">
-              <ClientEvent name="onContextMenu">view.id(&quot;menuAccounts&quot;).show({
-  position: {
-    left: arg.event.pageX,
-    top: arg.event.pageY
-  }
-});</ClientEvent>
-              <ClientEvent name="beforeCurrentChange">/**
-var node=arg.oldCurrent;
-if(node){
-	var data=node.get(&quot;data&quot;);
-	if(data &amp;&amp; data.state!=dorado.Entity.STATE_NONE){
-		alert(1);
-    view.id(&quot;updateActionSaveAccounts&quot;).execute();
-		if(data.validate()!=&quot;ok&quot;){
-			arg.processDefault=false;
-		}
-	}
-}
-**/</ClientEvent>
-              <ClientEvent name="onDraggingSourceDrop">var draggingInfo=arg.draggingInfo;
-if(!draggingInfo){
-	return true;
-}
-var parentNode=draggingInfo.get(&quot;targetObject&quot;);
-if(!parentNode){
-	return true;
-}
-var parentId=parentNode.get(&quot;data.id&quot;);
-parentNode.get(&quot;nodes&quot;).each(function(node){
-	var data=node.get(&quot;data&quot;);
-	data.set(&quot;parentAccountId&quot;,parentId);
-});
-alert(&quot;move&quot;);
-view.id(&quot;updateActionSaveAccounts&quot;).execute();</ClientEvent>
-              <Property name="currentNodeDataPath">CURRENT_ACCOUNT</Property>
-              <Property name="dataSet">dsAccounts</Property>
-              <BindingConfigs>
-                <BindingConfig>
-                  <Property name="childrenProperty">child</Property>
-                  <Property name="expandLevel">2</Property>
-                  <Property name="labelProperty">name</Property>
-                  <Property name="recursive">true</Property>
-                </BindingConfig>
-              </BindingConfigs>
-            </DataTree>
-          </Children>
-          <Tools/>
-        </Panel>
+        <DataTree id="dataTreeAccount">
+          <Property name="currentNodeDataPath">CURRENT_ACCOUNT</Property>
+          <Property name="dataSet">dsAccounts</Property>
+          <Property name="allowNoCurrent">true</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">child</Property>
+              <Property name="expandLevel">2</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="recursive">true</Property>
+              <Property name="hasChild">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
       </SideControl>
     </SplitPanel>
     <Menu id="menuAccounts">
       <MenuItem>
-        <ClientEvent name="onClick">var dsAccount = view.id(&quot;dsAccounts&quot;);
-var entity = dsAccount.getData().insert();
-this.id(&quot;dataTreeAccount&quot;).set(&quot;currentEntity&quot;, entity);
-view.id(&quot;accountDialog&quot;).show();</ClientEvent>
-        <Property name="caption">添加一级分类</Property>
-        <Property name="icon"> url(>skin>common/icons.gif) -260px -100px</Property>
+        <Property name="action">actionAdd</Property>
       </MenuItem>
       <MenuItem>
-        <ClientEvent name="onClick">var treeAccount = this.id(&quot;dataTreeAccount&quot;);
-var currentEntity = treeAccount.get(&quot;currentEntity&quot;);
-
-var currentNode = view.get(&quot;#dataTreeAccount.currentNode&quot;);
-if(!currentNode){
-	dorado.MessageBox.alert(&quot;请先选中一个父分类!&quot;);
-	return;
-}
-
-if (currentEntity) {
-	   newEntity = currentEntity.createChild(&quot;child&quot;, {
-        parentAccountId: currentEntity.get(&quot;id&quot;)
-    });
-    treeAccount.get(&quot;currentNode&quot;).expand();
-    treeAccount.set(&quot;currentEntity&quot;, newEntity);
-	debugger;
-	view.id(&quot;accountDialog&quot;).show();
-	//newEntity.setState(dorado.Entity.STATE_NEW);
-	//view.id(&quot;accountForm&quot;).set(&quot;entity&quot;,newEntity);
-	
-}
-
-
-</ClientEvent>
-        <Property name="caption">添加子分类</Property>
-        <Property name="icon"> url(>skin>common/icons.gif) -280px -120px</Property>
+        <Property name="action">actionMove</Property>
       </MenuItem>
+      <Separator/>
       <MenuItem>
-        <Property name="caption">修改分类</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -0px -120px</Property>
-      </MenuItem>
-      <MenuItem>
-        <ClientEvent name="onClick">var treeAccount = this.id(&quot;dataTreeAccount&quot;);
-var currentEntity = treeAccount.get(&quot;currentEntity&quot;);
-if (currentEntity) {
-  view.id(&quot;ajaxActionCheckAccountChildren&quot;).set(&quot;parameter&quot;, currentEntity.get(&quot;id&quot;)).execute(function(count) {
-    if (count > 0) {
-      dorado.MessageBox.alert(&quot;请先删除子分类&quot;);
-    } else {
-      dorado.MessageBox.confirm(&quot;是否确定删除此分类及该分类的所有记录？&quot;, function() {
-        currentEntity.remove();
-        view.id(&quot;updateActionSaveAccounts&quot;).execute();
-      });
-    }
-  });
-}</ClientEvent>
-        <Property name="caption">删除分类</Property>
-        <Property name="icon"> url(>skin>common/icons.gif) -40px -0px</Property>
-      </MenuItem>
-      <MenuItem>
-        <ClientEvent name="onClick">view.id(&quot;menuAccounts&quot;).hide();</ClientEvent>
-        <Property name="caption">取消</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+        <Property name="action">actionRemove</Property>
       </MenuItem>
     </Menu>
     <AjaxAction id="ajaxActionCheckAccountChildren">
       <Property name="service">accountService#checkAccount</Property>
     </AjaxAction>
-    <UpdateAction id="updateActionSaveAccounts">
-      <Property name="dataResolver">accountService#saveAccounts</Property>
-      <Property name="executingMessage">系统正在保存</Property>
-      <Property name="successMessage">数据保存成功</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsAccounts</Property>
-      </UpdateItem>
-    </UpdateAction>
-    <Dialog id="accountDialog">
-      <Property name="caption">添加/修改分类</Property>
-      <Property name="width">400</Property>
-      <Property name="height">200</Property>
-      <Property name="icon">url(>skin>common/icons.gif) -0px -120px</Property>
-      <Buttons>
-        <Button>
-          <ClientEvent name="onClick">view.id(&quot;updateActionSaveAccounts&quot;).execute(function(){
-	view.id(&quot;accountDialog&quot;).hide();
-});</ClientEvent>
-          <Property name="caption">保存</Property>
-          <Property name="action">updateActionSaveAccounts</Property>
-          <Property name="icon"> url(>skin>common/icons.gif) -20px -0px</Property>
-        </Button>
-        <Button>
-          <ClientEvent name="onClick">view.id(&quot;accountDialog&quot;).hide();</ClientEvent>
-          <Property name="caption">取消</Property>
-          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-        </Button>
-      </Buttons>
-      <Children>
-        <AutoForm id="accountForm">
-          <Property name="createPrivateDataSet">false</Property>
-          <Property name="dataSet">dsAccounts</Property>
-          <Property name="dataPath">!CURRENT_ACCOUNT</Property>
-          <AutoFormElement layoutConstraint="colSpan:2">
-            <Property name="name">name</Property>
-            <Property name="property">name</Property>
-            <Editor/>
-          </AutoFormElement>
-        </AutoForm>
-      </Children>
-      <Tools/>
-    </Dialog>
   </View>
 </ViewConfig>
