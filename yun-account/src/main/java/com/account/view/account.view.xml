@@ -233,7 +233,7 @@
                 <Property name="action">export2ReportAction1</Property>
               </ToolBarButton>
               <Separator/>
-              <ToolBarButton>
+              <ToolBarButton id="printBtn">
                 <Property name="caption">打印</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -120px -20px</Property>
               </ToolBarButton>
@@ -243,6 +243,8 @@
               <Property name="dataSet">dsAccounts</Property>
               <Property name="allowNoCurrent">true</Property>
               <Property name="appendOnLastEnter">true</Property>
+              <Property name="highlightCurrentRow">true</Property>
+              <IndicatorColumn/>
               <DataColumn>
                 <Property name="property">name</Property>
                 <Editor/>
