@@ -1,10 +1,12 @@
 package com.account.pojo;
 
+
 import com.jifa.core.pojo.IPojo;
 
 import javax.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 记账本
@@ -39,6 +41,12 @@ public class Account implements IPojo{
 
     @Column(length=60)
     private String delUser;//删除人
+    
+    @Column
+    private String remark;//备注
+    
+    @Column
+    private Integer sortFlag;//排序标志
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parentAccountId", insertable = false, updatable = false)
@@ -46,6 +54,16 @@ public class Account implements IPojo{
 
     @Column
     private Long parentAccountId;//父记账本id
+    
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "parentAccountId", insertable = false, updatable = false)
+	@OrderBy(value = "sortFlag")
+    private List<Account> child;//子分类
+    
+    @Transient
+    private List<Record> records;//记录明细
+    
+    
 
 
     public Long getId() {
@@ -119,4 +137,38 @@ public class Account implements IPojo{
     public void setParentAccountId(Long parentAccountId) {
         this.parentAccountId = parentAccountId;
     }
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Integer getSortFlag() {
+		return sortFlag;
+	}
+
+	public void setSortFlag(Integer sortFlag) {
+		this.sortFlag = sortFlag;
+	}
+
+	public List<Account> getChild() {
+		return child;
+	}
+
+	public void setChild(List<Account> child) {
+		this.child = child;
+	}
+
+	public List<Record> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<Record> records) {
+		this.records = records;
+	}
+    
+    
 }

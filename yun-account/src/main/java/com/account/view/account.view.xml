@@ -157,6 +157,7 @@
       <Property name="caption">保存所有</Property>
       <Property name="icon">url(>skin>common/icons.gif) -160px -20px</Property>
       <Property name="tags">onDirty</Property>
+      <Property name="hotkey">ctrl+s</Property>
       <UpdateItem>
         <Property name="dataSet">dsAccounts</Property>
       </UpdateItem>
