@@ -105,6 +105,7 @@
             <tx:method name="complete*" read-only="false" propagation="REQUIRED" />
             <tx:method name="with*" read-only="false" propagation="REQUIRED" />
             <tx:method name="reset*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="do*" read-only="false" propagation="REQUIRED" />
             
             <tx:method name="*" read-only="true" propagation="NOT_SUPPORTED" />
         </tx:attributes>

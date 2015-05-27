@@ -21,7 +21,8 @@ public interface IWriteDao {
      * @param <T>
      * @param t
      */
-    <T extends IPojo> List<T> saveOrUpdate(T... t);
+    <T extends IPojo> List<T> saveOrUpdate(T... t);  
+    
     /**
      * 根据传入hql执行复杂数据库操作.
      * @param hql String 需执行hql语句

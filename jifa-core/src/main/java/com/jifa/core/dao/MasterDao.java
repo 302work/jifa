@@ -3,6 +3,7 @@ package com.jifa.core.dao;
 import com.bstek.dorado.data.provider.Page;
 import com.jifa.core.dao.interfaces.IMasterDao;
 import com.jifa.core.pojo.IPojo;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -210,10 +211,11 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             }
             this.getHibernateTemplate().clear();
             this.getHibernateTemplate().delete(t);
+            this.getHibernateTemplate().flush();
         }
     }
 
-    @Override
+	@Override
     public <T extends IPojo> List<T> saveOrUpdate(T... ts) {
         List<T> returnObjs = new ArrayList < T > ();
         for ( T t : ts ) {
@@ -222,6 +224,7 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             }
             this.getHibernateTemplate().clear();
             returnObjs.add(this.getHibernateTemplate().merge(t));
+            this.getHibernateTemplate().flush();
         }
         return returnObjs;
     }
@@ -240,8 +243,9 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             }
             query.executeUpdate();
         } finally {
-            if ( null != session ) {
-                this.releaseSession(session);
+        	if ( null != session ) {
+                session.flush();
+        		this.releaseSession(session);
             }
         }
     }
@@ -263,9 +267,11 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             query.executeUpdate();
         } finally {
             if ( null != session ) {
-                this.releaseSession(session);
+            	session.flush();
+            	this.releaseSession(session);
             }
         }
 
     }
+
 }

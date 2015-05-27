@@ -107,14 +107,17 @@ public class AccountService {
 			newAccount = dao.saveOrUpdate(account).get(0);
 		}else if (EntityState.MODIFIED.equals(state)
 				|| EntityState.MOVED.equals(state)) {
-			newAccount = dao.saveOrUpdate(account).get(0);
+			account.setCrTime(new Date());
+			account.setCrUser(userName);
+			dao.saveOrUpdate(account);
 		}
     	Long accountId = account.getId();
 		if(newAccount.getId()!=null){
 			accountId = newAccount.getId();
 		}
     	//子分类
-    	List<Account> subAccounts = account.getChild();
+//    	List<Account> subAccounts = account.getChild();
+    	List<Account> subAccounts = EntityUtils.getValue(account, "child");
     	if(subAccounts!=null && subAccounts.size()>0){
     		for (Account subAccount : subAccounts) {
     			doSaveOrUpdateAccount(accountId, subAccount);

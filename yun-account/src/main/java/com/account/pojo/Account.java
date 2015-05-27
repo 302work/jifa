@@ -1,12 +1,20 @@
 package com.account.pojo;
 
 
-import com.jifa.core.pojo.IPojo;
-
-import javax.persistence.*;
-
 import java.util.Date;
-import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.jifa.core.pojo.IPojo;
 
 /**
  * 记账本
@@ -55,13 +63,14 @@ public class Account implements IPojo{
     @Column
     private Long parentAccountId;//父记账本id
     
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
-	@JoinColumn(name = "parentAccountId", insertable = false, updatable = false)
-	@OrderBy(value = "sortFlag")
-    private List<Account> child;//子分类
-    
+//    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+//	@JoinColumn(name = "parentAccountId", insertable = false, updatable = false)
+//	@OrderBy(value = "sortFlag")
     @Transient
-    private List<Record> records;//记录明细
+//    private List<Account> child;//子分类
+//    
+//    @Transient
+//    private List<Record> records;//记录明细
     
     
 
@@ -152,22 +161,6 @@ public class Account implements IPojo{
 
 	public void setSortFlag(Integer sortFlag) {
 		this.sortFlag = sortFlag;
-	}
-
-	public List<Account> getChild() {
-		return child;
-	}
-
-	public void setChild(List<Account> child) {
-		this.child = child;
-	}
-
-	public List<Record> getRecords() {
-		return records;
-	}
-
-	public void setRecords(List<Record> records) {
-		this.records = records;
 	}
     
     
