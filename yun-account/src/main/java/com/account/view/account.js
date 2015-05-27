@@ -1,3 +1,4 @@
+//打印插件
 (function ($) {
     var printAreaCount = 0;
     $.fn.printArea = function () {
@@ -68,6 +69,27 @@ function refreshActions() {
 	refreshActions();
 };
 
+//@Bind @Account.onInsert
+!function(arg) {
+	var entityList = arg.entityList;
+	var maxSortFlag = 0;
+	entityList.each(function(entity) {
+		var sortFlag = entity.get("sortFlag");
+		if (sortFlag <= maxSortFlag) {
+			maxSortFlag++;
+			entity.set("sortFlag", maxSortFlag);
+		} else {
+			maxSortFlag = sortFlag;
+		}
+	});
+};
+
+//@Bind @Account.onRemove
+!function(arg) {
+	arg.entity.set("sortFlag", 0);
+};
+
+
 // @Bind #dataTreeAccount.onContextMenu
 !function(self, arg) {
 	view.id("menuAccounts").show({
@@ -77,6 +99,30 @@ function refreshActions() {
 		}
 	});
 };
+//@Bind #dataTreeAccount.onDataNodeCreate
+!function(self, arg) {
+	var entity = arg.data;
+	if (entity.state == dorado.Entity.STATE_NEW) {
+		setTimeout(function() {
+			self.set("currentNode", arg.node);
+		}, 50);
+	}
+};
+//@Bind #dataTreeAccount.onDraggingSourceMove
+!function(arg) {
+	var draggingInfo = arg.draggingInfo;
+	var sourceNode = draggingInfo.get("object");
+	var sourceType = sourceNode.get("bindingConfig.name");
+
+	var targetNode = draggingInfo.get("targetObject");
+	if (targetNode) {
+		var accept = false;
+		if (sourceType == "Account") {
+			accept = (targetNode.get("bindingConfig.name") == "Account");
+		}
+		draggingInfo.set("accept", accept);
+	}
+};
 
 //@Bind #actionAdd.onExecute
 !function(dsAccounts, dataTreeAccount) {
@@ -84,11 +130,15 @@ function refreshActions() {
 	if (currentEntity) {
 		var data = {
 				name : "<新分类>",
-				parentAccountId : currentEntity.get("id")
+				parentAccountId : currentEntity.get("id"),
+				sortFlag:0
 			};
-		currentEntity.createChild("child", data);
+//		currentEntity.createChild("child", data);
+		//插入
+		currentEntity.get("child").insert(data,"before");
 	} else {
-		dsAccounts.getData().createChild({name:"<新分类>"});
+		//dsAccounts.getData().createChild({name:"<新分类>"});
+		dsAccounts.getData().insert({name:"<新分类>",sortFlag:0},"before");
 	}
 	var currentNode = dataTreeAccount.get("currentNode");
 	if (currentNode) {
@@ -109,6 +159,11 @@ function refreshActions() {
 	    }
 	  });
 	}
+};
+
+//@Bind #actionMove.onExecute
+!function(dialogSelectAccount) {
+	dialogSelectAccount.show();
 };
 
 // @Bind #actionCancel.onExecute
@@ -132,9 +187,51 @@ function refreshActions() {
 
 };
 
+//打印
 // @Bind #printBtn.onClick
 !function(self, arg) {
 	$("#d_recordDataGrid").printArea();
+};
+
+//日期选择不能选择将来时间
+//@Bind #dateDropDown1.onFilterDate
+!function(self, arg) {
+    if (arg.date>new Date()) {
+        arg.selectable = false;
+    }
+};
+
+//@Bind #buttonOk.onClick
+!function(selectDataTreeAccount, dataTreeAccount, dialogSelectAccount) {
+	//用户选择的分类
+	var account = selectDataTreeAccount.get("currentNode.data");
+	if (!account) {
+		dorado.MessageBox.alert("请选择一个有效的分类。");
+		return;
+	}
+	//要移动的分类
+	var currentAccountNode = dataTreeAccount.get("currentNode");
+	if(account == currentAccountNode.get("data")){
+		dorado.MessageBox.alert("不能选择自己。");
+		return;
+	}
+	//不能parent
+	var parentCurrentAccountNode = currentAccountNode.get("parent");
+	if(account == parentCurrentAccountNode.get("data")){
+		dorado.MessageBox.alert("不能选择自己的父分类。");
+		return;
+	}
+	var newAccount = dataTreeAccount.get("currentNode.data");
+	newAccount = newAccount.clone();
+	newAccount.set("sortFlag", 0);
+	account.get("child").insert(newAccount,"before");
+	currentAccountNode.remove();	
+	dialogSelectAccount.hide();
+};
+
+// @Bind #buttonCancel.onClick
+!function(dialogSelectAccount) {
+	dialogSelectAccount.hide();
 };
 
 

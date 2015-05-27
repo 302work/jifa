@@ -210,7 +210,7 @@
               <Property name="dataSet">dsAccounts</Property>
               <Property name="dataPath">!CURRENT_ACCOUNT</Property>
               <Property name="cols">*</Property>
-              <AutoFormElement>
+              <AutoFormElement id="accountName">
                 <Property name="name">name</Property>
                 <Property name="property">name</Property>
                 <Editor/>
@@ -257,11 +257,13 @@
               <DataColumn>
                 <Property name="property">type</Property>
                 <Property name="editable">false</Property>
+                <Property name="trigger">listDropDown1</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
                 <Property name="property">doDate</Property>
                 <Property name="editable">false</Property>
+                <Property name="trigger">dateDropDown1</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn name="accountName">
@@ -284,6 +286,13 @@
               <Property name="dataScope">serverAll</Property>
               <Property name="template">recordDataGrid</Property>
             </Export2ReportAction>
+            <DateDropDown id="dateDropDown1">
+              <Property name="autoOpen">true</Property>
+            </DateDropDown>
+            <ListDropDown id="listDropDown1">
+              <Property name="items">支出,收入</Property>
+              <Property name="autoOpen">true</Property>
+            </ListDropDown>
           </Container>
         </CardBook>
       </MainControl>
@@ -292,13 +301,21 @@
           <Property name="currentNodeDataPath">CURRENT_ACCOUNT</Property>
           <Property name="dataSet">dsAccounts</Property>
           <Property name="allowNoCurrent">true</Property>
+          <Property name="dragMode">item</Property>
+          <Property name="draggable">true</Property>
+          <Property name="dropMode">onOrInsertItems</Property>
+          <Property name="droppable">true</Property>
+          <Property name="dragTags">node</Property>
+          <Property name="droppableTags">node</Property>
           <BindingConfigs>
             <BindingConfig>
               <Property name="childrenProperty">child</Property>
-              <Property name="expandLevel">2</Property>
               <Property name="labelProperty">name</Property>
               <Property name="recursive">true</Property>
               <Property name="hasChild">true</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+              <Property name="expandLevel">2</Property>
+              <Property name="name">Account</Property>
             </BindingConfig>
           </BindingConfigs>
         </DataTree>
@@ -319,5 +336,33 @@
     <AjaxAction id="ajaxActionCheckAccountChildren">
       <Property name="service">accountService#checkAccount</Property>
     </AjaxAction>
+    <Dialog id="dialogSelectAccount" layout="padding:4" buttonAlign="right" caption="请选择一个分类..." height="400" width="400">
+      <Buttons>
+        <Button id="buttonOk" caption="确定" width="80">
+          <Property name="ui">highlight</Property>
+        </Button>
+        <Button id="buttonCancel" caption="取消" width="60"/>
+      </Buttons>
+      <Children>
+        <DataTree id="selectDataTreeAccount">
+          <Property name="dataSet">dsAccounts</Property>
+          <Property name="allowNoCurrent">false</Property>
+          <Property name="dragMode">item</Property>
+          <Property name="draggable">false</Property>
+          <Property name="droppable">false</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">child</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="recursive">true</Property>
+              <Property name="hasChild">true</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+              <Property name="expandLevel">2</Property>
+              <Property name="name">Account</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </Children>
+    </Dialog>
   </View>
 </ViewConfig>

@@ -47,6 +47,7 @@ public class AccountService {
             hql += " and parentAccountId=:accountId ";
             params.put("accountId",accountId);
         }
+        hql += " order by sortFlag ";
         params.put("isDeleted",false);
         return (List<Account>)dao.query(hql,params);
     }
