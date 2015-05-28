@@ -3,7 +3,6 @@
  */
 package com.jifa.test.pojo;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.business.IPosition;
 import com.bstek.bdf2.core.model.Group;
 import com.bstek.bdf2.core.model.Role;
-import com.jifa.core.pojo.IPojo;
+import com.dosola.core.dao.interfaces.IPojo;
 
 /**
  *

@@ -4,7 +4,7 @@
 package com.jifa.test.base;
 
 
-import com.jifa.core.dao.interfaces.IMasterDao;
+import com.dosola.core.dao.interfaces.IMasterDao;
 import org.junit.runner.RunWith;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 import org.springframework.test.context.ContextConfiguration;

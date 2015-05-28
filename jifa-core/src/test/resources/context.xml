@@ -73,7 +73,7 @@
     <bean id="masterHibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
         <property name="sessionFactory" ref="masterSessionFactory"></property>
     </bean>
-    <bean id="masterDao" class="com.jifa.core.dao.MasterDao">
+    <bean id="masterDao" class="com.dosola.core.dao.MasterDao">
         <property name="hibernateTemplate"
                   ref="masterHibernateTemplate"></property>
         <property name="sessionFactory">

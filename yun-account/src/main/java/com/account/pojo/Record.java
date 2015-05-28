@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.jifa.core.pojo.IPojo;
+import com.dosola.core.dao.interfaces.IPojo;
 
 /**
  * 记账明细

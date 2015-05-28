@@ -20,7 +20,7 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
-import com.jifa.core.dao.interfaces.IMasterDao;
+import com.dosola.core.dao.interfaces.IMasterDao;
 
 /**
  * 记账本操作相关

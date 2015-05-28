@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:d="http://www.bstek.com/dorado/schema"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.bstek.com/dorado/schema http://www.bstek.com/dorado/schema/spring-dorado-7.0.xsd">
+
+	<bean parent="dorado.viewServiceInterceptorRegister">
+	    <property name="methodInterceptor">     
+	        <!-- 注册的同时指定更多的信息，只有继承PatternMethodInterceptor的拦截器才支持这些额外的属性 -->
+	        <bean class="com.dorado.intercept.ViewServiceTxInterceptor" >
+	            <property name="order" value="1" /> <!-- 拦截优先级 -->
+	            <property name="pattern" value="*" /> <!-- 要拦截哪一类Ajax操作 -->
+	            <!-- <property name="excludePattern" value="load-*" /> --> <!-- 不拦截哪一类Ajax操作 -->
+	        </bean>
+	    </property>
+	    
+	</bean>
+	
+</beans>

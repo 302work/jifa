@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.account.pojo.Record;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.data.provider.Page;
-import com.jifa.core.dao.interfaces.IMasterDao;
+import com.dosola.core.dao.interfaces.IMasterDao;
 
 /**
  * 记录操作相关
