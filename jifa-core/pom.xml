@@ -10,9 +10,245 @@
     <packaging>war</packaging>
     <name>jifa-core</name>
     <url>http://maven.apache.org</url>
+    
+     <properties>
+        <java.version>1.7</java.version>
+        <junit.version>4.11</junit.version>
+        <servlet.version>3.0.1</servlet.version>
+        <mysql.version>5.1.34</mysql.version>
+        <druid.version>1.0.10</druid.version>
+        <jackson.version>2.3.1</jackson.version>
+        <redis.version>2.5.1</redis.version>
+        <aspectjweaver.version>1.6.2</aspectjweaver.version>
+
+        <dorado.version>7.5.0-SNAPSHOT</dorado.version>
+        <dorado-cloudo.version>0.0.1-SNAPSHOT</dorado-cloudo.version>
+        <dorado-ueditor.version>1.0.5</dorado-ueditor.version>
+        <dorado-uploader.version>1.0.4</dorado-uploader.version>
+
+        <bdf2-core.version>2.0.8-SNAPSHOT</bdf2-core.version>
+        <bdf2-import.version>2.0.7</bdf2-import.version>
+        <bdf2-export.version>2.0.8-SNAPSHOT</bdf2-export.version>
+        <bdf2-job-daemon.version>2.0.4</bdf2-job-daemon.version>
+        <bdf2-uflo.version>2.1.2-SNAPSHOT</bdf2-uflo.version>
+
+        <springframework.version>3.2.5.RELEASE</springframework.version>
+
+    </properties>
+
     <dependencies>
 
+        <!-- Start Testing dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- End Testing dependencies -->
+        <!-- redis jar start-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${redis.version}</version>
+        </dependency>
+        <!-- redis jar end -->
+        <!-- Start DB dependencies -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <!-- End DB dependencies -->
+
+        <!-- Start Web dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+        </dependency>
+        <!-- End Web dependencies -->
+
+        <!-- Start dorado dependencies -->
+        <dependency>
+            <groupId>com.bstek.dorado</groupId>
+            <artifactId>dorado-core</artifactId>
+            <version>${dorado.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-codec</artifactId>
+                    <groupId>commons-codec</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-web</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-beans</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-expression</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-context-support</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-webmvc</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.bstek.dorado</groupId>
+            <artifactId>dorado-uploader</artifactId>
+            <version>${dorado-uploader.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.bstek.dorado</groupId>
+            <artifactId>dorado-ueditor</artifactId>
+            <version>${dorado-ueditor.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- End dorado dependencies -->
+
+        <!-- Start bdf2 dependencies -->
+        <dependency>
+            <groupId>com.bstek.bdf2</groupId>
+            <artifactId>bdf2-core</artifactId>
+            <version>${bdf2-core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bstek.bdf2</groupId>
+            <artifactId>bdf2-import</artifactId>
+            <version>${bdf2-import.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-webmvc</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-jcl</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.bstek.bdf2</groupId>
+            <artifactId>bdf2-export</artifactId>
+            <version>${bdf2-export.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bstek.bdf2</groupId>
+            <artifactId>bdf2-job-daemon</artifactId>
+            <version>${bdf2-job-daemon.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.bstek.bdf2</groupId>
+                    <artifactId>bdf2-orm-hibernate3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bstek.bdf2</groupId>
+            <artifactId>bdf2-uflo</artifactId>
+            <version>${bdf2-uflo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.bstek.bdf2</groupId>
+                    <artifactId>bdf2-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- End bdf2 dependencies -->
+
+        <!-- start spring test-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+        <!-- End spring test -->
+
+        <dependency>
+            <groupId>com.bstek.dorado</groupId>
+            <artifactId>dorado-cloudo</artifactId>
+            <version>${dorado-cloudo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dorado-core</artifactId>
+                    <groupId>com.bstek.dorado</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
+    
     <build>
         <finalName>jifa-core</finalName>
         <plugins>
