@@ -33,6 +33,9 @@ public class Record implements IPojo {
     @Column(length=4000)
     private String homework;//家庭作业
 
+    @Column(length=2000)
+    private String score;//作业评分
+
     @Column(nullable = false)
     private Date crTime;//创建时间
 
@@ -93,5 +96,13 @@ public class Record implements IPojo {
 
     public void setCrUser(String crUser) {
         this.crUser = crUser;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
     }
 }
