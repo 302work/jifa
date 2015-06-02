@@ -123,6 +123,10 @@
     <!-- 要扫描的包 -->
     <context:component-scan base-package="com"/>
 
+    <bean id="bdf2.frameworkService" class="com.elective.service.FrameworkService"></bean>
+    <bean id="bdf2.userService" class="com.elective.service.UserService"></bean>
+    <bean id="bdf2.deptService" class="com.elective.service.DeptService"></bean>
+
 	<bdf:anonymous-url urlPattern="/index.jsp"/>
 	<bdf:anonymous-url urlPattern="/images/*.jpg"/>
 	<bdf:anonymous-url urlPattern="/images/*.css"/>

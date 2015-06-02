@@ -28,7 +28,7 @@ public class Classroom implements IPojo {
     private String address;//教室地址
 
     @Column(length = 1,columnDefinition="tinyint default 1")
-    private Boolean isEnable;//是否可用，默认可用
+    private Boolean isEnable = true;//是否可用，默认可用
 
     @Column
     private String remark;//备注
