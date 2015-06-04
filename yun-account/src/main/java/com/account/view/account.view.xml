@@ -126,38 +126,39 @@
     </DataType>
   </Model>
   <View layout="padding:20">
+    <Property name="packages">font-awesome</Property>
     <Action id="actionAdd">
       <Property name="caption">添加新分类</Property>
-      <Property name="icon">url(>skin>common/icons.gif) -280px -100px</Property>
       <Property name="tip">点击树的空白处，不选中任何分类，就可以添加顶层分类了。</Property>
+      <Property name="iconClass">fa fa-plus</Property>
     </Action>
     <Action id="actionMove">
       <Property name="tags">onCurrentNode</Property>
       <Property name="disabled">true</Property>
       <Property name="caption">移动分类</Property>
-      <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
+      <Property name="iconClass">fa fa-arrows</Property>
     </Action>
     <Action id="actionRemove">
       <Property name="disabled">true</Property>
       <Property name="tags">onCurrentNode</Property>
       <Property name="caption">删除分类</Property>
-      <Property name="icon">url(>skin>common/icons.gif) -300px -100px</Property>
       <Property name="confirmMessage">如果删除分类，该分类下的记录也会一并删除，是否确定删除？</Property>
+      <Property name="iconClass">fa fa-trash-o</Property>
     </Action>
     <Action id="actionCancel">
       <Property name="disabled">true</Property>
       <Property name="tags">onDirtyNode</Property>
       <Property name="caption">取消</Property>
-      <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
+      <Property name="iconClass">fa fa-reply</Property>
     </Action>
     <UpdateAction id="actionSaveAll">
       <Property name="dataResolver">accountService#saveAccounts</Property>
       <Property name="executingMessage">系统正在保存</Property>
       <Property name="successMessage">数据保存成功</Property>
       <Property name="caption">保存所有</Property>
-      <Property name="icon">url(>skin>common/icons.gif) -160px -20px</Property>
       <Property name="tags">onDirty</Property>
       <Property name="hotkey">ctrl+s</Property>
+      <Property name="iconClass">fa fa-floppy-o</Property>
       <UpdateItem>
         <Property name="dataSet">dsAccounts</Property>
       </UpdateItem>
@@ -230,13 +231,13 @@
               <Separator/>
               <ToolBarButton>
                 <Property name="caption">导出</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -180px -120px</Property>
                 <Property name="action">export2ReportAction1</Property>
+                <Property name="iconClass">fa fa-file-excel-o</Property>
               </ToolBarButton>
               <Separator/>
               <ToolBarButton id="printBtn">
                 <Property name="caption">打印</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -120px -20px</Property>
+                <Property name="iconClass">fa fa-print</Property>
               </ToolBarButton>
             </ToolBar>
             <DataGrid id="recordDataGrid">
@@ -313,9 +314,9 @@
               <Property name="labelProperty">name</Property>
               <Property name="recursive">true</Property>
               <Property name="hasChild">true</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
               <Property name="expandLevel">2</Property>
               <Property name="name">Account</Property>
+              <Property name="iconClass">fa fa-folder-o</Property>
             </BindingConfig>
           </BindingConfigs>
         </DataTree>

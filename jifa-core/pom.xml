@@ -30,7 +30,8 @@
         <dorado-cloudo.version>0.0.1-SNAPSHOT</dorado-cloudo.version>
         <dorado-ueditor.version>1.0.5</dorado-ueditor.version>
         <dorado-uploader.version>1.0.4</dorado-uploader.version>
-
+        <dorado-raphael.version>1.0.3</dorado-raphael.version>
+		<dorado-map.version>1.2.0-BETA</dorado-map.version>
         <bdf2-core.version>2.0.8-SNAPSHOT</bdf2-core.version>
         <bdf2-import.version>2.0.7</bdf2-import.version>
         <bdf2-export.version>2.0.8-SNAPSHOT</bdf2-export.version>
@@ -348,6 +349,16 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+		  <groupId>com.bstek.dorado</groupId>
+		  <artifactId>dorado-raphael</artifactId>
+		  <version>${dorado-raphael.version}</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.bstek.dorado</groupId>
+		  <artifactId>dorado-map</artifactId>
+		  <version>${dorado-map.version}</version>
+		</dependency>
     </dependencies>
     
     <build>
