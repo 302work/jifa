@@ -43,10 +43,10 @@ public class Course implements IPojo {
     private String deptId;//年级限制
 
     @Column(length = 1,columnDefinition="tinyint default 1")
-    private Boolean isEnable;//是否可用，默认可用
+    private Boolean isEnable = true;//是否可用，默认可用
 
     @Column(length = 1,columnDefinition="tinyint default 0")
-    private Boolean isAudit;//是否已审核，默认未审核
+    private Boolean isAudit = false;//是否已审核，默认未审核
 
     @Column(length=4000)
     private String homework;//家庭作业
