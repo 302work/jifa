@@ -39,7 +39,7 @@ public class UserService implements IUserService{
     @Override
     public void loadPageUsers(Page<IUser> page, String companyId, Criteria criteria) {
         StringBuilder sb = new StringBuilder();
-        sb.append( " From "+ User.class.getName() +" where 1=1 ");
+        sb.append( " From "+ User.class.getName() +" as u where 1=1 ");
         ParseResult result = SqlKit.parseCriteria(criteria,true,"u");
         String orderSql = SqlKit.buildOrderSql(criteria,"u");
         Map<String,Object> params = new HashMap<String, Object>();

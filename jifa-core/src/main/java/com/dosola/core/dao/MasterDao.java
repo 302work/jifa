@@ -1,36 +1,38 @@
 package com.dosola.core.dao;
 
-import com.bstek.dorado.data.provider.Page;
-import com.dosola.core.dao.interfaces.IMasterDao;
-import com.dosola.core.dao.interfaces.IPojo;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.springframework.util.CollectionUtils;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.*;
+import com.bstek.dorado.data.provider.Page;
+import com.dosola.core.dao.base.AbstractDao;
+import com.dosola.core.dao.interfaces.IMasterDao;
+import com.dosola.core.dao.interfaces.IPojo;
 
 
 /**
  * @author june
- *         2015年04月26日 23:47
+ * 2015年04月26日 23:47
  */
 
-public class MasterDao extends HibernateDaoSupport implements IMasterDao {
+public class MasterDao extends AbstractDao implements IMasterDao {
 
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T extends IPojo> T getObjectById(Class<T> clz, Serializable objectId){
         T result = null;
-        Session session = this.getSession();
+        Session session = null;
         try {
-            result = (T) this.getSession().get(clz, objectId);
+        	session = this.getSession();
+        	result = (T) this.getSession().get(clz, objectId);
         }catch(Exception e){
             throw e;
         } finally {
@@ -44,16 +46,11 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
     @Override
     public List<?> query(String hql, Map<String, Object> params) {
         List <?> result = null;
-        Session session = this.getSession();
+        Session session = null;
         try {
-            Query query = session.createQuery(hql);
-            String[] paramNames = query.getNamedParameters();
-            if ( !ArrayUtils.isEmpty(paramNames) && params!=null && !params.isEmpty()) {
-                for ( String paramName : paramNames ) {
-                    Object value = params.get(paramName);
-                    query.setParameter(paramName, value);
-                }
-            }
+        	session = this.getSession();
+        	Query query = session.createQuery(hql);
+    		query = this.setParameter(query, params);
             result = query.list();
         }catch(Exception e){
             throw e;
@@ -66,19 +63,15 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         return result;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Map<String, Object>> queryBySql(String sql, Map<String, Object> params) {
-        Session session = null;
+    	Session session = null;
         List<Map<String, Object>> resultList = null;
         try {
-            session = this.getHibernateTemplate().getSessionFactory()
-                    .getCurrentSession();
-            SQLQuery query = session.createSQLQuery(sql);
-            if (!CollectionUtils.isEmpty(params)) {
-                for(String param:params.keySet()){
-                    query.setParameter(param, params.get(param));
-                }
-            }
+        	session = this.getSession();
+        	SQLQuery query = session.createSQLQuery(sql);
+            query = (SQLQuery) this.setParameter(query, params);
             query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
             resultList =  query.list();
         }catch(Exception e){
@@ -91,42 +84,36 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         return resultList;
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public Page<?> pagingQuery(String hql, Integer pageIndex, Integer pageSize, Map<String, Object> params) {
         Page<?> page  = new Page(pageSize,pageIndex);
         pagingQuery(page,hql,params);
         return page;
     }
 
-    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     public Page<Map<String, Object>> pagingQueryBySql(String sql, Integer pageIndex, Integer pageSize, Map<String, Object> params) {
         Page<Map<String, Object>> page  = new Page(pageSize,pageIndex);
         pagingQueryBySql(page, sql, params);
         return page;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void pagingQuery(Page<?> page, String hql, Map<String, Object> params) {
         int pageIndex = page.getPageNo();
         int pageSize = page.getPageSize();
-        int beginIndex, totalCount = 0;
+        int totalCount = 0;
         Session session = null;
         try {
             session = this.getSession();
-            Query  searchQuery;
-            searchQuery = session.createQuery(hql);
-            String[] queryParams = searchQuery.getNamedParameters();
-            if ( !ArrayUtils.isEmpty(queryParams) && !CollectionUtils.isEmpty(params)) {
-                for ( String queryParam : queryParams ) {
-                    Object value = params.get(queryParam);
-                    searchQuery.setParameter(queryParam, value);
-                }
-            }
+            Query query = session.createQuery(hql);
+            query = this.setParameter(query, params);
+            query = this.setPageProperty(query, pageSize, pageIndex);
             totalCount = this.queryCount(hql, params);
-            beginIndex = Integer.valueOf((pageIndex-1) * pageSize);
-            searchQuery.setFirstResult(beginIndex);
-            searchQuery.setMaxResults(pageSize);
-            page.setEntities(searchQuery.list());
+            page.setEntities(query.list());
             page.setEntityCount(totalCount);
         }catch(Exception e){
             throw e;
@@ -137,28 +124,22 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void pagingQueryBySql(Page<Map<String, Object>> page, String sql, Map<String, Object> params) {
         int pageIndex = page.getPageNo();
         int pageSize = page.getPageSize();
         Session session = null;
-        int beginIndex = 0, totalCount = 0;
+        int totalCount = 0;
         try {
-            session = this.getHibernateTemplate().getSessionFactory()
-                    .getCurrentSession();
-            SQLQuery query = session.createSQLQuery(sql);
-            if (!CollectionUtils.isEmpty(params)) {
-                for(String param:params.keySet()){
-                    query.setParameter(param, params.get(param));
-                }
-            }
-            totalCount = this.queryCountBySql(sql,params);
-            beginIndex = Integer.valueOf((pageIndex-1) * pageSize);
-            query.setFirstResult(beginIndex);
-            query.setMaxResults(pageSize);
-            query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-            page.setEntities(query.list());
-            page.setEntityCount(totalCount);
+        	 session = this.getSession();
+             SQLQuery query = session.createSQLQuery(sql);
+             query = (SQLQuery) this.setParameter(query, params);
+             query = (SQLQuery) this.setPageProperty(query, pageSize, pageIndex);
+             query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+             totalCount = this.queryCountBySql(sql, params);
+             page.setEntities(query.list());
+             page.setEntityCount(totalCount);
         }catch(Exception e){
             throw e;
         } finally {
@@ -173,17 +154,11 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         int objectCount =0;
         Session session = null;
         try {
-            session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-            Query countQuery;
-            String countSB = "SELECT COUNT(*) " + hql;
-            countQuery = session.createQuery(countSB.toString());
-            String[] queryParams = countQuery.getNamedParameters();
-            if ( !ArrayUtils.isEmpty(queryParams) && !CollectionUtils.isEmpty(params)) {
-                for ( String queryParam : queryParams ) {
-                    countQuery.setParameter(queryParam, params.get(queryParam));
-                }
-            }
-            objectCount =((Long)countQuery.uniqueResult()).intValue();
+        	session = this.getSession();
+            String countHql = "SELECT COUNT(*) " + hql;
+            Query query = session.createQuery(countHql);
+            query = this.setParameter(query, params);
+            objectCount =((Long)query.uniqueResult()).intValue();
         }catch(Exception e){
             throw e;
         } finally {
@@ -199,13 +174,9 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         Session session = null;
         int totalCount = 0;
         try {
-            session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        	session = this.getSession();
             SQLQuery query = session.createSQLQuery("SELECT COUNT(*) a FROM ("+sql+") b");
-            if (!CollectionUtils.isEmpty(params)) {
-                for(String param:params.keySet()){
-                    query.setParameter(param, params.get(param));
-                }
-            }
+            query = (SQLQuery) this.setParameter(query, params);
             totalCount = ((BigInteger) query.uniqueResult()).intValue();
         }catch(Exception e){
             throw e;
@@ -217,7 +188,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         return totalCount;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T extends IPojo> void delete(T... ts) {
         for ( IPojo t : ts ) {
             if ( null == t ) {
@@ -229,6 +201,7 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         }
     }
 
+	@SuppressWarnings("unchecked")
 	@Override
     public <T extends IPojo> List<T> saveOrUpdate(T... ts) {
         List<T> returnObjs = new ArrayList < T > ();
@@ -249,12 +222,7 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         try {
             session = this.getSession(true);
             Query query = session.createQuery(hql);
-            String[] paramNames = query.getNamedParameters();
-            if (!CollectionUtils.isEmpty(params)) {
-                for ( String paramName : paramNames ) {
-                    query.setParameter(paramName, params.get(paramName));
-                }
-            }
+            query = this.setParameter(query, params);
             query.executeUpdate();
         }catch(Exception e){
             throw e;
@@ -270,16 +238,9 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
     public void executeSQL(String sql, Map<String, Object> params) {
         Session session = null;
         try {
-//			session = this.getHibernateTemplate().getSessionFactory()
-//					.getCurrentSession();
-            //更改为支持多线程调用
-            session = this.getHibernateTemplate().getSessionFactory().openSession();
+			session = this.getSession(true);
             SQLQuery query = session.createSQLQuery(sql);
-            if (!CollectionUtils.isEmpty(params)) {
-                for(String param:params.keySet()){
-                    query.setParameter(param, params.get(param));
-                }
-            }
+            query = (SQLQuery) this.setParameter(query, params);
             query.executeUpdate();
         }catch(Exception e){
             throw e;

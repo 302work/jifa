@@ -49,10 +49,28 @@ public class AccountService {
         }
         hql += " order by sortFlag ";
         params.put("isDeleted",false);
-        return (List<Account>)dao.query(hql,params);
+        List<Account> list = (List<Account>)dao.query(hql,params);
+        checkChild(list);
+        return list;
     }
 
     /**
+     * 检查是否有子分类
+     * @param list
+     */
+    private void checkChild(List<Account> list) {
+		for (Account account : list) {
+			String hql = "From "+Account.class.getName()+" where parentAccountId=:parentAccountId and isDeleted=:isDeleted ";
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("isDeleted",false);
+			params.put("parentAccountId",account.getId());
+			int count = dao.queryCount(hql, params);
+			account.setHasChild(count>0);
+		}
+		
+	}
+
+	/**
      * 检查记账本底下是否有子记账本
      * @param accountId
      * @return

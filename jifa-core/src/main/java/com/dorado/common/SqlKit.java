@@ -65,7 +65,7 @@ public class SqlKit {
 			if (StringUtils.isNotEmpty(alias)) {
 				sb.append(" " + alias + "." + propertyName);
 			} else {
-				sb.append(" `" + propertyName+"`");
+				sb.append(" " + propertyName);
 			}
 			sb.append(" " + processLike(operator) + " ");
 			String paramName = fc.getProperty();
@@ -165,6 +165,37 @@ public class SqlKit {
 		}
 		return orderSb.toString();
 	}
+	
+	/**
+	 * 获取排序hql
+	 * 
+	 * @param criteria
+	 * @param alias
+	 * @return
+	 */
+	public static String buildOrderHql(Criteria criteria, String alias) {
+		if (criteria == null || criteria.getOrders().size() == 0) {
+			return "";
+		}
+		StringBuffer orderSb = new StringBuffer();
+		int num = 0;
+		orderSb.append(" order by ");
+		for (Order order : criteria.getOrders()) {
+			if (num > 0) {
+				orderSb.append(" , ");
+			}
+			if (StringUtils.isNotEmpty(alias)) {
+				orderSb.append(" " + alias + "." + order.getProperty() + ""
+						+ (order.isDesc() ? "desc" : "asc") + " ");
+			} else {
+				orderSb.append(" " + order.getProperty() + " "
+						+ (order.isDesc() ? "desc" : "asc") + " ");
+			}
+
+		}
+		return orderSb.toString();
+	}
+
 
 	/**
 	 * 替换前台传来的属性名称

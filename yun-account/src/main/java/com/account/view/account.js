@@ -38,6 +38,9 @@
 
 
 var dirtyEntityNum = 0;
+window.zhichu = 0;
+window.shouru = 0;
+window.shengyu = 0;
 
 function refreshActions() {
 	var node = view.get("#dataTreeAccount.currentNode");
@@ -90,6 +93,61 @@ function refreshActions() {
 };
 
 
+//@Bind #recordDataGrid.#name.onRenderFooterCell
+!function(arg) {
+	arg.dom.innerText = "支出合计：";
+	
+};
+//@Bind #recordDataGrid.#type.onRenderFooterCell
+!function(arg) {
+	arg.dom.innerText = "收入合计：";
+};
+//@Bind #recordDataGrid.#remark.onRenderFooterCell
+!function(arg) {
+	arg.dom.innerText = "剩余资金：";
+};
+
+//@Bind #recordDataGrid.#money.onRenderFooterCell
+!function(arg) {
+	//支出合计
+	arg.dom.innerText = window.zhichu;
+};
+//@Bind #recordDataGrid.#doDate.onRenderFooterCell
+!function(arg) {
+	//收入合计
+	arg.dom.innerText = window.shouru;
+};
+//@Bind #recordDataGrid.#accountName.onRenderFooterCell
+!function(arg) {
+	//剩余资金
+	arg.dom.innerText = window.shengyu;
+};
+
+//@Bind #dataTreeAccount.onDataRowClick
+!function(dsAccounts,dataTreeAccount,recordDataPilot,recordDataGrid) {
+	var currEntity = dsAccounts.getData("!CURRENT_ACCOUNT");
+	var id = currEntity.get("id");
+	if(id){
+		//点击树重新加载数据
+		currEntity.reset("records");
+		//dsAccounts.flushAsync();
+		//currEntity.reset("child");
+	}
+	var hasChild = currEntity.get("hasChild");
+	if(hasChild){
+		//判断如果有子分类则隐藏添加、删除、取消按钮，表格设置为只读
+		//recordDataPilot.set("itemCodes","pages,pageSize");
+		recordDataGrid.set("readOnly",true);
+	}else{
+		//recordDataPilot.set("itemCodes","pages,pageSize,+,-,x");
+		recordDataGrid.set("readOnly",false);
+	}
+	view.id("ajaxActionSum").set("parameter", id).execute(function(data) {
+		window.zhichu = dorado.util.Common.formatFloat(data.zhichu, "#,##0.00");
+		window.shouru = dorado.util.Common.formatFloat(data.shouru, "#,##0.00");
+		window.shengyu = dorado.util.Common.formatFloat(data.shengyu, "#,##0.00");
+	});
+};
 // @Bind #dataTreeAccount.onContextMenu
 !function(self, arg) {
 	view.id("menuAccounts").show({

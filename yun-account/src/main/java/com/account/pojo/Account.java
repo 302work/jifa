@@ -63,6 +63,9 @@ public class Account implements IPojo{
     @Column
     private Long parentAccountId;//父记账本id
     
+    @Transient
+    private Boolean hasChild;//是否有子分类
+    
 //    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
 //	@JoinColumn(name = "parentAccountId", insertable = false, updatable = false)
 //	@OrderBy(value = "sortFlag")
@@ -161,6 +164,14 @@ public class Account implements IPojo{
 
 	public void setSortFlag(Integer sortFlag) {
 		this.sortFlag = sortFlag;
+	}
+
+	public Boolean getHasChild() {
+		return hasChild;
+	}
+
+	public void setHasChild(Boolean hasChild) {
+		this.hasChild = hasChild;
 	}
     
     

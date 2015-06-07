@@ -51,6 +51,9 @@
         <Property></Property>
         <Property name="label">备注</Property>
       </PropertyDef>
+      <PropertyDef name="hasChild">
+        <Property name="dataType">Boolean</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="Record">
       <Property name="creationType">com.account.pojo.Record</Property>
@@ -72,6 +75,7 @@
             </Collection>
           </Property>
         </Property>
+        <Property name="defaultValue">1</Property>
       </PropertyDef>
       <PropertyDef name="name">
         <Property name="dataType">String</Property>
@@ -92,6 +96,7 @@
         <Property name="dataType">Double</Property>
         <Property name="label">金额</Property>
         <Property name="required">true</Property>
+        <Property name="displayFormat">#,##0.00</Property>
       </PropertyDef>
       <PropertyDef name="accountId">
         <Property name="dataType">Long</Property>
@@ -116,9 +121,12 @@
       </PropertyDef>
       <PropertyDef name="crTime">
         <Property name="dataType">Date</Property>
+        <Property name="displayFormat">Y-m-d H:m:s</Property>
+        <Property name="label">创建时间</Property>
       </PropertyDef>
       <PropertyDef name="crUser">
         <Property></Property>
+        <Property name="label">创建人</Property>
       </PropertyDef>
       <PropertyDef name="delUser">
         <Property></Property>
@@ -194,7 +202,7 @@
       </ToolBarButton>
     </ToolBar>
     <SplitPanel>
-      <Property name="position">200</Property>
+      <Property name="position">180</Property>
       <MainControl>
         <CardBook id="cardbook">
           <Container>
@@ -223,7 +231,7 @@
               </AutoFormElement>
             </AutoForm>
             <ToolBar>
-              <DataPilot>
+              <DataPilot id="recordDataPilot">
                 <Property name="itemCodes">pages,pageSize,+,-,x</Property>
                 <Property name="dataPath">!CURRENT_ACCOUNT.records</Property>
                 <Property name="dataSet">dsAccounts</Property>
@@ -246,35 +254,58 @@
               <Property name="allowNoCurrent">true</Property>
               <Property name="appendOnLastEnter">true</Property>
               <Property name="highlightCurrentRow">true</Property>
+              <Property name="sortMode">serverSide</Property>
+              <Property name="filterMode">serverSide</Property>
+              <Property name="showFilterBar">true</Property>
+              <Property name="showFooter">true</Property>
               <IndicatorColumn/>
               <DataColumn>
                 <Property name="property">name</Property>
+                <Property name="width">140</Property>
+                <Property name="align">right</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
                 <Property name="property">money</Property>
+                <Property name="align">right</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
                 <Property name="property">type</Property>
                 <Property name="editable">false</Property>
                 <Property name="trigger">listDropDown1</Property>
+                <Property name="align">right</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
                 <Property name="property">doDate</Property>
                 <Property name="editable">false</Property>
                 <Property name="trigger">dateDropDown1</Property>
+                <Property name="align">right</Property>
                 <Editor/>
-              </DataColumn>
-              <DataColumn name="accountName">
-                <Property name="property">accountName</Property>
-              </DataColumn>
-              <DataColumn name="tag">
-                <Property name="property">tag</Property>
               </DataColumn>
               <DataColumn name="remark">
                 <Property name="property">remark</Property>
+                <Property name="width">140</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="accountName">
+                <Property name="property">accountName</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="tag">
+                <Property name="property">tag</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="crTime">
+                <Property name="property">crTime</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="crUser">
+                <Property name="property">crUser</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="align">right</Property>
               </DataColumn>
             </DataGrid>
             <Export2ReportAction id="export2ReportAction1">
@@ -317,6 +348,7 @@
               <Property name="expandLevel">2</Property>
               <Property name="name">Account</Property>
               <Property name="iconClass">fa fa-folder-o</Property>
+              <Property name="hasChildProperty">hasChild</Property>
             </BindingConfig>
           </BindingConfigs>
         </DataTree>
@@ -365,5 +397,8 @@
         </DataTree>
       </Children>
     </Dialog>
+    <AjaxAction id="ajaxActionSum">
+      <Property name="service">recordService#getTotal</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>
