@@ -31,6 +31,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
         Session session = this.getSession();
         try {
             result = (T) this.getSession().get(clz, objectId);
+        }catch(Exception e){
+            throw e;
         } finally {
             if ( null != session ) {
                 this.releaseSession(session);
@@ -53,7 +55,10 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
                 }
             }
             result = query.list();
-        } finally {
+        }catch(Exception e){
+            throw e;
+        }
+        finally {
             if ( null != session ) {
                 this.releaseSession(session);
             }
@@ -76,6 +81,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             }
             query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
             resultList =  query.list();
+        }catch(Exception e){
+            throw e;
         } finally {
             if (null != session) {
                 this.releaseSession(session);
@@ -121,6 +128,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             searchQuery.setMaxResults(pageSize);
             page.setEntities(searchQuery.list());
             page.setEntityCount(totalCount);
+        }catch(Exception e){
+            throw e;
         } finally {
             if ( null != session ) {
                 this.releaseSession(session);
@@ -150,6 +159,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
             query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
             page.setEntities(query.list());
             page.setEntityCount(totalCount);
+        }catch(Exception e){
+            throw e;
         } finally {
             if (null != session) {
                 this.releaseSession(session);
@@ -173,6 +184,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
                 }
             }
             objectCount =((Long)countQuery.uniqueResult()).intValue();
+        }catch(Exception e){
+            throw e;
         } finally {
             if ( null != session ) {
                 this.releaseSession(session);
@@ -194,6 +207,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
                 }
             }
             totalCount = ((BigInteger) query.uniqueResult()).intValue();
+        }catch(Exception e){
+            throw e;
         } finally {
             if (null != session) {
                 this.releaseSession(session);
@@ -241,6 +256,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
                 }
             }
             query.executeUpdate();
+        }catch(Exception e){
+            throw e;
         } finally {
         	if ( null != session ) {
                 session.flush();
@@ -264,6 +281,8 @@ public class MasterDao extends HibernateDaoSupport implements IMasterDao {
                 }
             }
             query.executeUpdate();
+        }catch(Exception e){
+            throw e;
         } finally {
             if ( null != session ) {
             	session.flush();
