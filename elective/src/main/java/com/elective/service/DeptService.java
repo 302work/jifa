@@ -1,5 +1,14 @@
 package com.elective.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.service.IDeptService;
 import com.dosola.core.common.DosolaUtil;
@@ -7,17 +16,6 @@ import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Dept;
 import com.elective.pojo.DeptUser;
 import com.elective.pojo.User;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.commons.lang.StringUtils;
-
-import javax.annotation.Resource;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 部门管理
@@ -65,7 +63,8 @@ public class DeptService implements IDeptService{
         return dao.getObjectById(Dept.class,deptId);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<IDept> loadDeptsByParentId(String parentId,String companyId) {
         if(StringUtils.isEmpty(parentId) || StringUtils.isEmpty(companyId)){
             return null;

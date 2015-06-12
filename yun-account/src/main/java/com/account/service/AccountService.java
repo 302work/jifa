@@ -17,7 +17,6 @@ import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.bdf2.core.exception.NoneLoginException;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
-import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.dosola.core.dao.interfaces.IMasterDao;
@@ -50,38 +49,23 @@ public class AccountService {
         hql += " order by sortFlag ";
         params.put("isDeleted",false);
         List<Account> list = (List<Account>)dao.query(hql,params);
-        checkChild(list);
+        for (Account account : list) {
+			account.setHasChild(hasChild(account));
+		}
         return list;
     }
-
-    /**
-     * 检查是否有子分类
-     * @param list
-     */
-    private void checkChild(List<Account> list) {
-		for (Account account : list) {
-			String hql = "From "+Account.class.getName()+" where parentAccountId=:parentAccountId and isDeleted=:isDeleted ";
-			Map<String,Object> params = new HashMap<String,Object>();
-			params.put("isDeleted",false);
-			params.put("parentAccountId",account.getId());
-			int count = dao.queryCount(hql, params);
-			account.setHasChild(count>0);
-		}
-		
-	}
 
 	/**
      * 检查记账本底下是否有子记账本
      * @param accountId
      * @return
      */
-    @Expose
-    public int checkAccount(Long accountId){
+    public boolean hasChild(Account account){
         String hql = "from "+Account.class.getName()+" where isDeleted=:isDeleted and parentAccountId=:accountId ";
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put("accountId",accountId);
+        params.put("accountId",account.getId());
         params.put("isDeleted",false);
-        return dao.queryCount(hql,params);
+        return dao.queryCount(hql,params)>0;
     }
 
     //前台传递的是整棵树，见http://www.bsdn.org/projects/dorado7/issue/dorado7-8718
@@ -110,7 +94,7 @@ public class AccountService {
     	Account newAccount = new Account();
     	//如果是删除
     	if (EntityState.DELETED.equals(state)) {
-    		if (checkAccount(account.getId()) == 0) {
+    		if (!hasChild(account)) {
                 recordService.deleteRecords(account.getId());
                 account.setIsDeleted(true);
                 account.setDelTime(new Date());

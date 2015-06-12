@@ -3,6 +3,7 @@ package com.elective.pojo;
 import com.dosola.core.dao.interfaces.IPojo;
 
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -28,19 +29,38 @@ public class Course implements IPojo {
     private String intro;//课程介绍
 
     @Column(nullable = false)
-    private Long teacherId;//开课老师
+    private Long teacherId;//开课老师ID
+
+    @ManyToOne
+	@JoinColumn(name = "teacherId", updatable = false, insertable = false)
+	private User teacher;//开课老师
+	
+    @Column(nullable = false)
+    private Long termId;//所属学期ID
+    
+    @ManyToOne
+	@JoinColumn(name = "termId", updatable = false, insertable = false)
+	private Term term;//所属学期
 
     @Column(nullable = false)
-    private Long termId;//所属学期
-
-    @Column(nullable = false)
-    private Long classroomId;//上课教室
+    private Long classroomId;//上课教室ID
+    
+    @ManyToOne
+   	@JoinColumn(name = "classroomId", updatable = false, insertable = false)
+   	private Classroom classroom;//上课教室
 
     @Column(nullable = false)
     private Integer num;//每班限报人数
+    
+    @Column(nullable = false)
+    private Integer total;//总人数限制
 
     @Column(length=100)
     private String deptId;//年级限制
+    
+    @ManyToOne
+   	@JoinColumn(name = "deptId", updatable = false, insertable = false)
+   	private Dept dept;//年级限制
 
     @Column(length = 1,columnDefinition="tinyint default 1")
     private Boolean isEnable = true;//是否可用，默认可用
@@ -160,4 +180,45 @@ public class Course implements IPojo {
     public void setIsAudit(Boolean isAudit) {
         this.isAudit = isAudit;
     }
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+	public User getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(User teacher) {
+		this.teacher = teacher;
+	}
+
+	public Term getTerm() {
+		return term;
+	}
+
+	public void setTerm(Term term) {
+		this.term = term;
+	}
+
+	public Classroom getClassroom() {
+		return classroom;
+	}
+
+	public void setClassroom(Classroom classroom) {
+		this.classroom = classroom;
+	}
+
+	public Dept getDept() {
+		return dept;
+	}
+
+	public void setDept(Dept dept) {
+		this.dept = dept;
+	}
+    
 }

@@ -1,8 +1,15 @@
 package com.elective.service;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.AuthenticationException;
+
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
-import com.bstek.bdf2.core.model.DefaultUser;
 import com.bstek.bdf2.core.security.UserShaPasswordEncoder;
 import com.bstek.bdf2.core.service.IDeptService;
 import com.bstek.bdf2.core.service.IFrameworkService;
@@ -11,19 +18,13 @@ import com.bstek.bdf2.core.service.IPositionService;
 import com.bstek.dorado.core.Configure;
 import com.elective.pojo.User;
 import com.google.code.kaptcha.Constants;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.AuthenticationException;
-
-import javax.annotation.Resource;
 
 /**
  * 验证密码
  * @author june
  * 2015年06月02日 11:03
  */
+@SuppressWarnings("deprecation")
 public class FrameworkService implements IFrameworkService {
 
     @Resource(name=IDeptService.BEAN_ID)
@@ -35,7 +36,7 @@ public class FrameworkService implements IFrameworkService {
     @Resource(name=IGroupService.BEAN_ID)
     private IGroupService groupService;
 
-    @Resource(name= UserShaPasswordEncoder.BEAN_ID)
+	@Resource(name= UserShaPasswordEncoder.BEAN_ID)
     private PasswordEncoder passwordEncoder;
 
     public void authenticate(IUser iuser,UsernamePasswordAuthenticationToken authentication)

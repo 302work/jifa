@@ -1,5 +1,18 @@
 package com.elective.service;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.bdf2.core.security.UserShaPasswordEncoder;
@@ -11,23 +24,13 @@ import com.dorado.common.SqlKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.DeptUser;
 import com.elective.pojo.User;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.RandomUtils;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 用户管理
  * @author june
  * 2015年06月02日 10:13
  */
+@SuppressWarnings("deprecation")
 public class UserService implements IUserService{
 
     @Resource
@@ -55,7 +58,8 @@ public class UserService implements IUserService{
         dao.pagingQuery(page,sb.toString(),params);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Collection<IUser> loadUsersByDeptId(String deptId) {
         if(StringUtils.isEmpty(deptId)){
             return null;

@@ -3,9 +3,11 @@ package com.elective.pojo;
 import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.business.IUser;
 import com.dosola.core.dao.interfaces.IPojo;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -57,6 +59,10 @@ public class Dept implements IDept,IPojo {
     @Transient
     private List<IUser> users;
 
+    @Transient
+    private Boolean hasChild;//是否有子部门
+    
+    
     public Dept() {
     }
 
@@ -157,4 +163,13 @@ public class Dept implements IDept,IPojo {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+	public Boolean getHasChild() {
+		return hasChild;
+	}
+
+	public void setHasChild(Boolean hasChild) {
+		this.hasChild = hasChild;
+	}
+    
 }

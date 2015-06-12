@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+  <DataType name="dataTypeClassroom">
+    <Property name="creationType">com.elective.pojo.Classroom</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="isEnable">
+      <Property name="dataType">Boolean</Property>
+      <Property name="label">是否可用</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="dataType">String</Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="address">
+      <Property name="dataType">String</Property>
+      <Property name="label">地址</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+    <PropertyDef name="crTime">
+      <Property name="dataType">Date</Property>
+      <Property name="label">创建时间</Property>
+      <Property name="displayFormat">Y-m-d H:m:s</Property>
+    </PropertyDef>
+    <PropertyDef name="crUser">
+      <Property name="dataType">String</Property>
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dataTypeCourse">
+    <Property name="creationType">com.elective.pojo.Course</Property>
+    <PropertyDef name="isEnable">
+      <Property name="dataType">Boolean</Property>
+      <Property name="label">是否可选</Property>
+    </PropertyDef>
+    <PropertyDef name="isAudit">
+      <Property name="dataType">Boolean</Property>
+      <Property name="label">是否审核</Property>
+    </PropertyDef>
+    <PropertyDef name="classroomId">
+      <Property name="dataType">Long</Property>
+      <Property name="label">教室ID</Property>
+    </PropertyDef>
+    <PropertyDef name="intro">
+      <Property name="dataType">String</Property>
+      <Property name="label">课程介绍</Property>
+    </PropertyDef>
+    <PropertyDef name="termId">
+      <Property name="dataType">Long</Property>
+      <Property name="label">学期ID</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="num">
+      <Property name="dataType">Integer</Property>
+      <Property name="label">每班限报人数</Property>
+    </PropertyDef>
+    <PropertyDef name="homework">
+      <Property name="dataType">String</Property>
+      <Property name="label">家庭作业</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">课程名称</Property>
+    </PropertyDef>
+    <PropertyDef name="crTime">
+      <Property name="dataType">Date</Property>
+      <Property name="displayFormat">Y-m-d H:m:s</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="crUser">
+      <Property name="dataType">String</Property>
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+    <PropertyDef name="deptId">
+      <Property name="dataType">String</Property>
+      <Property name="label">年级限制</Property>
+    </PropertyDef>
+    <PropertyDef name="teacherId">
+      <Property name="dataType">Long</Property>
+      <Property name="label">老师ID</Property>
+    </PropertyDef>
+    <PropertyDef name="total">
+      <Property name="dataType">Integer</Property>
+      <Property name="label">限报名人数</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dataTypeDept">
+    <Property name="creationType">com.elective.pojo.Dept</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="parentId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="enabled">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否可用</Property>
+    </PropertyDef>
+    <PropertyDef name="sortFlag">
+      <Property name="dataType">Integer</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="dataType">String</Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">名称</Property>
+    </PropertyDef>
+    <PropertyDef name="parent">
+      <Property name="dataType">dataTypeDept</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="crTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="crUser">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dataTypeRecord">
+    <Property name="creationType">com.elective.pojo.Record</Property>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="homework">
+      <Property name="dataType">String</Property>
+      <Property name="label">家庭作业</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="dataType">String</Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="studentId">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="score">
+      <Property name="dataType">String</Property>
+      <Property name="label">成绩</Property>
+    </PropertyDef>
+    <PropertyDef name="courseId">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="crTime">
+      <Property name="dataType">Date</Property>
+      <Property name="label">报名时间</Property>
+      <Property name="displayFormat">Y-m-d H:m:s</Property>
+    </PropertyDef>
+    <PropertyDef name="crUser">
+      <Property name="dataType">String</Property>
+      <Property name="label">学生姓名</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dataTypeTerm">
+    <Property name="creationType">com.elective.pojo.Term</Property>
+    <PropertyDef name="startTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="dataType">String</Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="name">
+      <Property name="dataType">String</Property>
+      <Property name="label">学期名称</Property>
+    </PropertyDef>
+    <PropertyDef name="year">
+      <Property name="dataType">String</Property>
+      <Property name="label">所属年份</Property>
+    </PropertyDef>
+    <PropertyDef name="crTime">
+      <Property name="dataType">Date</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="endTime">
+      <Property name="dataType">Date</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="dataType">String</Property>
+      <Property name="label">上课时间</Property>
+    </PropertyDef>
+    <PropertyDef name="crUser">
+      <Property name="dataType">String</Property>
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+  </DataType>
+  <DataType name="dataTypeUser">
+    <Property name="creationType">com.elective.pojo.User</Property>
+    <PropertyDef name="enabled">
+      <Property name="dataType">boolean</Property>
+      <Property name="label">是否可用</Property>
+      <Property name="defaultValue">true</Property>
+    </PropertyDef>
+    <PropertyDef name="remark">
+      <Property name="dataType">String</Property>
+      <Property name="label">备注</Property>
+    </PropertyDef>
+    <PropertyDef name="type">
+      <Property name="dataType">Integer</Property>
+      <Property name="label">类型</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">学生</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">老师</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">3</Property>
+              <Property name="value">管理员</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
+    </PropertyDef>
+    <PropertyDef name="password">
+      <Property name="dataType">String</Property>
+      <Property name="label">密码</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="id">
+      <Property name="dataType">Long</Property>
+    </PropertyDef>
+    <PropertyDef name="username">
+      <Property name="dataType">String</Property>
+      <Property name="label">用户名</Property>
+      <Property name="required">true</Property>
+    </PropertyDef>
+    <PropertyDef name="email">
+      <Property name="dataType">String</Property>
+      <Property name="label">邮箱</Property>
+    </PropertyDef>
+    <PropertyDef name="ename">
+      <Property name="dataType">String</Property>
+      <Property name="label">英文名</Property>
+    </PropertyDef>
+    <PropertyDef name="companyId">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="crTime">
+      <Property name="dataType">Date</Property>
+      <Property name="label">创建时间</Property>
+    </PropertyDef>
+    <PropertyDef name="crUser">
+      <Property name="dataType">String</Property>
+      <Property name="label">创建人</Property>
+    </PropertyDef>
+    <PropertyDef name="cname">
+      <Property name="dataType">String</Property>
+      <Property name="label">中文名称</Property>
+    </PropertyDef>
+    <PropertyDef name="salt">
+      <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="mobile">
+      <Property name="dataType">String</Property>
+      <Property name="label">手机号</Property>
+    </PropertyDef>
+  </DataType>
+</Model>

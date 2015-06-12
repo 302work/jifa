@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="deptDataType" parent="dataTypeDept">
+      <Property name="defaultDisplayProperty">name</Property>
+      <Reference name="child">
+        <Property name="dataProvider">deptMaintain#getDeptsByParentId</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="users">
+        <Property name="dataProvider">userMaintainuser#getUsersByDeptId</Property>
+        <Property name="dataType">[userDataType]</Property>
+        <Property name="pageSize">20</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="userDataType" parent="dataTypeUser"/>
+  </Model>
+  <View layout="padding:20">
+    <Property name="packages">font-awesome</Property>
+    <Action id="actionAdd">
+      <Property name="caption">添加新分类</Property>
+      <Property name="tip">点击树的空白处，不选中任何分类，就可以添加顶层分类了。</Property>
+      <Property name="iconClass">fa fa-plus</Property>
+    </Action>
+    <Action id="actionMove">
+      <Property name="tags">onCurrentNode</Property>
+      <Property name="disabled">true</Property>
+      <Property name="caption">移动分类</Property>
+      <Property name="iconClass">fa fa-arrows</Property>
+    </Action>
+    <Action id="actionRemove">
+      <Property name="disabled">true</Property>
+      <Property name="tags">onCurrentNode</Property>
+      <Property name="caption">删除分类</Property>
+      <Property name="confirmMessage">如果删除分类，该分类下的记录也会一并删除，是否确定删除？</Property>
+      <Property name="iconClass">fa fa-trash-o</Property>
+    </Action>
+    <Action id="actionCancel">
+      <Property name="disabled">true</Property>
+      <Property name="tags">onDirtyNode</Property>
+      <Property name="caption">取消</Property>
+      <Property name="iconClass">fa fa-reply</Property>
+    </Action>
+    <UpdateAction id="actionSaveAll">
+      <Property name="dataResolver">accountService#saveAccounts</Property>
+      <Property name="executingMessage">系统正在保存</Property>
+      <Property name="successMessage">数据保存成功</Property>
+      <Property name="caption">保存所有</Property>
+      <Property name="tags">onDirty</Property>
+      <Property name="hotkey">ctrl+s</Property>
+      <Property name="iconClass">fa fa-floppy-o</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsAccounts</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <DataSet id="dsAccounts">
+      <Property name="dataProvider">accountService#getAccountsByParentId</Property>
+      <Property name="dataType">[Account]</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
+    <ToolBar>
+      <ToolBarButton>
+        <Property name="action">actionAdd</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionMove</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionRemove</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionCancel</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="disabled">false</Property>
+        <Property name="action">actionSaveAll</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <SplitPanel>
+      <Property name="position">180</Property>
+      <MainControl>
+        <CardBook id="cardbook">
+          <Container>
+            <DataGrid>
+              <DataColumn>
+                <Property name="caption">测试</Property>
+                <Editor/>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+          <Container>
+            <AutoForm id="accountForm">
+              <Property name="createPrivateDataSet">false</Property>
+              <Property name="dataSet">dsAccounts</Property>
+              <Property name="dataPath">!CURRENT_ACCOUNT</Property>
+              <Property name="cols">*</Property>
+              <AutoFormElement id="accountName">
+                <Property name="name">name</Property>
+                <Property name="property">name</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">remark</Property>
+                <Property name="property">remark</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+            <ToolBar>
+              <DataPilot id="recordDataPilot">
+                <Property name="itemCodes">pages,pageSize,+,-,x</Property>
+                <Property name="dataPath">!CURRENT_ACCOUNT.records</Property>
+                <Property name="dataSet">dsAccounts</Property>
+              </DataPilot>
+              <Separator/>
+              <ToolBarButton>
+                <Property name="caption">导出</Property>
+                <Property name="action">export2ReportAction1</Property>
+                <Property name="iconClass">fa fa-file-excel-o</Property>
+              </ToolBarButton>
+              <Separator/>
+              <ToolBarButton id="printBtn">
+                <Property name="caption">打印</Property>
+                <Property name="iconClass">fa fa-print</Property>
+              </ToolBarButton>
+            </ToolBar>
+            <DataGrid id="recordDataGrid">
+              <Property name="dataPath">!CURRENT_ACCOUNT.records</Property>
+              <Property name="dataSet">dsAccounts</Property>
+              <Property name="allowNoCurrent">true</Property>
+              <Property name="appendOnLastEnter">true</Property>
+              <Property name="highlightCurrentRow">true</Property>
+              <Property name="sortMode">serverSide</Property>
+              <Property name="filterMode">serverSide</Property>
+              <Property name="showFilterBar">true</Property>
+              <Property name="showFooter">true</Property>
+              <IndicatorColumn/>
+              <DataColumn>
+                <Property name="property">name</Property>
+                <Property name="width">140</Property>
+                <Property name="align">right</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">money</Property>
+                <Property name="align">right</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">type</Property>
+                <Property name="editable">false</Property>
+                <Property name="trigger">listDropDown1</Property>
+                <Property name="align">right</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="property">doDate</Property>
+                <Property name="editable">false</Property>
+                <Property name="trigger">dateDropDown1</Property>
+                <Property name="align">right</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn name="remark">
+                <Property name="property">remark</Property>
+                <Property name="width">140</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="accountName">
+                <Property name="property">accountName</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="tag">
+                <Property name="property">tag</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="crTime">
+                <Property name="property">crTime</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+              <DataColumn name="crUser">
+                <Property name="property">crUser</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="align">right</Property>
+              </DataColumn>
+            </DataGrid>
+            <Export2ReportAction id="export2ReportAction1">
+              <Property name="executingMessage">正在导出...</Property>
+              <Property name="fileName">record</Property>
+              <Property name="showTitle">true</Property>
+              <Property name="titleName">记录明细</Property>
+              <Property name="maxSize">10000</Property>
+              <Property name="confirmMessage">确定导出这些记录吗？</Property>
+              <Property name="dataScope">serverAll</Property>
+              <Property name="template">recordDataGrid</Property>
+            </Export2ReportAction>
+            <DateDropDown id="dateDropDown1">
+              <Property name="autoOpen">true</Property>
+            </DateDropDown>
+            <ListDropDown id="listDropDown1">
+              <Property name="items">支出,收入</Property>
+              <Property name="autoOpen">true</Property>
+            </ListDropDown>
+          </Container>
+        </CardBook>
+      </MainControl>
+      <SideControl>
+        <DataTree id="dataTreeAccount">
+          <Property name="currentNodeDataPath">CURRENT_ACCOUNT</Property>
+          <Property name="dataSet">dsAccounts</Property>
+          <Property name="allowNoCurrent">true</Property>
+          <Property name="dragMode">item</Property>
+          <Property name="draggable">true</Property>
+          <Property name="dropMode">onOrInsertItems</Property>
+          <Property name="droppable">true</Property>
+          <Property name="dragTags">node</Property>
+          <Property name="droppableTags">node</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">child</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="recursive">true</Property>
+              <Property name="hasChild">true</Property>
+              <Property name="expandLevel">2</Property>
+              <Property name="name">Account</Property>
+              <Property name="iconClass">fa fa-folder-o</Property>
+              <Property name="hasChildProperty">hasChild</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </SideControl>
+    </SplitPanel>
+    <Menu id="menuAccounts">
+      <MenuItem>
+        <Property name="action">actionAdd</Property>
+      </MenuItem>
+      <MenuItem>
+        <Property name="action">actionMove</Property>
+      </MenuItem>
+      <Separator/>
+      <MenuItem>
+        <Property name="action">actionRemove</Property>
+      </MenuItem>
+    </Menu>
+    <AjaxAction id="ajaxActionCheckAccountChildren">
+      <Property name="service">accountService#checkAccount</Property>
+    </AjaxAction>
+    <Dialog id="dialogSelectAccount" layout="padding:4" buttonAlign="right" caption="请选择一个分类..." height="400" width="400">
+      <Buttons>
+        <Button id="buttonOk" caption="确定" width="80">
+          <Property name="ui">highlight</Property>
+        </Button>
+        <Button id="buttonCancel" caption="取消" width="60"/>
+      </Buttons>
+      <Children>
+        <DataTree id="selectDataTreeAccount">
+          <Property name="dataSet">dsAccounts</Property>
+          <Property name="allowNoCurrent">false</Property>
+          <Property name="dragMode">item</Property>
+          <Property name="draggable">false</Property>
+          <Property name="droppable">false</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">child</Property>
+              <Property name="labelProperty">name</Property>
+              <Property name="recursive">true</Property>
+              <Property name="hasChild">true</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+              <Property name="expandLevel">2</Property>
+              <Property name="name">Account</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </Children>
+    </Dialog>
+    <AjaxAction id="ajaxActionSum">
+      <Property name="service">recordService#getTotal</Property>
+    </AjaxAction>
+  </View>
+</ViewConfig>

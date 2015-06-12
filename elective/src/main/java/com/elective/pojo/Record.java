@@ -3,6 +3,7 @@ package com.elective.pojo;
 import com.dosola.core.dao.interfaces.IPojo;
 
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -26,6 +27,10 @@ public class Record implements IPojo {
 
     @Column(nullable = false)
     private Long studentId;//学生ID
+    
+    @ManyToOne
+   	@JoinColumn(name = "studentId", updatable = false, insertable = false)
+   	private User student;//学生
 
     @Column
     private String remark;//备注
@@ -105,4 +110,13 @@ public class Record implements IPojo {
     public void setScore(String score) {
         this.score = score;
     }
+
+	public User getStudent() {
+		return student;
+	}
+
+	public void setStudent(User student) {
+		this.student = student;
+	}
+    
 }
