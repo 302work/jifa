@@ -49,13 +49,17 @@ public class Dept implements IDept,IPojo {
     @Column
     private Integer sortFlag;//排序标志
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parentId", insertable = false, updatable = false)
-    private Dept parent;//父部门
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "parentId", insertable = false, updatable = false)
+//    private Dept parent;//父部门
 
     @Column
     private String parentId;//父部门id
 
+    
+    @Transient
+	private IDept parent;
+    
     @Transient
     private List<IUser> users;
 
@@ -130,11 +134,11 @@ public class Dept implements IDept,IPojo {
     }
 
     @Override
-    public Dept getParent() {
+    public IDept getParent() {
         return parent;
     }
 
-    public void setParent(Dept parent) {
+    public void setParent(IDept parent) {
         this.parent = parent;
     }
 

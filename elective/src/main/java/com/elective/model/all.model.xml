@@ -101,6 +101,7 @@
     <PropertyDef name="enabled">
       <Property name="dataType">boolean</Property>
       <Property name="label">是否可用</Property>
+      <Property name="defaultValue">true</Property>
     </PropertyDef>
     <PropertyDef name="sortFlag">
       <Property name="dataType">Integer</Property>
@@ -124,6 +125,9 @@
     </PropertyDef>
     <PropertyDef name="crUser">
       <Property name="dataType">String</Property>
+    </PropertyDef>
+    <PropertyDef name="hasChild">
+      <Property name="dataType">Boolean</Property>
     </PropertyDef>
   </DataType>
   <DataType name="dataTypeRecord">
@@ -227,11 +231,13 @@
           </Collection>
         </Property>
       </Property>
+      <Property name="required">true</Property>
+      <Property name="defaultValue">1</Property>
     </PropertyDef>
     <PropertyDef name="password">
       <Property name="dataType">String</Property>
       <Property name="label">密码</Property>
-      <Property name="required">true</Property>
+      <Property name="required">false</Property>
     </PropertyDef>
     <PropertyDef name="id">
       <Property name="dataType">Long</Property>
@@ -263,6 +269,7 @@
     <PropertyDef name="cname">
       <Property name="dataType">String</Property>
       <Property name="label">中文名称</Property>
+      <Property name="required">true</Property>
     </PropertyDef>
     <PropertyDef name="salt">
       <Property name="dataType">String</Property>

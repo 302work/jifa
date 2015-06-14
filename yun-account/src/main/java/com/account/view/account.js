@@ -208,14 +208,16 @@ function refreshActions() {
 //@Bind #actionRemove.onExecute
 !function(dsAccounts) {
 	var currentEntity = dsAccounts.getData("!CURRENT_ACCOUNT");
+	
 	if (currentEntity) {
-	  view.id("ajaxActionCheckAccountChildren").set("parameter", currentEntity.get("id")).execute(function(count) {
-	    if (count > 0) {
+//	  view.id("ajaxActionCheckAccountChildren").set("parameter", currentEntity.get("id")).execute(function(count) {
+		if (currEntity.get("hasChild")) {
 	      dorado.MessageBox.alert("请先删除子分类");
+	      return false;
 	    } else {
 	      currentEntity.remove();        
 	    }
-	  });
+//	  });
 	}
 };
 

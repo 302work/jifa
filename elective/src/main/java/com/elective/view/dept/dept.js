@@ -1,8 +1,7 @@
 var dirtyEntityNum = 0;
 
-
 function refreshActions() {
-	var node = view.get("#dataTreeAccount.currentNode");
+	var node = view.get("#dataTreeDept.currentNode");
 	view.set({
 		"^onCurrentNode.disabled" : node == null
 	});
@@ -17,8 +16,8 @@ function refreshActions() {
 	});
 }
 
-// @Bind @Dept.onStateChange
-// @Bind @User.onStateChange
+// @Bind @deptDataType.onStateChange
+// @Bind @userDataType.onStateChange
 !function(arg) {
 	if (arg.oldState == dorado.Entity.STATE_NONE) {
 		dirtyEntityNum++;
@@ -31,7 +30,7 @@ function refreshActions() {
 	refreshActions();
 };
 
-//@Bind @Account.onInsert
+//@Bind @deptDataType.onInsert
 !function(arg) {
 	var entityList = arg.entityList;
 	var maxSortFlag = 0;
@@ -46,77 +45,34 @@ function refreshActions() {
 	});
 };
 
-//@Bind @Account.onRemove
+//@Bind @deptDataType.onRemove
 !function(arg) {
 	arg.entity.set("sortFlag", 0);
 };
 
 
-//@Bind #recordDataGrid.#name.onRenderFooterCell
-!function(arg) {
-	arg.dom.innerText = "支出合计：";
-	
-};
-//@Bind #recordDataGrid.#type.onRenderFooterCell
-!function(arg) {
-	arg.dom.innerText = "收入合计：";
-};
-//@Bind #recordDataGrid.#remark.onRenderFooterCell
-!function(arg) {
-	arg.dom.innerText = "剩余资金：";
-};
-
-//@Bind #recordDataGrid.#money.onRenderFooterCell
-!function(arg) {
-	//支出合计
-	arg.dom.innerText = window.zhichu;
-};
-//@Bind #recordDataGrid.#doDate.onRenderFooterCell
-!function(arg) {
-	//收入合计
-	arg.dom.innerText = window.shouru;
-};
-//@Bind #recordDataGrid.#accountName.onRenderFooterCell
-!function(arg) {
-	//剩余资金
-	arg.dom.innerText = window.shengyu;
-};
-
-//@Bind #dataTreeAccount.onDataRowClick
-!function(dsAccounts,dataTreeAccount,recordDataPilot,recordDataGrid) {
-	var currEntity = dsAccounts.getData("!CURRENT_ACCOUNT");
+//@Bind #dataTreeDept.onDataRowClick
+!function(dsDepts,dataTreeDept,userDataPilot,userDataGrid) {
+	var currEntity = dsDepts.getData("!CURRENT_DEPT");
 	var id = currEntity.get("id");
 	if(id){
 		//点击树重新加载数据
-		currEntity.reset("records");
-		//dsAccounts.flushAsync();
+		currEntity.reset("users");
+		//dsDepts.flushAsync();
 		//currEntity.reset("child");
 	}
-	var hasChild = currEntity.get("hasChild");
-	if(hasChild){
-		//判断如果有子分类则隐藏添加、删除、取消按钮，表格设置为只读
-		//recordDataPilot.set("itemCodes","pages,pageSize");
-		recordDataGrid.set("readOnly",true);
-	}else{
-		//recordDataPilot.set("itemCodes","pages,pageSize,+,-,x");
-		recordDataGrid.set("readOnly",false);
-	}
-	view.id("ajaxActionSum").set("parameter", id).execute(function(data) {
-		window.zhichu = dorado.util.Common.formatFloat(data.zhichu, "#,##0.00");
-		window.shouru = dorado.util.Common.formatFloat(data.shouru, "#,##0.00");
-		window.shengyu = dorado.util.Common.formatFloat(data.shengyu, "#,##0.00");
-	});
+	refreshActions();
 };
-// @Bind #dataTreeAccount.onContextMenu
+// @Bind #dataTreeDept.onContextMenu
 !function(self, arg) {
-	view.id("menuAccounts").show({
+	view.id("menuDepts").show({
 		position : {
 			left : arg.event.pageX,
 			top : arg.event.pageY
 		}
 	});
 };
-//@Bind #dataTreeAccount.onDataNodeCreate
+//@Bind #dataTreeDept.onDataNodeCreate
 !function(self, arg) {
 	var entity = arg.data;
 	if (entity.state == dorado.Entity.STATE_NEW) {
@@ -125,7 +81,7 @@ function refreshActions() {
 		}, 50);
 	}
 };
-//@Bind #dataTreeAccount.onDraggingSourceMove
+//@Bind #dataTreeDept.onDraggingSourceMove
 !function(arg) {
 	var draggingInfo = arg.draggingInfo;
 	var sourceNode = draggingInfo.get("object");
@@ -134,30 +90,30 @@ function refreshActions() {
 	var targetNode = draggingInfo.get("targetObject");
 	if (targetNode) {
 		var accept = false;
-		if (sourceType == "Account") {
-			accept = (targetNode.get("bindingConfig.name") == "Account");
+		if (sourceType == "Dept") {
+			accept = (targetNode.get("bindingConfig.name") == "Dept");
 		}
 		draggingInfo.set("accept", accept);
 	}
 };
 
 //@Bind #actionAdd.onExecute
-!function(dsAccounts, dataTreeAccount) {
-	var currentEntity = dsAccounts.getData("!CURRENT_ACCOUNT");	
+!function(dsDepts, dataTreeDept) {
+	var currentEntity = dsDepts.getData("!CURRENT_DEPT");	
 	if (currentEntity) {
 		var data = {
-				name : "<新分类>",
-				parentAccountId : currentEntity.get("id"),
+				name : "<新部门>",
+				parentDeptId : currentEntity.get("id"),
 				sortFlag:0
 			};
 //		currentEntity.createChild("child", data);
 		//插入
 		currentEntity.get("child").insert(data,"before");
 	} else {
-		//dsAccounts.getData().createChild({name:"<新分类>"});
-		dsAccounts.getData().insert({name:"<新分类>",sortFlag:0},"before");
+		//dsDepts.getData().createChild({name:"<新部门>"});
+		dsDepts.getData().insert({name:"<新部门>",sortFlag:0},"before");
 	}
-	var currentNode = dataTreeAccount.get("currentNode");
+	var currentNode = dataTreeDept.get("currentNode");
 	if (currentNode) {
 		currentNode.expandAsync();
 	}
@@ -165,27 +121,26 @@ function refreshActions() {
 };
 
 //@Bind #actionRemove.onExecute
-!function(dsAccounts) {
-	var currentEntity = dsAccounts.getData("!CURRENT_ACCOUNT");
+!function(dsDepts) {
+	var currentEntity = dsDepts.getData("!CURRENT_DEPT");
 	if (currentEntity) {
-	  view.id("ajaxActionCheckAccountChildren").set("parameter", currentEntity.get("id")).execute(function(count) {
-	    if (count > 0) {
-	      dorado.MessageBox.alert("请先删除子分类");
+		if (currentEntity.get("hasChild")) {
+		      dorado.MessageBox.alert("请先删除子部门");
+		      return false;
 	    } else {
 	      currentEntity.remove();        
 	    }
-	  });
 	}
 };
 
 //@Bind #actionMove.onExecute
-!function(dialogSelectAccount) {
-	dialogSelectAccount.show();
+!function(dialogSelectDept) {
+	dialogSelectDept.show();
 };
 
 // @Bind #actionCancel.onExecute
-!function(dsAccounts) {
-	var entity = dsAccounts.getData("!CURRENT_ACCOUNT");
+!function(dsDepts) {
+	var entity = dsDepts.getData("!CURRENT_DEPT");
 	if (entity) {
 		entity.cancel();
 	}
@@ -197,58 +152,38 @@ function refreshActions() {
 	refreshActions();
 };
 
-// @Bind #dataTreeAccount.onCurrentChange
-!function(self, arg) {
-	view.id("cardbook").set("currentControl", 1);
-	refreshActions();
-
-};
-
-//打印
-// @Bind #printBtn.onClick
-!function(self, arg) {
-	$("#d_recordDataGrid").printArea();
-};
-
-//日期选择不能选择将来时间
-//@Bind #dateDropDown1.onFilterDate
-!function(self, arg) {
-    if (arg.date>new Date()) {
-        arg.selectable = false;
-    }
-};
 
 //@Bind #buttonOk.onClick
-!function(selectDataTreeAccount, dataTreeAccount, dialogSelectAccount) {
-	//用户选择的分类
-	var account = selectDataTreeAccount.get("currentNode.data");
-	if (!account) {
-		dorado.MessageBox.alert("请选择一个有效的分类。");
+!function(selectDataTreeDept, dataTreeDept, dialogSelectDept) {
+	//用户选择的部门
+	var dept = selectDataTreeDept.get("currentNode.data");
+	if (!dept) {
+		dorado.MessageBox.alert("请选择一个有效的部门。");
 		return;
 	}
-	//要移动的分类
-	var currentAccountNode = dataTreeAccount.get("currentNode");
-	if(account == currentAccountNode.get("data")){
+	//要移动的部门
+	var currentDeptNode = dataTreeDept.get("currentNode");
+	if(dept == currentDeptNode.get("data")){
 		dorado.MessageBox.alert("不能选择自己。");
 		return;
 	}
 	//不能parent
-	var parentCurrentAccountNode = currentAccountNode.get("parent");
-	if(account == parentCurrentAccountNode.get("data")){
-		dorado.MessageBox.alert("不能选择自己的父分类。");
+	var parentCurrentDeptNode = currentDeptNode.get("parent");
+	if(dept == parentCurrentDeptNode.get("data")){
+		dorado.MessageBox.alert("不能选择自己的父部门。");
 		return;
 	}
-	var newAccount = dataTreeAccount.get("currentNode.data");
-	newAccount = newAccount.clone();
-	newAccount.set("sortFlag", 0);
-	account.get("child").insert(newAccount,"before");
-	currentAccountNode.remove();	
-	dialogSelectAccount.hide();
+	var newDept = dataTreeDept.get("currentNode.data");
+	newDept = newDept.clone();
+	newDept.set("sortFlag", 0);
+	dept.get("child").insert(newDept,"before");
+	currentDeptNode.remove();	
+	dialogSelectDept.hide();
 };
 
 // @Bind #buttonCancel.onClick
-!function(dialogSelectAccount) {
-	dialogSelectAccount.hide();
+!function(dialogSelectDept) {
+	dialogSelectDept.hide();
 };
 
 

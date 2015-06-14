@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
 import com.bstek.dorado.data.provider.Page;
+import com.dosola.core.common.DosolaUtil;
 import com.dosola.core.dao.base.AbstractDao;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.dosola.core.dao.interfaces.IPojo;
@@ -155,7 +156,7 @@ public class MasterDao extends AbstractDao implements IMasterDao {
         Session session = null;
         try {
         	session = this.getSession();
-            String countHql = "SELECT COUNT(*) " + hql;
+            String countHql =  DosolaUtil.getCountHQL(hql);
             Query query = session.createQuery(countHql);
             query = this.setParameter(query, params);
             objectCount =((Long)query.uniqueResult()).intValue();

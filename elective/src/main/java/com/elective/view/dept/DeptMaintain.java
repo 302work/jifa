@@ -3,6 +3,7 @@
  */
 package com.elective.view.dept;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,11 +12,16 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.bdf2.core.exception.NoneLoginException;
+import com.bstek.bdf2.core.security.UserShaPasswordEncoder;
+import com.bstek.bdf2.core.service.IDeptService;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.entity.EntityState;
@@ -35,23 +41,28 @@ public class DeptMaintain {
 	@Resource
     private IMasterDao dao;
 	
-	@SuppressWarnings("unchecked")
+	@Resource(name=IDeptService.BEAN_ID)
+	private IDeptService deptService;
+	
+	@Resource(name= UserShaPasswordEncoder.BEAN_ID)
+    private PasswordEncoder passwordEncoder;
+	
 	@DataProvider
     public List<Dept> getDeptsByParentId(String deptId){
-        Map<String,Object> params = new HashMap<String,Object>();
-        String hql = "From "+ Dept.class.getName()+" where 1=1 ";
-        if(deptId==null){
-            hql += " and (parentId='' or parentId is null) ";
-        }else{
-            hql += " and parentId=:parentId ";
-            params.put("parentId",deptId);
+		IUser user = ContextHolder.getLoginUser();
+        if (user == null) {
+            throw new NoneLoginException("Please login first");
         }
-        hql += " order by sortFlag ";
-        List<Dept> list = (List<Dept>)dao.query(hql,params);
-        for (Dept dept : list) {
-			dept.setHasChild(hasChild(dept));
-		}
-        return list;
+        List<IDept> list = deptService.loadDeptsByParentId(deptId, user.getCompanyId());
+        List<Dept> depts = new ArrayList<Dept>();
+        if(list!=null && list.size()>0){
+        	for (IDept idept : list) {
+    			Dept dept = (Dept)idept;
+            	dept.setHasChild(hasChild(dept));
+            	depts.add(dept);
+    		}
+        }
+        return depts;
     }
 	
     
@@ -71,7 +82,7 @@ public class DeptMaintain {
      * @param accountId
      * @return
      */
-    public boolean hasChild(Dept dept){
+    private boolean hasChild(Dept dept){
         String hql = "from "+Dept.class.getName()+" where parentId=:deptId ";
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("deptId",dept.getId());
@@ -82,7 +93,7 @@ public class DeptMaintain {
      * @param accountId
      * @return
      */
-    public boolean hasUser(Dept dept){
+    private boolean hasUser(Dept dept){
         String hql = "from "+DeptUser.class.getName()+" where deptId=:deptId ";
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("deptId",dept.getId());
@@ -94,7 +105,9 @@ public class DeptMaintain {
      * @param dept
      */
     private void doSaveOrUpdateDept(String parentId,Dept dept){
-    	String userName = ContextHolder.getLoginUser().getUsername();
+    	IUser user = ContextHolder.getLoginUser();
+    	String userName = user.getUsername();
+    	String companyId = user.getCompanyId();
     	EntityState state = EntityUtils.getState(dept);
     	//不是none并且不是delete
     	if(EntityState.isVisibleDirty(state)){
@@ -111,6 +124,7 @@ public class DeptMaintain {
     	}else if (EntityState.NEW.equals(state)) {
 			dept.setCrTime(new Date());
 			dept.setCrUser(userName);
+			dept.setCompanyId(companyId);
 			newDept = dao.saveOrUpdate(dept).get(0);
 		}else if (EntityState.MODIFIED.equals(state)
 				|| EntityState.MOVED.equals(state)) {
@@ -132,8 +146,8 @@ public class DeptMaintain {
     	//用户
     	List<User> users = EntityUtils.getValue(dept, "users");
     	if(users!=null && users.size()>0){
-    		for (User user : users) {
-				doSaveOrUpdateUser(deptId,user);
+    		for (User user2 : users) {
+				doSaveOrUpdateUser(deptId,user2);
 			}
     	}
     	
@@ -146,19 +160,28 @@ public class DeptMaintain {
      */
 	private void doSaveOrUpdateUser(String deptId, User user) {
 		EntityState state = EntityUtils.getState(user);
-		String userName = ContextHolder.getLoginUser().getUsername();
+		IUser user2 = ContextHolder.getLoginUser();
+    	String userName = user2.getUsername();
+    	String companyId = user2.getCompanyId();
 		//先删除关联关系
 		String hql = "delete from "+DeptUser.class.getName()+" where userId=:userId and deptId=:deptId";
 		Map<String,Object> params = new HashMap<String,Object>();
         params.put("userId",user.getId());
-        params.put("deptId",user.getId());
+        params.put("deptId",deptId);
         dao.executeHQL(hql, params);
         
 		if(EntityState.NEW.equals(state)){
 			user.setCrTime(new Date());
 			user.setCrUser(userName);
 			user.setEnabled(true);
-			dao.saveOrUpdate(user);
+			user.setCompanyId(companyId);
+			//默认密码654321
+			String salt = String.valueOf(RandomUtils.nextInt(100));
+			String password = passwordEncoder.encodePassword(User.defaultPassword, salt);
+			user.setPassword(password);
+			user.setSalt(salt);
+			
+			user = dao.saveOrUpdate(user).get(0);
 			
 			DeptUser du = new DeptUser();
 			du.setDeptId(deptId);

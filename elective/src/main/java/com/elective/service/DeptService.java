@@ -66,12 +66,18 @@ public class DeptService implements IDeptService{
     @SuppressWarnings("unchecked")
 	@Override
     public List<IDept> loadDeptsByParentId(String parentId,String companyId) {
-        if(StringUtils.isEmpty(parentId) || StringUtils.isEmpty(companyId)){
+        if(StringUtils.isEmpty(companyId)){
             return null;
         }
-        String hql = "From "+Dept.class.getName()+" where parentId=:parentId and companyId=:companyId";
+        String hql = "From "+Dept.class.getName()+" where companyId=:companyId";
         Map<String,Object> params = new HashMap<>();
-        params.put("parentId",parentId);
+        if(parentId==null){
+            hql += " and  parentId is null ";
+        }else{
+            hql += " and parentId=:parentId ";
+            params.put("parentId",parentId);
+        }
+        hql += " order by sortFlag ";
         params.put("companyId",companyId);
         return (List<IDept>)dao.query(hql,params);
     }

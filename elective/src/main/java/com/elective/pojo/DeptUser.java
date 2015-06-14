@@ -25,6 +25,14 @@ public class DeptUser implements IPojo {
 
     @Column(length=60,nullable=false)
     private String deptId;
+    
+    @ManyToOne
+   	@JoinColumn(name = "userId", updatable = false, insertable = false)
+   	private User user;
+    
+    @ManyToOne
+   	@JoinColumn(name = "deptId", updatable = false, insertable = false)
+   	private Dept dept;
 
     public Long getId() {
         return id;
@@ -49,4 +57,21 @@ public class DeptUser implements IPojo {
     public void setDeptId(String deptId) {
         this.deptId = deptId;
     }
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Dept getDept() {
+		return dept;
+	}
+
+	public void setDept(Dept dept) {
+		this.dept = dept;
+	}
+    
 }

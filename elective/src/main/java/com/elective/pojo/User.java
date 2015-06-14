@@ -23,6 +23,9 @@ import java.util.Map;
 public class User extends AbstractUser implements IPojo {
 
     public static final String TABLENAME = "e_user";
+    
+    //默认密码
+    public static final String defaultPassword = "654321";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

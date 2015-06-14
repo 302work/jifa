@@ -42,14 +42,15 @@ public class UserService implements IUserService{
     @Override
     public void loadPageUsers(Page<IUser> page, String companyId, Criteria criteria) {
         StringBuilder sb = new StringBuilder();
-        sb.append( " From "+ User.class.getName() +" as u where 1=1 ");
+        sb.append( " From "+ User.class.getName() +" as u where companyId=:companyId ");
         ParseResult result = SqlKit.parseCriteria(criteria,true,"u");
         String orderSql = SqlKit.buildOrderSql(criteria,"u");
         Map<String,Object> params = new HashMap<String, Object>();
+        params.put("companyId", companyId);
         if(result!=null){
             sb.append(" AND ");
             sb.append(result.getAssemblySql());
-            params = result.getValueMap();
+            params.putAll(result.getValueMap());
         }
         if(StringUtils.isEmpty(orderSql)){
             sb.append(" ORDER BY crTime desc");
@@ -90,7 +91,7 @@ public class UserService implements IUserService{
         int salt = RandomUtils.nextInt(1000);
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("password",passwordEncoder.encodePassword(newPassword, salt));
-        params.put("salt",salt);
+        params.put("salt",salt+"");
         params.put("username",username);
         dao.executeHQL(hql,params);
     }
