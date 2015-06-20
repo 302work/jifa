@@ -40,7 +40,7 @@ public class RecordService {
     	Long[] aIds = getChildAccountIds(accountId);
         StringBuilder sb = new StringBuilder();
         sb.append( " From "+ Record.class.getName() +" where accountId in (:accountIds) and isDeleted=:isDeleted ");
-        ParseResult result = SqlKit.parseCriteria(criteria,true,null);
+        ParseResult result = SqlKit.parseCriteria(criteria,true,null,false);
         String orderSql = SqlKit.buildOrderHql(criteria,null);
         Map<String,Object> params = new HashMap<String, Object>();
         if(result!=null){

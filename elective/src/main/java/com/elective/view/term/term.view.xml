@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="Term" parent="dataTypeTerm"/>
+  </Model>
+  <View>
+    <Property name="title">Term信息维护</Property>
+    <DataSet id="dataSetTerm">
+      <Property name="dataProvider">termPR#queryTerm</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[Term]</Property>
+    </DataSet>
+    <UpdateAction id="actionUpdate">
+      <Property name="successMessage">保存成功!</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="dataResolver">termPR#saveTerm</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetTerm</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dataSetTerm</Property>
+        <Property name="itemCodes">pages,+,x</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="caption">保存</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        <Property name="action">actionUpdate</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetTerm</Property>
+      <Property name="dataType">Term</Property>
+      <Property name="filterMode">serverSide</Property>
+      <Property name="sortMode">serverSide</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+      </DataColumn>
+      <DataColumn name="year">
+        <Property name="property">year</Property>
+      </DataColumn>
+      <DataColumn name="type">
+        <Property name="property">type</Property>
+        <Property name="editable">false</Property>
+      </DataColumn>
+      <DataColumn name="startTime">
+        <Property name="property">startTime</Property>
+        <Property name="editable">false</Property>
+      </DataColumn>
+      <DataColumn name="endTime">
+        <Property name="property">endTime</Property>
+        <Property name="editable">false</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

@@ -8,6 +8,7 @@ import com.bstek.bdf2.core.model.Role;
 import com.dosola.core.dao.interfaces.IPojo;
 
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class User extends AbstractUser implements IPojo {
     private String cname;
 
     @Column(nullable=false)
-    private boolean enabled=true;
+    private boolean enabled;
 
     @Column(length=20)
     private String mobile;
@@ -69,6 +70,9 @@ public class User extends AbstractUser implements IPojo {
 
     @Column
     private String remark;//备注
+    
+    @Column(length = 1,columnDefinition="tinyint default 0",nullable = false)
+    private Boolean isDeleted;//是否删除了
 
     @Transient
     private List<IPosition> positions;
@@ -255,4 +259,12 @@ public class User extends AbstractUser implements IPojo {
         this.remark = remark;
     }
 
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+    
 }

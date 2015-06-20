@@ -40,11 +40,11 @@ public class Dept implements IDept,IPojo {
     @Column(nullable = false, length = 60)
     private String crUser;//创建人
 
-    @Column(length=60,nullable=false)
+    @Column(length = 60,nullable = false)
     private String companyId;
 
-    @Column(nullable=false)
-    private boolean enabled=true;//是否可用
+    @Column(nullable = false)
+    private Integer type;//类型，1为普通，2为已毕业
 
     @Column
     private Integer sortFlag;//排序标志
@@ -55,6 +55,9 @@ public class Dept implements IDept,IPojo {
 
     @Column
     private String parentId;//父部门id
+    
+    @Column(length = 1,columnDefinition="tinyint default 0",nullable = false)
+    private Boolean isDeleted;//是否删除了
 
     
     @Transient
@@ -158,15 +161,15 @@ public class Dept implements IDept,IPojo {
 
     public void setUsers(List<IUser> users) {
         this.users = users;
-    }
+    }  
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+	public Integer getType() {
+		return type;
+	}
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
 	public Boolean getHasChild() {
 		return hasChild;
@@ -174,6 +177,14 @@ public class Dept implements IDept,IPojo {
 
 	public void setHasChild(Boolean hasChild) {
 		this.hasChild = hasChild;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
     
 }

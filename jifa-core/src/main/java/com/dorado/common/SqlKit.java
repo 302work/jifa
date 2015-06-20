@@ -9,6 +9,7 @@ import com.bstek.dorado.data.provider.filter.SingleValueFilterCriterion;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
@@ -27,11 +28,13 @@ public class SqlKit {
 	 *            在接装查询条件时是否采用参数名
 	 * @param alias
 	 *            别名字符串
+	 * @param isSql
+	 *            是否是原生sql
 	 * @return 
 	 *         ParseResult对象，其中包含解析生成SQL拼装对象以及查询条件的值对象Map,其中key为查询字段名,value为具体条件值
 	 */
 	public static ParseResult parseCriteria(Criteria criteria,
-			boolean useParameterName, String alias) {
+			boolean useParameterName, String alias,boolean isSql) {
 		int parameterNameCount = 0;
 		if (criteria == null || criteria.getCriterions().size() == 0) {
 			return null;
@@ -48,25 +51,22 @@ public class SqlKit {
 			}
 			count++;
 			parameterNameCount = buildCriterion(sb, c, valueMap,valueList,
-					parameterNameCount, useParameterName, alias);
+					parameterNameCount, useParameterName, alias,isSql);
 		}
 		return result;
 	}
 
 	private static int buildCriterion(StringBuffer sb, Criterion c,
 			Map<String, Object> valueMap,List<Object> valueList, int parameterNameCount,
-			boolean useParameterName, String alias) {
+			boolean useParameterName, String alias,boolean isSql) {
 		
 		if (c instanceof SingleValueFilterCriterion) {
 			parameterNameCount++;
 			SingleValueFilterCriterion fc = (SingleValueFilterCriterion) c;
 			String operator = buildOperator(fc.getFilterOperator());
-			String propertyName = fc.getProperty();
-			if (StringUtils.isNotEmpty(alias)) {
-				sb.append(" " + alias + "." + propertyName);
-			} else {
-				sb.append(" " + propertyName);
-			}
+			String propertyName = buildPropertyName(fc.getProperty(),alias,isSql);
+			sb.append(" " + propertyName);
+			
 			sb.append(" " + processLike(operator) + " ");
 			String paramName = fc.getProperty();
 			if (paramName.indexOf(".") != -1) {
@@ -109,12 +109,42 @@ public class SqlKit {
 					count++;
 					parameterNameCount = buildCriterion(sb, criterion,
 							valueMap,valueList, parameterNameCount, useParameterName,
-							alias);
+							alias,isSql);
 				}
 				sb.append(" ) ");
 			}
 		}
 		return parameterNameCount;
+	}
+
+	private static String buildPropertyName(String propertyName, String alias,
+			boolean isSql) {
+		//如果是hql
+		if(!isSql){
+			if (StringUtils.isNotEmpty(alias)) {
+				return alias + "." + propertyName;
+			} else {
+				return propertyName;
+			}
+		}
+		//是否存在关联的其他参数
+		int index = propertyName.indexOf(".");//1
+		//列名是否已转义
+		boolean flag = propertyName.indexOf("`")!=-1;//true
+		if(index==-1 && StringUtils.isNotEmpty(alias)){
+			propertyName = alias+"."+propertyName;
+		}
+		index = propertyName.indexOf(".");//1
+		if(flag){
+			return propertyName;
+		}
+		if(index!=-1){
+			String ali = propertyName.substring(0,index);//t
+			String name = propertyName.substring(index+1);//`name`
+			return ali+".`"+name+"`";//t.`name`
+		}else{
+			return "`"+propertyName+"`";//`name`
+		}
 	}
 
 	protected static String buildOperator(FilterOperator filterOperator) {
@@ -154,14 +184,27 @@ public class SqlKit {
 			if (num > 0) {
 				orderSb.append(" , ");
 			}
-			if (StringUtils.isNotEmpty(alias)) {
-				orderSb.append(" " + alias + ".`" + order.getProperty() + "` "
-						+ (order.isDesc() ? "desc" : "asc") + " ");
-			} else {
-				orderSb.append(" `" + order.getProperty() + "` "
-						+ (order.isDesc() ? "desc" : "asc") + " ");
+			String pp = order.getProperty();//假设是t.`name`
+			String da = order.isDesc() ? "desc" : "asc";//假设是desc
+			//是否存在关联的其他参数
+			int index = pp.indexOf(".");//1
+			//列名是否已转义
+			boolean flag = pp.indexOf("`")!=-1;//true
+			if(index==-1 && StringUtils.isNotEmpty(alias)){
+				pp = alias+"."+pp;
 			}
-
+			index = pp.indexOf(".");//1
+			if(flag){
+				orderSb.append(pp+" "+da);//t.`name` desc
+				continue;
+			}
+			if(index!=-1){
+				String ali = pp.substring(0,index);//t
+				String name = pp.substring(index+1);//`name`
+				orderSb.append(ali+".`"+name+"` "+da);//t.`name` desc
+			}else{
+				orderSb.append("`"+pp+"` "+da);//`name` desc
+			}
 		}
 		return orderSb.toString();
 	}

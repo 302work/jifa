@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="Course">
+      <PropertyDef name="name">
+        <Property name="dataType">String</Property>
+        <Property name="label">课程名称</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="intro">
+        <Property name="dataType">String</Property>
+        <Property name="label">课程介绍</Property>
+      </PropertyDef>
+      <PropertyDef name="num">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">每班限报人数</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="total">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">总限报人数</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="teacherId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="termId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="classroomId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="deptIds">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="homework">
+        <Property></Property>
+        <Property name="label">家庭作业</Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="crTime">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="crUser">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+      </PropertyDef>
+      <PropertyDef name="teacherName">
+        <Property name="dataType">String</Property>
+        <Property name="label">开课老师</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="termName">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属学期</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="classroomName">
+        <Property name="dataType">String</Property>
+        <Property name="label">上课教室</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="deptNames">
+        <Property name="dataType">String</Property>
+        <Property name="label">年级限制</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="isEnable">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">是否可用</Property>
+        <Property name="defaultValue">1</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">启用</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">未启用</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+      <PropertyDef name="isAudit">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">状态</Property>
+        <Property name="defaultValue">2</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">审核通过</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">未审核</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">审核未通过</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Property name="title">Course信息维护</Property>
+    <Property name="packages">font-awesome</Property>
+    <DataSet id="dataSetCourse">
+      <Property name="dataProvider">coursePR#queryCourses</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[Course]</Property>
+    </DataSet>
+    <DataSet id="dataSetTerm">
+      <Property name="dataType">[dataTypeTerm]</Property>
+      <Property name="dataProvider">termPR#queryTerms</Property>
+    </DataSet>
+    <DataSet id="dataSetUser">
+      <Property name="dataType">[dataTypeUser]</Property>
+      <Property name="dataProvider">userMaintain#queryTeachers</Property>
+    </DataSet>
+    <DataSet id="dataSetClassroom">
+      <Property name="dataProvider">classroomMaintain#queryClassrooms</Property>
+      <Property name="dataType">[dataTypeClassroom]</Property>
+    </DataSet>
+    <UpdateAction id="actionUpdate">
+      <Property name="successMessage">保存成功!</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="dataResolver">coursePR#saveCourse</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetCourse</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var datas = view.get(&quot;#dataSetCourse.data&quot;);&#xD;
+var action = view.get(&quot;#actionUpdate&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:{&#xD;
+		datas.insert();&#xD;
+		view.get(&quot;#dialogCourse&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	}&#xD;
+	case &quot;-&quot;:{&#xD;
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){&#xD;
+			datas.remove();&#xD;
+			actionUpdate.execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	}&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dataSetCourse</Property>
+        <Property name="itemCodes">pages,+,-,x</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data=view.get(&quot;#dataSetCourse.data&quot;);&#xD;
+if(data.current){&#xD;
+	view.get(&quot;#dialogCourse&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;当前表没有信息可供编辑!&quot;);&#xD;
+}</ClientEvent>
+        <Property name="caption">修改</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetCourse</Property>
+      <Property name="dataType">Course</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="sortMode">serverSide</Property>
+      <Property name="showFilterBar">true</Property>
+      <Property name="filterMode">serverSide</Property>
+      <DataColumn name="termName">
+        <Property name="property">termName</Property>
+      </DataColumn>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+      </DataColumn>
+      <DataColumn name="intro">
+        <Property name="property">intro</Property>
+      </DataColumn>
+      <DataColumn name="teacherName">
+        <Property name="property">teacherName</Property>
+      </DataColumn>
+      <DataColumn name="classroomName">
+        <Property name="property">classroomName</Property>
+      </DataColumn>
+      <DataColumn name="deptNames">
+        <Property name="property">deptNames</Property>
+      </DataColumn>
+      <DataColumn name="num">
+        <Property name="property">num</Property>
+      </DataColumn>
+      <DataColumn name="total">
+        <Property name="property">total</Property>
+      </DataColumn>
+      <DataColumn name="isAudit">
+        <Property name="property">isAudit</Property>
+      </DataColumn>
+      <DataColumn name="isEnable">
+        <Property name="property">isEnable</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+    </DataGrid>
+    <Dialog id="dialogCourse">
+      <Property name="center">true</Property>
+      <Property name="width">480</Property>
+      <Property name="height">510</Property>
+      <Property name="modal">true</Property>
+      <Property name="closeable">false</Property>
+      <Property name="caption">课程添加/编辑</Property>
+      <Property name="iconClass">fa fa-pencil-square-o</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var dialog=view.get(&quot;#dialogCourse&quot;);&#xD;
+var action=view.get(&quot;#actionUpdate&quot;);&#xD;
+action.execute(function(){&#xD;
+	dialog.hide();&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">var data=view.get(&quot;#dataSetCourse&quot;).getData();&#xD;
+var dialog=view.get(&quot;#dialogCourse&quot;);&#xD;
+data.cancel();&#xD;
+dialog.hide();</ClientEvent>
+          <Property name="caption">取消</Property>
+          <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetCourse</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement>
+            <Property name="name">termName</Property>
+            <Property name="property">termName</Property>
+            <Property name="trigger">termDSDD</Property>
+            <Property name="editable">false</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement name="name">
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement name="intro">
+            <Property name="name">intro</Property>
+            <Property name="property">intro</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement name="num">
+            <Property name="name">num</Property>
+            <Property name="property">num</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement name="total">
+            <Property name="name">total</Property>
+            <Property name="property">total</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">teacherName</Property>
+            <Property name="property">teacherName</Property>
+            <Property name="editable">false</Property>
+            <Property name="trigger">teacherDSDD</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">classroomName</Property>
+            <Property name="property">classroomName</Property>
+            <Property name="trigger">classroomDSDD</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deptNames</Property>
+            <Property name="property">deptNames</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Property name="editorType">TextArea</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <DataSetDropDown id="termDSDD">
+      <Property name="dataSet">dataSetTerm</Property>
+      <Property name="displayProperty">name</Property>
+      <Property name="assignmentMap">termName=name,termId=id</Property>
+      <Property name="autoOpen">true</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="teacherDSDD">
+      <Property name="dataSet">dataSetUser</Property>
+      <Property name="autoOpen">true</Property>
+      <Property name="assignmentMap">teacherName=cname,teacherId=id</Property>
+      <Property name="displayProperty">cname</Property>
+    </DataSetDropDown>
+    <DataSetDropDown id="classroomDSDD">
+      <Property name="autoOpen">true</Property>
+      <Property name="dataSet">dataSetClassroom</Property>
+      <Property name="displayProperty">name</Property>
+      <Property name="assignmentMap">classroomName=name,classroomId=id</Property>
+    </DataSetDropDown>
+  </View>
+</ViewConfig>

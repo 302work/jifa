@@ -56,17 +56,13 @@ public class Course implements IPojo {
     private Integer total;//总人数限制
 
     @Column(length=100)
-    private String deptId;//年级限制
+    private String deptIds;//年级限制
     
-    @ManyToOne
-   	@JoinColumn(name = "deptId", updatable = false, insertable = false)
-   	private Dept dept;//年级限制
-
     @Column(length = 1,columnDefinition="tinyint default 1")
-    private Boolean isEnable = true;//是否可用，默认可用
+    private Integer isEnable;//是否可用，1为可用，2为不可用
 
     @Column(length = 1,columnDefinition="tinyint default 0")
-    private Boolean isAudit = false;//是否已审核，默认未审核
+    private Integer isAudit;//是否已审核，1为已审核，2为未审核，3为审核未通过
 
     @Column(length=4000)
     private String homework;//家庭作业
@@ -76,6 +72,9 @@ public class Course implements IPojo {
 
     @Column(nullable = false,length=60)
     private String crUser;//创建人
+    
+    @Column
+    private String remark;//备注
 
     public Long getId() {
         return id;
@@ -141,14 +140,6 @@ public class Course implements IPojo {
         this.crUser = crUser;
     }
 
-    public Boolean getIsEnable() {
-        return isEnable;
-    }
-
-    public void setIsEnable(Boolean isEnable) {
-        this.isEnable = isEnable;
-    }
-
     public Long getTeacherId() {
         return teacherId;
     }
@@ -157,12 +148,12 @@ public class Course implements IPojo {
         this.teacherId = teacherId;
     }
 
-    public String getDeptId() {
-        return deptId;
+    public String getDeptIds() {
+        return deptIds;
     }
 
-    public void setDeptId(String deptId) {
-        this.deptId = deptId;
+    public void setDeptIds(String deptIds) {
+        this.deptIds = deptIds;
     }
 
     public String getHomework() {
@@ -171,14 +162,6 @@ public class Course implements IPojo {
 
     public void setHomework(String homework) {
         this.homework = homework;
-    }
-
-    public Boolean getIsAudit() {
-        return isAudit;
-    }
-
-    public void setIsAudit(Boolean isAudit) {
-        this.isAudit = isAudit;
     }
 
 	public Integer getTotal() {
@@ -213,12 +196,28 @@ public class Course implements IPojo {
 		this.classroom = classroom;
 	}
 
-	public Dept getDept() {
-		return dept;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setDept(Dept dept) {
-		this.dept = dept;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
-    
+
+	public Integer getIsEnable() {
+		return isEnable;
+	}
+
+	public void setIsEnable(Integer isEnable) {
+		this.isEnable = isEnable;
+	}
+
+	public Integer getIsAudit() {
+		return isAudit;
+	}
+
+	public void setIsAudit(Integer isAudit) {
+		this.isAudit = isAudit;
+	}
+	
 }

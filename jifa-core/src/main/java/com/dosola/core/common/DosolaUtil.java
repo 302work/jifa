@@ -6,6 +6,7 @@ package com.dosola.core.common;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.beans.BeanInfo;
@@ -76,6 +77,46 @@ public class DosolaUtil {
 		Matcher m = p.matcher(code);
 		return m.matches();
 	}
+	
+	/**
+	 * 将一个 Map 对象转化为一个 JavaBean
+	 * 
+	 * @param obj
+	 *            要转化的对象
+	 * @param map
+	 *            包含属性值的 map
+	 * @return 转化出来的 JavaBean 对象
+	 * @throws IntrospectionException
+	 *             如果分析类属性失败
+	 * @throws IllegalAccessException
+	 *             如果实例化 JavaBean 失败
+	 * @throws InstantiationException
+	 *             如果实例化 JavaBean 失败
+	 * @throws InvocationTargetException
+	 *             如果调用属性的 setter 方法失败
+	 */
+	@SuppressWarnings("rawtypes")
+	public static Object convertMap(Object obj, Map map) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException{
+		BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass()); // 获取类属性
+		// 给 JavaBean 对象的属性赋值
+		PropertyDescriptor[] propertyDescriptors = beanInfo
+				.getPropertyDescriptors();
+		for (int i = 0; i < propertyDescriptors.length; i++) {
+			PropertyDescriptor descriptor = propertyDescriptors[i];
+			String propertyName = descriptor.getName();
+
+			if (map.containsKey(propertyName)) {
+				// 下面一句可以 try 起来，这样当一个属性赋值失败的时候就不会影响其他属性赋值。
+				Object value = map.get(propertyName);
+
+				Object[] args = new Object[1];
+				args[0] = value;
+
+				descriptor.getWriteMethod().invoke(obj, args);
+			}
+		}
+		return obj;
+	}
 
 	/**
 	 * 将一个 Map 对象转化为一个 JavaBean
@@ -98,27 +139,8 @@ public class DosolaUtil {
 	public static Object convertMap(Class type, Map map)
 			throws IntrospectionException, IllegalAccessException,
 			InstantiationException, InvocationTargetException {
-		BeanInfo beanInfo = Introspector.getBeanInfo(type); // 获取类属性
 		Object obj = type.newInstance(); // 创建 JavaBean 对象
-
-		// 给 JavaBean 对象的属性赋值
-		PropertyDescriptor[] propertyDescriptors = beanInfo
-				.getPropertyDescriptors();
-		for (int i = 0; i < propertyDescriptors.length; i++) {
-			PropertyDescriptor descriptor = propertyDescriptors[i];
-			String propertyName = descriptor.getName();
-
-			if (map.containsKey(propertyName)) {
-				// 下面一句可以 try 起来，这样当一个属性赋值失败的时候就不会影响其他属性赋值。
-				Object value = map.get(propertyName);
-
-				Object[] args = new Object[1];
-				args[0] = value;
-
-				descriptor.getWriteMethod().invoke(obj, args);
-			}
-		}
-		return obj;
+		return convertMap(obj, map);
 	}
 
 	/**

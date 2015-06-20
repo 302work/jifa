@@ -42,9 +42,10 @@ public class DeptService implements IDeptService{
         sb.append(Dept.TABLENAME+" as d join ");
         sb.append(DeptUser.TABLENAME+" as du on d.id=du.deptId join ");
         sb.append(User.TABLENAME+" as u on u.id=du.userId");
-        sb.append(" where u.username=:username ");
+        sb.append(" where u.username=:username and d.isDeleted=:isDeleted ");
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("username",username);
+        params.put("isDeleted", false);
         List<Map<String,Object>> list = dao.queryBySql(sb.toString(),params);
         try {
             List<IDept> depts = new ArrayList<IDept>();
@@ -69,8 +70,9 @@ public class DeptService implements IDeptService{
         if(StringUtils.isEmpty(companyId)){
             return null;
         }
-        String hql = "From "+Dept.class.getName()+" where companyId=:companyId";
+        String hql = "From "+Dept.class.getName()+" where companyId=:companyId and isDeleted=:isDeleted";
         Map<String,Object> params = new HashMap<>();
+        params.put("isDeleted", false);
         if(parentId==null){
             hql += " and  parentId is null ";
         }else{

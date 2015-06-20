@@ -8,6 +8,8 @@
     <PropertyDef name="isEnable">
       <Property name="dataType">Boolean</Property>
       <Property name="label">是否可用</Property>
+      <Property name="defaultValue">true</Property>
+      <Property name="required">true</Property>
     </PropertyDef>
     <PropertyDef name="remark">
       <Property name="dataType">String</Property>
@@ -20,6 +22,7 @@
     <PropertyDef name="name">
       <Property name="dataType">String</Property>
       <Property name="label">名称</Property>
+      <Property name="required">true</Property>
     </PropertyDef>
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
@@ -34,12 +37,46 @@
   <DataType name="dataTypeCourse">
     <Property name="creationType">com.elective.pojo.Course</Property>
     <PropertyDef name="isEnable">
-      <Property name="dataType">Boolean</Property>
-      <Property name="label">是否可选</Property>
+      <Property name="dataType">Integer</Property>
+      <Property name="label">是否可用</Property>
+      <Property name="defaultValue">1</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">启用</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">未启用</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
     </PropertyDef>
     <PropertyDef name="isAudit">
-      <Property name="dataType">Boolean</Property>
-      <Property name="label">是否审核</Property>
+      <Property name="dataType">Integer</Property>
+      <Property name="label">状态</Property>
+      <Property name="defaultValue">2</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">审核通过</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">未审核</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">3</Property>
+              <Property name="value">审核未通过</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
     </PropertyDef>
     <PropertyDef name="classroomId">
       <Property name="dataType">Long</Property>
@@ -98,10 +135,24 @@
     <PropertyDef name="parentId">
       <Property name="dataType">String</Property>
     </PropertyDef>
-    <PropertyDef name="enabled">
-      <Property name="dataType">boolean</Property>
-      <Property name="label">是否可用</Property>
-      <Property name="defaultValue">true</Property>
+    <PropertyDef name="type">
+      <Property name="dataType">Integer</Property>
+      <Property name="label">类型</Property>
+      <Property name="defaultValue">1</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">1</Property>
+              <Property name="value">普通</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">2</Property>
+              <Property name="value">已毕业</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
     </PropertyDef>
     <PropertyDef name="sortFlag">
       <Property name="dataType">Integer</Property>
@@ -167,6 +218,9 @@
     <Property name="creationType">com.elective.pojo.Term</Property>
     <PropertyDef name="startTime">
       <Property name="dataType">Date</Property>
+      <Property name="required">true</Property>
+      <Property name="displayFormat">Y-m-d</Property>
+      <Property name="label">选课开始时间</Property>
     </PropertyDef>
     <PropertyDef name="id">
       <Property name="dataType">Long</Property>
@@ -178,10 +232,12 @@
     <PropertyDef name="name">
       <Property name="dataType">String</Property>
       <Property name="label">学期名称</Property>
+      <Property name="required">true</Property>
     </PropertyDef>
     <PropertyDef name="year">
       <Property name="dataType">String</Property>
       <Property name="label">所属年份</Property>
+      <Property name="required">true</Property>
     </PropertyDef>
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
@@ -189,10 +245,32 @@
     </PropertyDef>
     <PropertyDef name="endTime">
       <Property name="dataType">Date</Property>
+      <Property name="required">true</Property>
+      <Property name="displayFormat">Y-m-d</Property>
+      <Property name="label">选课截止时间</Property>
     </PropertyDef>
     <PropertyDef name="type">
       <Property name="dataType">String</Property>
       <Property name="label">上课时间</Property>
+      <Property name="required">true</Property>
+      <Property name="mapping">
+        <Property name="mapValues">
+          <Collection>
+            <Entity>
+              <Property name="key">每周</Property>
+              <Property name="value">每周</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">隔周</Property>
+              <Property name="value">隔周</Property>
+            </Entity>
+            <Entity>
+              <Property name="key">隔两周</Property>
+              <Property name="value">隔两周</Property>
+            </Entity>
+          </Collection>
+        </Property>
+      </Property>
     </PropertyDef>
     <PropertyDef name="crUser">
       <Property name="dataType">String</Property>

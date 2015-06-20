@@ -1,6 +1,7 @@
 package com.elective.service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,11 +43,12 @@ public class UserService implements IUserService{
     @Override
     public void loadPageUsers(Page<IUser> page, String companyId, Criteria criteria) {
         StringBuilder sb = new StringBuilder();
-        sb.append( " From "+ User.class.getName() +" as u where companyId=:companyId ");
-        ParseResult result = SqlKit.parseCriteria(criteria,true,"u");
-        String orderSql = SqlKit.buildOrderSql(criteria,"u");
+        sb.append( " From "+ User.class.getName() +" as u where u.companyId=:companyId and u.isDeleted=:isDeleted ");
+        ParseResult result = SqlKit.parseCriteria(criteria,true,"u",false);
+        String orderSql = SqlKit.buildOrderHql(criteria,"u");
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("companyId", companyId);
+        params.put("isDeleted", false);
         if(result!=null){
             sb.append(" AND ");
             sb.append(result.getAssemblySql());
@@ -106,6 +108,7 @@ public class UserService implements IUserService{
         user.setCname(cname);
         user.setUsername(username);
         user.setEname(ename);
+        user.setIsDeleted(false);
         int salt = RandomUtils.nextInt(1000);
         password = passwordEncoder.encodePassword(password, salt);
         user.setPassword(password);
@@ -122,14 +125,43 @@ public class UserService implements IUserService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String hql = " From "+ User.class.getName() +" where username=:username ";
+        String hql = " From "+ User.class.getName() +" where username=:username and isDeleted=:isDeleted ";
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("username",username);
+        params.put("isDeleted", false);
         List<?> users = dao.query(hql,params);
         if(users==null || users.size()==0){
             throw new UsernameNotFoundException("User " + username
                     + " is not exist");
         }
         return (User)users.get(0);
+    }
+    /**
+     * 保存新增的用户
+     * @param user
+     */
+    public User saveUser(User user){
+    	IUser user2 = ContextHolder.getLoginUser();
+    	String userName = user2.getUsername();
+    	String companyId = user2.getCompanyId();
+    	user.setCrTime(new Date());
+		user.setCrUser(userName);
+		user.setEnabled(true);
+		user.setCompanyId(companyId);
+		//默认密码654321
+		String salt = String.valueOf(RandomUtils.nextInt(100));
+		String password = passwordEncoder.encodePassword(User.defaultPassword, salt);
+		user.setPassword(password);
+		user.setSalt(salt);
+		user.setIsDeleted(false);
+		user = dao.saveOrUpdate(user).get(0);
+		return user;
+    }
+    /**
+     * 删除用户
+     */
+    public void deleteUser(User user){
+    	user.setIsDeleted(true);
+		dao.saveOrUpdate(user);
     }
 }

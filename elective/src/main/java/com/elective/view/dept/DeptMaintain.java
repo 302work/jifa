@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +29,14 @@ import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Dept;
 import com.elective.pojo.DeptUser;
 import com.elective.pojo.User;
+import com.elective.service.UserService;
 
 /**
  * 部门维护
  * @author june
  * 2015年6月11日
  */
+@SuppressWarnings("deprecation")
 @Service
 public class DeptMaintain {
 	@Resource
@@ -46,6 +47,9 @@ public class DeptMaintain {
 	
 	@Resource(name= UserShaPasswordEncoder.BEAN_ID)
     private PasswordEncoder passwordEncoder;
+	
+	@Resource
+	private UserService userService;
 	
 	@DataProvider
     public List<Dept> getDeptsByParentId(String deptId){
@@ -83,9 +87,10 @@ public class DeptMaintain {
      * @return
      */
     private boolean hasChild(Dept dept){
-        String hql = "from "+Dept.class.getName()+" where parentId=:deptId ";
+        String hql = "from "+Dept.class.getName()+" where parentId=:deptId and isDeleted=:isDeleted ";
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("deptId",dept.getId());
+        params.put("isDeleted", false);
         return dao.queryCount(hql,params)>0;
     }
     /**
@@ -117,7 +122,8 @@ public class DeptMaintain {
     	//如果是删除
     	if (EntityState.DELETED.equals(state)) {
     		if (!hasChild(dept) && !hasUser(dept)) {
-    			dao.delete(dept);
+    			dept.setIsDeleted(true);
+    			dao.saveOrUpdate(dept);
             } else {
                 throw new RuntimeException("请先删除子部门和部门底下的用户");
             }
@@ -125,6 +131,8 @@ public class DeptMaintain {
 			dept.setCrTime(new Date());
 			dept.setCrUser(userName);
 			dept.setCompanyId(companyId);
+			dept.setIsDeleted(false);
+			dept.setType(1);
 			newDept = dao.saveOrUpdate(dept).get(0);
 		}else if (EntityState.MODIFIED.equals(state)
 				|| EntityState.MOVED.equals(state)) {
@@ -154,40 +162,24 @@ public class DeptMaintain {
     }
 
     /**
-     * 保存用户
+     * 添加删除用户
      * @param accountId
      * @param record
      */
 	private void doSaveOrUpdateUser(String deptId, User user) {
 		EntityState state = EntityUtils.getState(user);
-		IUser user2 = ContextHolder.getLoginUser();
-    	String userName = user2.getUsername();
-    	String companyId = user2.getCompanyId();
 		//先删除关联关系
 		String hql = "delete from "+DeptUser.class.getName()+" where userId=:userId and deptId=:deptId";
 		Map<String,Object> params = new HashMap<String,Object>();
         params.put("userId",user.getId());
         params.put("deptId",deptId);
         dao.executeHQL(hql, params);
-        
 		if(EntityState.NEW.equals(state)){
-			user.setCrTime(new Date());
-			user.setCrUser(userName);
-			user.setEnabled(true);
-			user.setCompanyId(companyId);
-			//默认密码654321
-			String salt = String.valueOf(RandomUtils.nextInt(100));
-			String password = passwordEncoder.encodePassword(User.defaultPassword, salt);
-			user.setPassword(password);
-			user.setSalt(salt);
-			
-			user = dao.saveOrUpdate(user).get(0);
-			
+			user = userService.saveUser(user);
 			DeptUser du = new DeptUser();
 			du.setDeptId(deptId);
 			du.setUserId(user.getId());
 			dao.saveOrUpdate(du);
-			
 		}else if(EntityState.MODIFIED.equals(state)){
 			dao.saveOrUpdate(user);
 			DeptUser du = new DeptUser();
@@ -195,7 +187,7 @@ public class DeptMaintain {
 			du.setUserId(user.getId());
 			dao.saveOrUpdate(du);
 		}else if (EntityState.DELETED.equals(state)) {
-			dao.delete(user);
+			userService.deleteUser(user);
 		}	
 	}
 }

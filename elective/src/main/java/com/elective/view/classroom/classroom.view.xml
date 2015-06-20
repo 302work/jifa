@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="Classroom" parent="dataTypeClassroom"/>
+  </Model>
+  <View>
+    <Property name="title">Classroom信息维护</Property>
+    <DataSet id="dataSetClassroom">
+      <Property name="dataProvider">classroomMaintain#queryClassroom</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[Classroom]</Property>
+    </DataSet>
+    <UpdateAction id="actionUpdate">
+      <Property name="successMessage">保存成功!</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="dataResolver">classroomMaintain#saveClassroom</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetClassroom</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <ToolBar>
+      <DataPilot>
+        <Property name="dataSet">dataSetClassroom</Property>
+        <Property name="itemCodes">pages,+,-,x</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="caption">保存</Property>
+        <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+        <Property name="action">actionUpdate</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetClassroom</Property>
+      <Property name="dataType">Classroom</Property>
+      <Property name="filterMode">serverSide</Property>
+      <Property name="showFilterBar">true</Property>
+      <Property name="sortMode">serverSide</Property>
+      <DataColumn name="name">
+        <Property name="property">name</Property>
+      </DataColumn>
+      <DataColumn name="address">
+        <Property name="property">address</Property>
+      </DataColumn>
+      <DataColumn name="isEnable">
+        <Property name="property">isEnable</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

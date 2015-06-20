@@ -130,7 +130,7 @@
               <Property name="sortMode">serverSide</Property>
               <Property name="filterMode">serverSide</Property>
               <Property name="showFilterBar">true</Property>
-              <Property name="showFooter">true</Property>
+              <Property name="showFooter">false</Property>
               <IndicatorColumn/>
               <DataColumn name="username">
                 <Property name="property">username</Property>
