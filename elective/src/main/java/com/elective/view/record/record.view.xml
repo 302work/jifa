@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="Record">
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="courseId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="studentId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="homework">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">家庭作业</Property>
+      </PropertyDef>
+      <PropertyDef name="score">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">作业评分</Property>
+      </PropertyDef>
+      <PropertyDef name="crTime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">报名时间</Property>
+        <Property name="displayFormat">Y-m-d H:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="crUser">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">报名人</Property>
+      </PropertyDef>
+      <PropertyDef name="teacherName">
+        <Property name="dataType">String</Property>
+        <Property name="label">开课老师</Property>
+      </PropertyDef>
+      <PropertyDef name="courseName">
+        <Property name="dataType">String</Property>
+        <Property name="label">课程名称</Property>
+      </PropertyDef>
+      <PropertyDef name="studentName">
+        <Property name="dataType">String</Property>
+        <Property name="label">学生</Property>
+      </PropertyDef>
+      <PropertyDef name="classroomName">
+        <Property name="dataType">String</Property>
+        <Property name="label">上课教室</Property>
+      </PropertyDef>
+      <PropertyDef name="termName">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属学期</Property>
+      </PropertyDef>
+      <PropertyDef name="courseType">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">上课时间</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">6</Property>
+                <Property name="value">单周</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">7</Property>
+                <Property name="value">双周</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Property name="title">Record信息维护</Property>
+    <Property name="packages">font-awesome</Property>
+    <DataSet id="dataSetRecord">
+      <Property name="dataProvider">recordPR#queryRecords</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[Record]</Property>
+      <Property name="parameter">
+        <Entity>
+          <Property name="type">1</Property>
+        </Entity>
+      </Property>
+    </DataSet>
+    <UpdateAction id="actionUpdate">
+      <Property name="successMessage">保存成功!</Property>
+      <Property name="executingMessage">正在保存...</Property>
+      <Property name="dataResolver">recordPR#saveRecords</Property>
+      <UpdateItem>
+        <Property name="dataSet">dataSetRecord</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <ToolBar>
+      <DataPilot>
+        <ClientEvent name="onSubControlAction">var datas = view.get(&quot;#dataSetRecord.data&quot;);&#xD;
+var action = view.get(&quot;#actionUpdate&quot;);&#xD;
+switch(arg.code){&#xD;
+	case &quot;+&quot;:{&#xD;
+		datas.insert();&#xD;
+		view.get(&quot;#dialogRecord&quot;).show();&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	}&#xD;
+	case &quot;-&quot;:{&#xD;
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){&#xD;
+			datas.remove();&#xD;
+			actionUpdate.execute();&#xD;
+		});&#xD;
+		arg.processDefault=false;&#xD;
+		break;&#xD;
+	}&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dataSetRecord</Property>
+        <Property name="itemCodes">pages</Property>
+      </DataPilot>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="caption">查看作业</Property>
+        <Property name="iconClass">fa fa-search</Property>
+      </ToolBarButton>
+    </ToolBar>
+    <DataGrid>
+      <Property name="dataSet">dataSetRecord</Property>
+      <Property name="dataType">Record</Property>
+      <Property name="readOnly">true</Property>
+      <Property name="filterMode">serverSide</Property>
+      <Property name="sortMode">serverSide</Property>
+      <Property name="showFilterBar">false</Property>
+      <DataColumn name="termName">
+        <Property name="property">termName</Property>
+      </DataColumn>
+      <DataColumn name="courseName">
+        <Property name="property">courseName</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">courseType</Property>
+        <Property name="align">left</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="teacherName">
+        <Property name="property">teacherName</Property>
+      </DataColumn>
+      <DataColumn name="classroomName">
+        <Property name="property">classroomName</Property>
+      </DataColumn>
+      <DataColumn name="crTime">
+        <Property name="property">crTime</Property>
+      </DataColumn>
+      <DataColumn name="score">
+        <Property name="property">score</Property>
+      </DataColumn>
+      <DataColumn name="remark">
+        <Property name="property">remark</Property>
+      </DataColumn>
+    </DataGrid>
+  </View>
+</ViewConfig>

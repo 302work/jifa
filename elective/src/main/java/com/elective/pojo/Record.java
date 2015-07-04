@@ -47,6 +47,9 @@ public class Record implements IPojo {
     @Column(nullable = false, length = 60)
     private String crUser;//创建人
 
+    @Column(length = 1,columnDefinition="tinyint default 0",nullable = false)
+    private Boolean isDeleted;//是否删除了
+    
     public Long getId() {
         return id;
     }
@@ -117,6 +120,14 @@ public class Record implements IPojo {
 
 	public void setStudent(User student) {
 		this.student = student;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
     
 }

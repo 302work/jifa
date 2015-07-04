@@ -104,7 +104,8 @@ function refreshActions() {
 		var data = {
 				name : "<新部门>",
 				parentDeptId : currentEntity.get("id"),
-				sortFlag:0
+				sortFlag:0,
+				type:1
 			};
 //		currentEntity.createChild("child", data);
 		//插入
@@ -176,6 +177,7 @@ function refreshActions() {
 	var newDept = dataTreeDept.get("currentNode.data");
 	newDept = newDept.clone();
 	newDept.set("sortFlag", 0);
+	newDept.set("type", 1);
 	dept.get("child").insert(newDept,"before");
 	currentDeptNode.remove();	
 	dialogSelectDept.hide();

@@ -189,7 +189,7 @@
               <Property name="labelProperty">name</Property>
               <Property name="recursive">true</Property>
               <Property name="hasChild">true</Property>
-              <Property name="expandLevel">2</Property>
+              <Property name="expandLevel">1</Property>
               <Property name="name">Dept</Property>
               <Property name="iconClass">fa fa-folder-o</Property>
               <Property name="hasChildProperty">hasChild</Property>

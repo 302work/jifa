@@ -134,10 +134,15 @@ public class DeptMaintain {
 			dept.setIsDeleted(false);
 			dept.setType(1);
 			newDept = dao.saveOrUpdate(dept).get(0);
-		}else if (EntityState.MODIFIED.equals(state)
-				|| EntityState.MOVED.equals(state)) {
+		}else if (EntityState.MODIFIED.equals(state)) {
 			dept.setCrTime(new Date());
 			dept.setCrUser(userName);
+			dept.setIsDeleted(false);
+			dao.saveOrUpdate(dept);
+		}else if(EntityState.MOVED.equals(state)){
+			dept.setCrTime(new Date());
+			dept.setCrUser(userName);
+			dept.setIsDeleted(false);
 			dao.saveOrUpdate(dept);
 		}
     	String deptId = dept.getId();

@@ -86,7 +86,7 @@ public class ClassroomMaintain {
 	@SuppressWarnings("unchecked")
 	@DataProvider
 	public Collection<Classroom> queryClassrooms() {
-        String hql =  " From "+ Classroom.class.getName()+" where isEnable=true ORDER BY crTime desc";
+        String hql =  " From "+ Classroom.class.getName()+" where isEnable=true ORDER BY name desc";
         return (Collection<Classroom>) dao.query(hql, null);
 	}
 }

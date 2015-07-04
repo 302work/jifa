@@ -69,7 +69,7 @@ public class UserService implements IUserService{
         }
         //String sql = " select u.* from "+User.TABLENAME+" as u JOIN "+ DeptUser.TABLENAME+" as ud on u.id=ud.userId where ud.deptId=:deptId ";
         //参考http://blog.csdn.net/chenssy/article/details/7728367
-        String hql = "select u From "+User.class.getName()+" as u inner join "+DeptUser.class.getName()+" as ud with u.id=ud.userId where ud.deptId=:deptId ";
+        String hql = "select u From "+User.class.getName()+" as u inner join "+DeptUser.class.getName()+" as ud  where u.id=ud.userId and ud.deptId=:deptId ";
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("deptId",deptId);
         return (List<IUser>)dao.query(hql,params);

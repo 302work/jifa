@@ -76,7 +76,7 @@
       </PropertyDef>
       <PropertyDef name="isEnable">
         <Property name="dataType">Integer</Property>
-        <Property name="label">是否可用</Property>
+        <Property name="label">是否启用</Property>
         <Property name="defaultValue">1</Property>
         <Property name="mapping">
           <Property name="mapValues">
@@ -118,6 +118,103 @@
         </Property>
         <Property name="required">true</Property>
       </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="dataType">Integer</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">6</Property>
+                <Property name="value">单周</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">7</Property>
+                <Property name="value">双周</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">上课时间</Property>
+        <Property name="required">true</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="Record">
+      <PropertyDef name="id">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="courseId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="studentId">
+        <Property name="dataType">Long</Property>
+      </PropertyDef>
+      <PropertyDef name="remark">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">备注</Property>
+      </PropertyDef>
+      <PropertyDef name="homework">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">家庭作业</Property>
+      </PropertyDef>
+      <PropertyDef name="score">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">作业评分</Property>
+      </PropertyDef>
+      <PropertyDef name="crTime">
+        <Property name="dataType">Date</Property>
+        <Property name="label">报名时间</Property>
+        <Property name="displayFormat">Y-m-d H:m:s</Property>
+      </PropertyDef>
+      <PropertyDef name="crUser">
+        <Property></Property>
+        <Property name="dataType">String</Property>
+        <Property name="label">报名人</Property>
+      </PropertyDef>
+      <PropertyDef name="teacherName">
+        <Property name="dataType">String</Property>
+        <Property name="label">开课老师</Property>
+      </PropertyDef>
+      <PropertyDef name="courseName">
+        <Property name="dataType">String</Property>
+        <Property name="label">课程名称</Property>
+      </PropertyDef>
+      <PropertyDef name="studentName">
+        <Property name="dataType">String</Property>
+        <Property name="label">学生姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="classroomName">
+        <Property name="dataType">String</Property>
+        <Property name="label">上课教室</Property>
+      </PropertyDef>
+      <PropertyDef name="termName">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属学期</Property>
+      </PropertyDef>
+      <PropertyDef name="courseType">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">上课时间</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">6</Property>
+                <Property name="value">单周</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">7</Property>
+                <Property name="value">双周</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="deptNames">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属班级</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -140,6 +237,16 @@
       <Property name="dataProvider">classroomMaintain#queryClassrooms</Property>
       <Property name="dataType">[dataTypeClassroom]</Property>
     </DataSet>
+    <DataSet id="dataSetRecord">
+      <Property name="dataProvider">recordPR#queryRecordsByCourse</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[Record]</Property>
+      <Property name="parameter">
+        <Entity>
+          <Property name="type">1</Property>
+        </Entity>
+      </Property>
+    </DataSet>
     <UpdateAction id="actionUpdate">
       <Property name="successMessage">保存成功!</Property>
       <Property name="executingMessage">正在保存...</Property>
@@ -160,27 +267,215 @@ switch(arg.code){&#xD;
 		break;&#xD;
 	}&#xD;
 	case &quot;-&quot;:{&#xD;
+		/**&#xD;
+		if(datas.current){&#xD;
+			var data = datas.current;&#xD;
+			//是否已审核，1为已审核，2为未审核，3为审核未通过&#xD;
+			var isAudit = data.get(&quot;isAudit&quot;);&#xD;
+			//上课老师&#xD;
+			var teacherId = data.get(&quot;teacherId&quot;);&#xD;
+			&#xD;
+			//查询身份&#xD;
+			view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){&#xD;
+				//角色&#xD;
+				var type = user.type;&#xD;
+				//id&#xD;
+				var userId = user.id;&#xD;
+				//如果审核通过，并且不是管理员，不能删除。不是自己的也不能删除&#xD;
+				if((isAudit==1 &amp;&amp; type!=3) || (type==2 &amp;&amp; teacherId!=userId)){&#xD;
+					dorado.MessageBox.alert(&quot;该课程已审核无法删除，或只能删除自己的课程!&quot;);&#xD;
+					return false;&#xD;
+				}&#xD;
+				&#xD;
+			});	&#xD;
+		}**/&#xD;
 		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){&#xD;
-			datas.remove();&#xD;
-			actionUpdate.execute();&#xD;
+					datas.remove();&#xD;
+					actionUpdate.execute();&#xD;
 		});&#xD;
-		arg.processDefault=false;&#xD;
 		break;&#xD;
 	}&#xD;
 }</ClientEvent>
         <Property name="dataSet">dataSetCourse</Property>
-        <Property name="itemCodes">pages,+,-,x</Property>
+        <Property name="itemCodes">pages,+,x</Property>
       </DataPilot>
       <Separator/>
       <ToolBarButton>
-        <ClientEvent name="onClick">var data=view.get(&quot;#dataSetCourse.data&quot;);&#xD;
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetCourse.data&quot;);
+var action = view.get(&quot;#actionUpdate&quot;);
+if(datas.current){
+	var data = datas.current;
+	//是否已审核，1为已审核，2为未审核，3为审核未通过
+	var isAudit = data.get(&quot;isAudit&quot;);
+	//上课老师
+	var teacherId = data.get(&quot;teacherId&quot;);
+	
+	//查询身份
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
+		//角色
+		var type = user.type;
+		//id
+		var userId = user.id;
+		//如果审核通过，并且不是管理员，不能删除。不是自己的也不能删除
+		if((isAudit==1 &amp;&amp; type!=3) || (type==2 &amp;&amp; teacherId!=userId)){
+			dorado.MessageBox.alert(&quot;该课程已审核无法删除，或只能删除自己的课程!&quot;);
+			return false;
+		}
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
+			datas.remove();
+			action.execute();
+		});
+		
+	});	
+}</ClientEvent>
+        <Property name="caption">删除</Property>
+        <Property name="iconClass">fa fa-minus</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dataSetCourse.data&quot;);&#xD;
+&#xD;
 if(data.current){&#xD;
-	view.get(&quot;#dialogCourse&quot;).show();&#xD;
+	data = data.current;&#xD;
+	//是否已审核，1为已审核，2为未审核，3为审核未通过&#xD;
+	var isAudit = data.get(&quot;isAudit&quot;);&#xD;
+	//上课老师&#xD;
+	var teacherId = data.get(&quot;teacherId&quot;);&#xD;
+	&#xD;
+	//查询身份&#xD;
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){&#xD;
+		//角色&#xD;
+		var type = user.type;&#xD;
+		//id&#xD;
+		var userId = user.id;&#xD;
+		//如果审核通过，并且不是管理员，不能编辑。不是自己的也不能编辑&#xD;
+		if((isAudit==1 &amp;&amp; type!=3) || (type==2 &amp;&amp; teacherId!=userId)){&#xD;
+			view.id(&quot;courseForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		}else{&#xD;
+			view.id(&quot;courseForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		}&#xD;
+		view.get(&quot;#dialogCourse&quot;).show();&#xD;
+	});	&#xD;
 }else{&#xD;
 	dorado.MessageBox.alert(&quot;当前表没有信息可供编辑!&quot;);&#xD;
 }</ClientEvent>
         <Property name="caption">修改</Property>
-        <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+        <Property name="iconClass">fa fa-pencil</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetCourse.data&quot;);
+var dataSet = view.id(&quot;dataSetCourse&quot;);
+
+if(datas.current){
+	//查询身份
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
+		//角色
+		var type = user.type;	
+		//如果不是管理员，不能审核
+		if(type!=3){
+			dorado.MessageBox.alert(&quot;您没权限执行审核操作&quot;);
+			return false;
+		}
+		var data = datas.current;
+		var courseId = data.get(&quot;id&quot;);
+		dorado.MessageBox.show({
+			icon: &quot;INFO&quot;,
+			title: &quot;审核课程&quot;,
+			message: &quot;点击\&quot;是\&quot;表示审核通过，点击\&quot;否\&quot;表示审核不通过&quot;,
+			buttons: [&quot;yes&quot;, &quot;no&quot;, &quot;cancel&quot;],
+			closeAction: &quot;cancel&quot;,
+			detailCallback: function(button, text) {
+				if(button!=&quot;yes&quot; &amp;&amp; button!=&quot;no&quot;){
+					return false;
+				}
+				view.id(&quot;auditAction&quot;).set(&quot;parameter&quot;,{&quot;button&quot;:button,&quot;courseId&quot;:courseId}).execute(function(){
+					dorado.MessageBox.alert(&quot;审核成功！&quot;);
+					dataSet.flushAsync();
+				});
+			}
+		});	
+	});	
+
+	
+}</ClientEvent>
+        <Property name="caption">审核</Property>
+        <Property name="iconClass">fa fa-retweet</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetCourse.data&quot;);
+var dataSet = view.id(&quot;dataSetCourse&quot;);
+
+if(datas.current){
+	//查询身份
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
+		var data = datas.current;
+		//是否已审核，1为已审核，2为未审核，3为审核未通过
+		var isAudit = data.get(&quot;isAudit&quot;);
+		//上课老师
+		var teacherId = data.get(&quot;teacherId&quot;);
+		//角色
+		var type = user.type;	
+		//id
+		var userId = user.id;
+		//如果不是管理员，并且不是自己的课程不能操作
+		if(type!=3 &amp;&amp; userId!=teacherId){
+			dorado.MessageBox.alert(&quot;您没权限执行该操作，您只能操作自己的课程&quot;);
+			return false;
+		}
+		var courseId = data.get(&quot;id&quot;);
+		dorado.MessageBox.show({
+			icon: &quot;INFO&quot;,
+			title: &quot;启停课程&quot;,
+			message: &quot;点击\&quot;是\&quot;表示启用该课程，点击\&quot;否\&quot;表示停用该课程&quot;,
+			buttons: [&quot;yes&quot;, &quot;no&quot;, &quot;cancel&quot;],
+			closeAction: &quot;cancel&quot;,
+			detailCallback: function(button, text) {
+				if(button!=&quot;yes&quot; &amp;&amp; button!=&quot;no&quot;){
+					return false;
+				}
+				var str = &quot;启用&quot;;
+				if(button!=&quot;yes&quot;){
+					str = &quot;停用&quot;;
+				}
+				view.id(&quot;enableAction&quot;).set(&quot;parameter&quot;,{&quot;button&quot;:button,&quot;courseId&quot;:courseId}).execute(function(){
+					dorado.MessageBox.alert(&quot;您成功的&quot;+str+&quot;该课程！&quot;);
+					dataSet.flushAsync();
+				});
+			}
+		});	
+	});	
+
+	
+}</ClientEvent>
+        <Property name="caption">启停用</Property>
+        <Property name="iconClass">fa fa-caret-square-o-left</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">view.id(&quot;homeworkDialog&quot;).show();
+</ClientEvent>
+        <Property name="caption">作业设置</Property>
+        <Property name="iconClass">fa fa-file-word-o</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data = view.get(&quot;#dataSetCourse.data&quot;);
+var dataSet = view.id(&quot;dataSetRecord&quot;);
+if(data.current){
+	data = data.current;
+	var courseId = data.get(&quot;id&quot;);
+	dataSet.set(&quot;parameter&quot;,{&quot;courseId&quot;:courseId}).flushAsync();
+	view.id(&quot;studentDialog&quot;).show();
+}
+
+
+
+
+</ClientEvent>
+        <Property name="caption">学生选课管理</Property>
+        <Property name="iconClass">fa fa-users</Property>
       </ToolBarButton>
     </ToolBar>
     <DataGrid>
@@ -192,6 +487,10 @@ if(data.current){&#xD;
       <Property name="filterMode">serverSide</Property>
       <DataColumn name="termName">
         <Property name="property">termName</Property>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">type</Property>
+        <Editor/>
       </DataColumn>
       <DataColumn name="name">
         <Property name="property">name</Property>
@@ -225,11 +524,15 @@ if(data.current){&#xD;
       </DataColumn>
     </DataGrid>
     <Dialog id="dialogCourse">
+      <ClientEvent name="onClose">var data=view.get(&quot;#dataSetCourse&quot;).getData();
+var dialog=view.get(&quot;#dialogCourse&quot;);
+data.cancel();
+dialog.hide();</ClientEvent>
       <Property name="center">true</Property>
       <Property name="width">480</Property>
       <Property name="height">510</Property>
       <Property name="modal">true</Property>
-      <Property name="closeable">false</Property>
+      <Property name="closeable">true</Property>
       <Property name="caption">课程添加/编辑</Property>
       <Property name="iconClass">fa fa-pencil-square-o</Property>
       <Buttons>
@@ -253,7 +556,7 @@ dialog.hide();</ClientEvent>
         </Button>
       </Buttons>
       <Children>
-        <AutoForm>
+        <AutoForm id="courseForm">
           <Property name="dataSet">dataSetCourse</Property>
           <Property name="cols">*</Property>
           <AutoFormElement>
@@ -261,11 +564,19 @@ dialog.hide();</ClientEvent>
             <Property name="property">termName</Property>
             <Property name="trigger">termDSDD</Property>
             <Property name="editable">false</Property>
+            <Property name="tags">tagA</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">type</Property>
+            <Property name="property">type</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement name="name">
             <Property name="name">name</Property>
             <Property name="property">name</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement name="intro">
@@ -277,11 +588,13 @@ dialog.hide();</ClientEvent>
           <AutoFormElement name="num">
             <Property name="name">num</Property>
             <Property name="property">num</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement name="total">
             <Property name="name">total</Property>
             <Property name="property">total</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -289,17 +602,20 @@ dialog.hide();</ClientEvent>
             <Property name="property">teacherName</Property>
             <Property name="editable">false</Property>
             <Property name="trigger">teacherDSDD</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">classroomName</Property>
             <Property name="property">classroomName</Property>
             <Property name="trigger">classroomDSDD</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
             <Property name="name">deptNames</Property>
             <Property name="property">deptNames</Property>
+            <Property name="tags">tagA</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -330,5 +646,126 @@ dialog.hide();</ClientEvent>
       <Property name="displayProperty">name</Property>
       <Property name="assignmentMap">classroomName=name,classroomId=id</Property>
     </DataSetDropDown>
+    <AjaxAction id="ajaxActionGetUserInfo">
+      <Property name="service">coursePR#getUserInfo</Property>
+      <Property name="async">false</Property>
+    </AjaxAction>
+    <AjaxAction id="auditAction">
+      <Property name="successMessage">审核成功</Property>
+      <Property name="executingMessage">审核中....</Property>
+      <Property name="service">coursePR#auditCourse</Property>
+    </AjaxAction>
+    <AjaxAction id="enableAction">
+      <Property name="service">coursePR#enableCourse</Property>
+      <Property name="successMessage">操作成功</Property>
+    </AjaxAction>
+    <Dialog id="homeworkDialog">
+      <Property name="width">680</Property>
+      <Property name="height">480</Property>
+      <Property name="caption">作业设置</Property>
+      <Property name="iconClass">fa fa-file-word-o</Property>
+      <Buttons>
+        <Button>
+          <Property name="caption">保存</Property>
+          <Property name="iconClass">fa fa-check-circle-o</Property>
+        </Button>
+        <Button>
+          <Property name="caption">取消</Property>
+          <Property name="iconClass">fa fa-times-circle-o</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <UEditor/>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="studentDialog">
+      <Property name="caption">学生选课管理</Property>
+      <Property name="iconClass">fa fa-users</Property>
+      <Property name="width">800</Property>
+      <Property name="height">480</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;studentDialog&quot;).hide();
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="iconClass">fa fa-times-circle-o</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <Property name="itemCodes">pages,+,x</Property>
+          </DataPilot>
+          <Separator/>
+          <ToolBarButton>
+            <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetCourse.data&quot;);
+var action = view.get(&quot;#actionUpdate&quot;);
+if(datas.current){
+	var data = datas.current;
+	//是否已审核，1为已审核，2为未审核，3为审核未通过
+	var isAudit = data.get(&quot;isAudit&quot;);
+	//上课老师
+	var teacherId = data.get(&quot;teacherId&quot;);
+	
+	//查询身份
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
+		//角色
+		var type = user.type;
+		//id
+		var userId = user.id;
+		//如果审核通过，并且不是管理员，不能删除。不是自己的也不能删除
+		if((isAudit==1 &amp;&amp; type!=3) || (type==2 &amp;&amp; teacherId!=userId)){
+			dorado.MessageBox.alert(&quot;该课程已审核无法删除，或只能删除自己的课程!&quot;);
+			return false;
+		}
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
+			datas.remove();
+			action.execute();
+		});
+		
+	});	
+}</ClientEvent>
+            <Property name="caption">删除</Property>
+            <Property name="iconClass">fa fa-minus</Property>
+          </ToolBarButton>
+        </ToolBar>
+        <DataGrid>
+          <Property name="dataSet">dataSetRecord</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="sortMode">serverSide</Property>
+          <Property name="filterMode">serverSide</Property>
+          <DataColumn name="courseName">
+            <Property name="property">courseName</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">courseType</Property>
+            <Property name="align">left</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="teacherName">
+            <Property name="property">teacherName</Property>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">studentName</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">deptNames</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn name="score">
+            <Property name="property">score</Property>
+          </DataColumn>
+          <DataColumn name="crTime">
+            <Property name="property">crTime</Property>
+          </DataColumn>
+          <DataColumn name="remark">
+            <Property name="property">remark</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>

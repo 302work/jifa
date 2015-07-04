@@ -14,6 +14,7 @@ import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
@@ -47,12 +48,17 @@ public class CourseMaintain {
 			IUser user2 = ContextHolder.getLoginUser();
 	    	String userName = user2.getUsername();
 			if(EntityState.NEW.equals(state)){
+				//检查教室是否占用
+				checkClassroom(course);
 				course.setCrTime(new Date());
 				course.setCrUser(userName);
 				course.setIsEnable(1);
 				course.setIsAudit(2);
 				dao.saveOrUpdate(course);
+				
 			}else if(EntityState.MODIFIED.equals(state)){
+				//检查教室是否占用
+				checkClassroom(course);
 				dao.saveOrUpdate(course);
 			}else if (EntityState.DELETED.equals(state)) {
 				//校验课程是否已被使用
@@ -64,6 +70,22 @@ public class CourseMaintain {
 				}
 				dao.delete(course);
 			}
+		}
+	}
+	/**
+	 * 检查教室是否被占用
+	 * @param course
+	 * @return
+	 * @throws Exception 
+	 */
+	private void checkClassroom(Course course) throws Exception{
+		String hql = "From "+Course.class.getName()+" where classroomId=:classroomId and type=:type";
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("classroomId", course.getClassroomId());
+		params.put("type", course.getType());
+		int count = dao.queryCount(hql, params);
+		if(count>0){
+			throw new Exception("该教室已被占用，请选择其他教室或更改上课时间。");
 		}
 	}
 	
@@ -81,7 +103,7 @@ public class CourseMaintain {
         sb.append(" join "+Classroom.TABLENAME+" as r on c.classroomId=r.id");
         sb.append(" join "+Term.TABLENAME+" as t on c.termId=t.id");
         sb.append(" left join "+Dept.TABLENAME+" as d on LOCATE(d.id,c.deptIds)>0");
-        sb.append(" where c.isEnable=1");
+        sb.append(" where 1=1");
         
         //替换前台传入的字段名称
 		Map<String,String> propertyMap = new HashMap<String, String>();
@@ -108,5 +130,51 @@ public class CourseMaintain {
         dao.pagingQueryBySql(page, sb.toString(), params);
     }
 	
+	@Expose
+	public User getUserInfo(){
+		return (User)ContextHolder.getLoginUser();
+	}
+	
+	/**
+	 * 审核课程
+	 * @throws Exception 
+	 */
+	@Expose
+	public void auditCourse(Map<String,Object> param) throws Exception{
+		User user = (User)ContextHolder.getLoginUser();
+		if(user.getType()!=3){
+			throw new Exception("您无权审核。");
+		}
+		int courseId = Integer.valueOf(param.get("courseId").toString());
+		String button = param.get("button").toString();
+		//1为已审核，2为未审核，3为审核未通过
+		int isAudit = 0;
+		if(button.equals("yes")){
+			isAudit = 1;
+		}else{
+			isAudit = 3;
+		}
+		String hql = "update "+Course.class.getName()+" set isAudit="+isAudit+" where id="+courseId;
+		dao.executeHQL(hql, null);
+	}
 
+
+	/**
+	 * 审核课程
+	 * @throws Exception 
+	 */
+	@Expose
+	public void enableCourse(Map<String,Object> param) throws Exception{
+		int courseId = Integer.valueOf(param.get("courseId").toString());
+		String button = param.get("button").toString();
+		//1为可用，2为不可用
+		int isEnable = 0;
+		if(button.equals("yes")){
+			isEnable = 1;
+		}else{
+			isEnable = 2;
+		}
+		String hql = "update "+Course.class.getName()+" set isEnable="+isEnable+" where id="+courseId;
+		dao.executeHQL(hql, null);
+	}
 }

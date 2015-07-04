@@ -58,6 +58,9 @@ public class Course implements IPojo {
     @Column(length=100)
     private String deptIds;//年级限制
     
+    @Column(nullable = false)
+    private Integer type;//上课时间类型，每周（周一1、周二2、周三3、周四4、周五5），隔周（单周6、双周7），隔两周（标明哪些周）
+    
     @Column(length = 1,columnDefinition="tinyint default 1")
     private Integer isEnable;//是否可用，1为可用，2为不可用
 
@@ -218,6 +221,14 @@ public class Course implements IPojo {
 
 	public void setIsAudit(Integer isAudit) {
 		this.isAudit = isAudit;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 	
 }
