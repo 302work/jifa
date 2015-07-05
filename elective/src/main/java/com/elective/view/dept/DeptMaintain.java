@@ -186,6 +186,7 @@ public class DeptMaintain {
 			du.setUserId(user.getId());
 			dao.saveOrUpdate(du);
 		}else if(EntityState.MODIFIED.equals(state)){
+			user.setIsDeleted(false);
 			dao.saveOrUpdate(user);
 			DeptUser du = new DeptUser();
 			du.setDeptId(deptId);

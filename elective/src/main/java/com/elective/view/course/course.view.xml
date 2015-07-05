@@ -216,6 +216,21 @@
         <Property name="label">所属班级</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="deptDataType" parent="dataTypeDept">
+      <Property name="defaultDisplayProperty">name</Property>
+      <Reference name="child">
+        <Property name="dataProvider">deptMaintain#getDeptsByParentId</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+      <Reference name="users">
+        <Property name="dataProvider">userMaintain#getUsersByDeptId</Property>
+        <Property name="dataType">[userDataType]</Property>
+        <Property name="pageSize">20</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
+    </DataType>
+    <DataType name="userDataType" parent="dataTypeUser"/>
   </Model>
   <View>
     <Property name="title">Course信息维护</Property>
@@ -247,6 +262,11 @@
         </Entity>
       </Property>
     </DataSet>
+    <DataSet id="dsDepts">
+      <Property name="dataProvider">deptMaintain#getDeptsByParentId</Property>
+      <Property name="dataType">[deptDataType]</Property>
+      <Property name="readOnly">false</Property>
+    </DataSet>
     <UpdateAction id="actionUpdate">
       <Property name="successMessage">保存成功!</Property>
       <Property name="executingMessage">正在保存...</Property>
@@ -266,38 +286,9 @@ switch(arg.code){&#xD;
 		arg.processDefault=false;&#xD;
 		break;&#xD;
 	}&#xD;
-	case &quot;-&quot;:{&#xD;
-		/**&#xD;
-		if(datas.current){&#xD;
-			var data = datas.current;&#xD;
-			//是否已审核，1为已审核，2为未审核，3为审核未通过&#xD;
-			var isAudit = data.get(&quot;isAudit&quot;);&#xD;
-			//上课老师&#xD;
-			var teacherId = data.get(&quot;teacherId&quot;);&#xD;
-			&#xD;
-			//查询身份&#xD;
-			view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){&#xD;
-				//角色&#xD;
-				var type = user.type;&#xD;
-				//id&#xD;
-				var userId = user.id;&#xD;
-				//如果审核通过，并且不是管理员，不能删除。不是自己的也不能删除&#xD;
-				if((isAudit==1 &amp;&amp; type!=3) || (type==2 &amp;&amp; teacherId!=userId)){&#xD;
-					dorado.MessageBox.alert(&quot;该课程已审核无法删除，或只能删除自己的课程!&quot;);&#xD;
-					return false;&#xD;
-				}&#xD;
-				&#xD;
-			});	&#xD;
-		}**/&#xD;
-		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){&#xD;
-					datas.remove();&#xD;
-					actionUpdate.execute();&#xD;
-		});&#xD;
-		break;&#xD;
-	}&#xD;
 }</ClientEvent>
         <Property name="dataSet">dataSetCourse</Property>
-        <Property name="itemCodes">pages,+,x</Property>
+        <Property name="itemCodes">pages,+</Property>
       </DataPilot>
       <Separator/>
       <ToolBarButton>
@@ -446,39 +437,86 @@ if(datas.current){
 			}
 		});	
 	});	
-
-	
 }</ClientEvent>
         <Property name="caption">启停用</Property>
         <Property name="iconClass">fa fa-caret-square-o-left</Property>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton>
-        <ClientEvent name="onClick">view.id(&quot;homeworkDialog&quot;).show();
-</ClientEvent>
+        <ClientEvent name="onClick">
+var datas = view.get(&quot;#dataSetCourse.data&quot;);
+var dataSet = view.id(&quot;dataSetCourse&quot;);
+
+if(datas.current){
+	//查询身份
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
+		var data = datas.current;
+		//是否已审核，1为已审核，2为未审核，3为审核未通过
+		var isAudit = data.get(&quot;isAudit&quot;);
+		//上课老师
+		var teacherId = data.get(&quot;teacherId&quot;);
+		//角色
+		var type = user.type;	
+		//id
+		var userId = user.id;
+		//如果不是管理员，并且不是自己的课程不能操作
+		if(type!=3 &amp;&amp; userId!=teacherId){
+			dorado.MessageBox.alert(&quot;您没权限执行该操作，您只能操作自己的课程&quot;);
+			return false;
+		}
+		view.id(&quot;homeworkDialog&quot;).show();	
+	});	
+}</ClientEvent>
         <Property name="caption">作业设置</Property>
         <Property name="iconClass">fa fa-file-word-o</Property>
       </ToolBarButton>
       <Separator/>
       <ToolBarButton>
-        <ClientEvent name="onClick">var data = view.get(&quot;#dataSetCourse.data&quot;);
+        <ClientEvent name="onClick">
+var datas = view.get(&quot;#dataSetCourse.data&quot;);
 var dataSet = view.id(&quot;dataSetRecord&quot;);
-if(data.current){
-	data = data.current;
-	var courseId = data.get(&quot;id&quot;);
-	dataSet.set(&quot;parameter&quot;,{&quot;courseId&quot;:courseId}).flushAsync();
-	view.id(&quot;studentDialog&quot;).show();
-}
 
-
-
-
-</ClientEvent>
+if(datas.current){
+	//查询身份
+	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
+		var data = datas.current;
+		//是否已审核，1为已审核，2为未审核，3为审核未通过
+		var isAudit = data.get(&quot;isAudit&quot;);
+		//上课老师
+		var teacherId = data.get(&quot;teacherId&quot;);
+		//角色
+		var type = user.type;	
+		//id
+		var userId = user.id;
+		//如果不是管理员，并且不是自己的课程不能操作
+		if(type!=3 &amp;&amp; userId!=teacherId){
+			dorado.MessageBox.alert(&quot;您没权限执行该操作，您只能操作自己的课程！&quot;);
+			return false;
+		}
+		if(isAudit==2){
+			dorado.MessageBox.alert(&quot;该课程还未审核，无法选课！&quot;);
+			return false;
+		}
+		if(isAudit==3){
+			dorado.MessageBox.alert(&quot;该课程审核未通过，无法选课，请联系管理员！&quot;);
+			return false;
+		}
+		var courseId = data.get(&quot;id&quot;);
+		dataSet.set(&quot;parameter&quot;,{&quot;courseId&quot;:courseId}).flushAsync();
+		view.id(&quot;studentDialog&quot;).show();	
+	});	
+}</ClientEvent>
         <Property name="caption">学生选课管理</Property>
         <Property name="iconClass">fa fa-users</Property>
       </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="caption">导出</Property>
+        <Property name="iconClass">fa fa-file-excel-o</Property>
+        <Property name="action">courseExport2ReportAction</Property>
+      </ToolBarButton>
     </ToolBar>
-    <DataGrid>
+    <DataGrid id="courseDataGrid">
       <Property name="dataSet">dataSetCourse</Property>
       <Property name="dataType">Course</Property>
       <Property name="readOnly">true</Property>
@@ -682,7 +720,7 @@ dialog.hide();</ClientEvent>
     <Dialog id="studentDialog">
       <Property name="caption">学生选课管理</Property>
       <Property name="iconClass">fa fa-users</Property>
-      <Property name="width">800</Property>
+      <Property name="width">900</Property>
       <Property name="height">480</Property>
       <Buttons>
         <Button>
@@ -695,42 +733,60 @@ dialog.hide();</ClientEvent>
       <Children>
         <ToolBar>
           <DataPilot>
-            <Property name="itemCodes">pages,+,x</Property>
+            <ClientEvent name="onSubControlAction">var datas = view.get(&quot;#dataSetRecord.data&quot;);
+var action = view.get(&quot;#recordUpdateAction&quot;);
+switch(arg.code){
+	case &quot;+&quot;:{
+		datas.insert();
+		view.get(&quot;#addStudentDialog&quot;).show();
+		arg.processDefault=false;
+		break;
+	}
+}</ClientEvent>
+            <Property name="itemCodes">pages,+</Property>
+            <Property name="dataSet">dataSetRecord</Property>
           </DataPilot>
           <Separator/>
           <ToolBarButton>
-            <ClientEvent name="onClick">var datas = view.get(&quot;#dataSetCourse.data&quot;);
-var action = view.get(&quot;#actionUpdate&quot;);
-if(datas.current){
-	var data = datas.current;
-	//是否已审核，1为已审核，2为未审核，3为审核未通过
-	var isAudit = data.get(&quot;isAudit&quot;);
-	//上课老师
-	var teacherId = data.get(&quot;teacherId&quot;);
+            <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;您真的想删除该学生的选课记录吗?&quot;,function(){
+	//当前操作的课程
+	var course = view.id(&quot;dataSetCourse&quot;).getData().current;
 	
-	//查询身份
-	view.id(&quot;ajaxActionGetUserInfo&quot;).execute(function(user){
-		//角色
-		var type = user.type;
-		//id
-		var userId = user.id;
-		//如果审核通过，并且不是管理员，不能删除。不是自己的也不能删除
-		if((isAudit==1 &amp;&amp; type!=3) || (type==2 &amp;&amp; teacherId!=userId)){
-			dorado.MessageBox.alert(&quot;该课程已审核无法删除，或只能删除自己的课程!&quot;);
-			return false;
-		}
-		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
-			datas.remove();
-			action.execute();
+	//当前操作的记录
+	var record = view.id(&quot;dataSetRecord&quot;).getData().current;
+	
+	var recordDataSet = view.id(&quot;dataSetRecord&quot;);
+	
+	var action = view.id(&quot;recordDeleteAjaxAction&quot;);
+	
+	if(record &amp;&amp; course){
+		//课程id
+		var courseId = course.get(&quot;id&quot;);
+		//学生id
+		var recordId = record.get(&quot;id&quot;);
+		//删除
+		action.set(&quot;parameter&quot;,{&quot;courseId&quot;:courseId,&quot;recordId&quot;:recordId}).execute(function(){
+			dorado.MessageBox.alert(&quot;删除成功&quot;);
+			recordDataSet.flushAsync();
 		});
-		
-	});	
-}</ClientEvent>
+	}else{
+		dorado.MessageBox.alert(&quot;请先选择一条记录&quot;);
+	}
+});
+
+
+</ClientEvent>
             <Property name="caption">删除</Property>
             <Property name="iconClass">fa fa-minus</Property>
           </ToolBarButton>
+          <Separator/>
+          <ToolBarButton>
+            <Property name="caption">导出</Property>
+            <Property name="iconClass">fa fa-file-excel-o</Property>
+            <Property name="action">recordExport2ReportAction</Property>
+          </ToolBarButton>
         </ToolBar>
-        <DataGrid>
+        <DataGrid id="recordDataGrid">
           <Property name="dataSet">dataSetRecord</Property>
           <Property name="readOnly">true</Property>
           <Property name="sortMode">serverSide</Property>
@@ -741,6 +797,10 @@ if(datas.current){
           <DataColumn>
             <Property name="property">courseType</Property>
             <Property name="align">left</Property>
+            <Editor/>
+          </DataColumn>
+          <DataColumn>
+            <Property name="property">classroomName</Property>
             <Editor/>
           </DataColumn>
           <DataColumn name="teacherName">
@@ -764,8 +824,180 @@ if(datas.current){
             <Property name="property">remark</Property>
           </DataColumn>
         </DataGrid>
+        <Dialog id="addStudentDialog">
+          <ClientEvent name="onClose">var data=view.get(&quot;#dataSetRecord&quot;).getData();
+var dialog=view.get(&quot;#addStudentDialog&quot;);
+data.cancel();
+dialog.hide();</ClientEvent>
+          <Property name="caption">添加学生</Property>
+          <Property name="width">800</Property>
+          <Property name="height">480</Property>
+          <Property name="iconClass">fa fa-plus</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">//选中的当前用户&#xD;
+var user = view.id(&quot;userDataGrid&quot;).getCurrentEntity();&#xD;
+//当前操作的课程&#xD;
+var course = view.id(&quot;dataSetCourse&quot;).getData().current;&#xD;
+&#xD;
+var recordDataSet = view.id(&quot;dataSetRecord&quot;);&#xD;
+&#xD;
+var dialog = view.id(&quot;addStudentDialog&quot;);&#xD;
+var action = view.id(&quot;recordSaveAjaxAction&quot;);&#xD;
+&#xD;
+if(user &amp;&amp; course){&#xD;
+	//选择的用户类型&#xD;
+	var type = user.get(&quot;type&quot;);&#xD;
+	//课程id&#xD;
+	var courseId = course.get(&quot;id&quot;);&#xD;
+	//学生id&#xD;
+	var studentId = user.get(&quot;id&quot;);&#xD;
+	&#xD;
+	if(type!=1){&#xD;
+		dorado.MessageBox.alert(&quot;您必须选择一个学生&quot;);&#xD;
+		return false;&#xD;
+	}&#xD;
+	//保存&#xD;
+	action.set(&quot;parameter&quot;,{&quot;courseId&quot;:courseId,&quot;studentId&quot;:studentId}).execute(function(result){&#xD;
+		if(result==null){&#xD;
+			dorado.MessageBox.alert(&quot;添加学生成功&quot;);&#xD;
+			dialog.hide();&#xD;
+			recordDataSet.flushAsync();&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(result,{icon:&quot;ERROR&quot;});&#xD;
+		}&#xD;
+	});&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请先选择一个学生&quot;);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">确定</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var data=view.get(&quot;#dataSetRecord&quot;).getData();
+var dialog=view.get(&quot;#addStudentDialog&quot;);
+data.cancel();
+dialog.hide();</ClientEvent>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <SplitPanel>
+              <Property name="position">180</Property>
+              <MainControl>
+                <CardBook id="cardbook">
+                  <Container>
+                    <ToolBar>
+                      <DataPilot id="userDataPilot">
+                        <Property name="itemCodes">pages,pageSize</Property>
+                        <Property name="dataPath">!CURRENT_DEPT.users</Property>
+                        <Property name="dataSet">dsDepts</Property>
+                      </DataPilot>
+                    </ToolBar>
+                    <DataGrid id="userDataGrid">
+                      <Property name="dataPath">!CURRENT_DEPT.users</Property>
+                      <Property name="dataSet">dsDepts</Property>
+                      <Property name="allowNoCurrent">true</Property>
+                      <Property name="appendOnLastEnter">true</Property>
+                      <Property name="highlightCurrentRow">true</Property>
+                      <Property name="sortMode">serverSide</Property>
+                      <Property name="filterMode">serverSide</Property>
+                      <Property name="showFilterBar">true</Property>
+                      <Property name="showFooter">false</Property>
+                      <Property name="readOnly">true</Property>
+                      <IndicatorColumn/>
+                      <DataColumn name="username">
+                        <Property name="property">username</Property>
+                      </DataColumn>
+                      <DataColumn name="cname">
+                        <Property name="property">cname</Property>
+                      </DataColumn>
+                      <DataColumn name="type">
+                        <Property name="property">type</Property>
+                        <Property name="trigger">listDropDown1</Property>
+                      </DataColumn>
+                      <DataColumn name="enabled">
+                        <Property name="property">enabled</Property>
+                      </DataColumn>
+                      <DataColumn name="email">
+                        <Property name="property">email</Property>
+                      </DataColumn>
+                      <DataColumn name="mobile">
+                        <Property name="property">mobile</Property>
+                      </DataColumn>
+                      <DataColumn name="remark">
+                        <Property name="property">remark</Property>
+                      </DataColumn>
+                    </DataGrid>
+                  </Container>
+                </CardBook>
+              </MainControl>
+              <SideControl>
+                <DataTree id="dataTreeDept">
+                  <Property name="currentNodeDataPath">CURRENT_DEPT</Property>
+                  <Property name="dataSet">dsDepts</Property>
+                  <Property name="allowNoCurrent">true</Property>
+                  <Property name="dragMode">item</Property>
+                  <Property name="draggable">true</Property>
+                  <Property name="dropMode">onOrInsertItems</Property>
+                  <Property name="droppable">true</Property>
+                  <Property name="dragTags">node</Property>
+                  <Property name="droppableTags">node</Property>
+                  <BindingConfigs>
+                    <BindingConfig>
+                      <Property name="childrenProperty">child</Property>
+                      <Property name="labelProperty">name</Property>
+                      <Property name="recursive">true</Property>
+                      <Property name="hasChild">true</Property>
+                      <Property name="expandLevel">1</Property>
+                      <Property name="name">Dept</Property>
+                      <Property name="iconClass">fa fa-folder-o</Property>
+                      <Property name="hasChildProperty">hasChild</Property>
+                    </BindingConfig>
+                  </BindingConfigs>
+                </DataTree>
+              </SideControl>
+            </SplitPanel>
+            <AjaxAction id="recordSaveAjaxAction">
+              <Property name="executingMessage">正在保存...</Property>
+              <Property name="service">recordPR#saveRecord</Property>
+            </AjaxAction>
+          </Children>
+          <Tools/>
+        </Dialog>
+        <AjaxAction id="recordDeleteAjaxAction">
+          <Property name="service">recordPR#deleteRecord</Property>
+          <Property name="executingMessage">正在删除...</Property>
+        </AjaxAction>
+        <Export2ReportAction id="recordExport2ReportAction">
+          <Property name="fileName">record</Property>
+          <Property name="successMessage">导出成功</Property>
+          <Property name="showTitle">true</Property>
+          <Property name="titleName">学生选课记录</Property>
+          <Property name="template">recordDataGrid</Property>
+          <Property name="confirmMessage">是否要导出所有选课记录</Property>
+          <Property name="executingMessage">正在导出...</Property>
+          <Property name="maxSize">10000</Property>
+          <Property name="dataScope">serverAll</Property>
+        </Export2ReportAction>
       </Children>
       <Tools/>
     </Dialog>
+    <Export2ReportAction id="courseExport2ReportAction">
+      <Property name="fileName">course</Property>
+      <Property name="successMessage">导出成功</Property>
+      <Property name="showTitle">true</Property>
+      <Property name="titleName">学生选课记录</Property>
+      <Property name="template">courseDataGrid</Property>
+      <Property name="confirmMessage">是否要导出所有课程</Property>
+      <Property name="executingMessage">正在导出...</Property>
+      <Property name="maxSize">10000</Property>
+      <Property name="dataScope">serverAll</Property>
+    </Export2ReportAction>
   </View>
 </ViewConfig>

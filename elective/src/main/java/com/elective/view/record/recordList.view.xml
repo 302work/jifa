@@ -48,7 +48,7 @@
       </PropertyDef>
       <PropertyDef name="studentName">
         <Property name="dataType">String</Property>
-        <Property name="label">学生</Property>
+        <Property name="label">学生姓名</Property>
       </PropertyDef>
       <PropertyDef name="classroomName">
         <Property name="dataType">String</Property>
@@ -76,13 +76,16 @@
           </Property>
         </Property>
       </PropertyDef>
+      <PropertyDef name="deptNames">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属班级</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
-    <Property name="title">Record信息维护</Property>
     <Property name="packages">font-awesome</Property>
     <DataSet id="dataSetRecord">
-      <Property name="dataProvider">recordPR#queryRecords</Property>
+      <Property name="dataProvider">recordPR#queryRecordsByCourse</Property>
       <Property name="pageSize">20</Property>
       <Property name="dataType">[Record]</Property>
       <Property name="parameter">
@@ -119,14 +122,18 @@ switch(arg.code){&#xD;
         <Property name="caption">查看作业</Property>
         <Property name="iconClass">fa fa-search</Property>
       </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <Property name="caption">导出</Property>
+        <Property name="iconClass">fa fa-file-excel-o</Property>
+        <Property name="action">recordExport2ReportAction</Property>
+      </ToolBarButton>
     </ToolBar>
-    <DataGrid>
+    <DataGrid id="recordDataGrid">
       <Property name="dataSet">dataSetRecord</Property>
-      <Property name="dataType">Record</Property>
       <Property name="readOnly">true</Property>
-      <Property name="filterMode">serverSide</Property>
       <Property name="sortMode">serverSide</Property>
-      <Property name="showFilterBar">false</Property>
+      <Property name="filterMode">serverSide</Property>
       <DataColumn name="termName">
         <Property name="property">termName</Property>
       </DataColumn>
@@ -138,21 +145,45 @@ switch(arg.code){&#xD;
         <Property name="align">left</Property>
         <Editor/>
       </DataColumn>
+      <DataColumn>
+        <Property name="property">classroomName</Property>
+        <Editor/>
+      </DataColumn>
       <DataColumn name="teacherName">
         <Property name="property">teacherName</Property>
       </DataColumn>
-      <DataColumn name="classroomName">
-        <Property name="property">classroomName</Property>
+      <DataColumn>
+        <Property name="property">studentName</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn>
+        <Property name="property">deptNames</Property>
+        <Editor/>
+      </DataColumn>
+      <DataColumn name="score">
+        <Property name="property">score</Property>
       </DataColumn>
       <DataColumn name="crTime">
         <Property name="property">crTime</Property>
       </DataColumn>
-      <DataColumn name="score">
-        <Property name="property">score</Property>
+      <DataColumn>
+        <Property name="property">crUser</Property>
+        <Editor/>
       </DataColumn>
       <DataColumn name="remark">
         <Property name="property">remark</Property>
       </DataColumn>
     </DataGrid>
+    <Export2ReportAction id="recordExport2ReportAction">
+      <Property name="fileName">record</Property>
+      <Property name="successMessage">导出成功</Property>
+      <Property name="showTitle">true</Property>
+      <Property name="titleName">学生选课记录</Property>
+      <Property name="template">recordDataGrid</Property>
+      <Property name="confirmMessage">是否要导出所有选课记录</Property>
+      <Property name="executingMessage">正在导出...</Property>
+      <Property name="maxSize">10000</Property>
+      <Property name="dataScope">serverAll</Property>
+    </Export2ReportAction>
   </View>
 </ViewConfig>

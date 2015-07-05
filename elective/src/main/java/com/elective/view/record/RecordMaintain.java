@@ -2,7 +2,6 @@ package com.elective.view.record;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -10,17 +9,13 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
-import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
-import com.bstek.dorado.annotation.DataResolver;
-import com.bstek.dorado.data.entity.EntityState;
-import com.bstek.dorado.data.entity.EntityUtils;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
-import com.dosola.core.common.DosolaUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Classroom;
 import com.elective.pojo.Course;
@@ -39,27 +34,64 @@ public class RecordMaintain {
 	@Resource
     private IMasterDao dao;
 
-	@DataResolver
-	public void saveRecords(List<Map<String,Object>> maps) throws Exception {
-		for (int i =0;i<maps.size();i++) {
-			EntityState state = EntityUtils.getState(maps.get(i));
-			Record record = (Record)DosolaUtil.convertMap(Record.class, maps.get(i));
-			IUser user2 = ContextHolder.getLoginUser();
-	    	String userName = user2.getUsername();
-			if(EntityState.NEW.equals(state)){
-				record.setCrTime(new Date());
-				record.setCrUser(userName);
-				record.setIsDeleted(false);
-				dao.saveOrUpdate(record);
-			}else if(EntityState.MODIFIED.equals(state)){
-				dao.saveOrUpdate(record);
-			}else if (EntityState.DELETED.equals(state)) {
-				record.setIsDeleted(true);
-				dao.delete(record);
-			}
+	
+	@Expose
+	public String saveRecord(Map<String,Object> param) throws Exception {
+		User user = (User)ContextHolder.getLoginUser();
+		Long courseId = Long.valueOf(param.get("courseId").toString());
+		Long studentId = Long.valueOf(param.get("studentId").toString());
+		//查询是否已存在
+		String hql = "From "+Record.class.getName()+" where courseId=:courseId and studentId=:studentId and isDeleted=false ";
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("courseId", courseId);
+		params.put("studentId", studentId);
+		if(dao.queryCount(hql, params)>0){
+			return "已选了该课程";
 		}
+		Record record = new Record();
+		record.setCourseId(courseId);
+		record.setCrTime(new Date());
+		record.setCrUser(user.getUsername());
+		record.setIsDeleted(false);
+		record.setStudentId(studentId);
+		
+		dao.saveOrUpdate(record);
+		return null;
 	}
 	
+	@Expose
+	public void deleteRecord(Map<String,Object> param) throws Exception {
+		Long courseId = Long.valueOf(param.get("courseId").toString());
+		Long recordId = Long.valueOf(param.get("recordId").toString());
+		String hql = "update "+Record.class.getName()+" set isDeleted=true where courseId=:courseId and id=:recordId ";
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("courseId", courseId);
+		params.put("recordId", recordId);
+		dao.executeHQL(hql, params);
+	}
+	
+//	@DataResolver
+//	public void saveRecords(List<Map<String,Object>> maps) throws Exception {
+//		for (int i =0;i<maps.size();i++) {
+//			EntityState state = EntityUtils.getState(maps.get(i));
+//			Record record = (Record)DosolaUtil.convertMap(Record.class, maps.get(i));
+//			IUser user2 = ContextHolder.getLoginUser();
+//	    	String userName = user2.getUsername();
+//			if(EntityState.NEW.equals(state)){
+//				record.setCrTime(new Date());
+//				record.setCrUser(userName);
+//				record.setIsDeleted(false);
+//				dao.saveOrUpdate(record);
+//			}else if(EntityState.MODIFIED.equals(state)){
+//				dao.saveOrUpdate(record);
+//			}else if (EntityState.DELETED.equals(state)) {
+//				record.setIsDeleted(true);
+//				dao.delete(record);
+//			}
+//		}
+//	}
+	
+	//学生查询自己的选课记录
 	@DataProvider
     public void queryRecords(Page<Map<String,Object>> page, Criteria criteria,int type){
 		User user = (User)ContextHolder.getLoginUser();
@@ -116,6 +148,7 @@ public class RecordMaintain {
         dao.pagingQueryBySql(page, sb.toString(), params);
     }
 	
+	//查询某个课程的选课记录、或全部记录
 	@DataProvider
     public void queryRecordsByCourse(Page<Map<String,Object>> page, Criteria criteria,Map<String,Object> parameter){
 		StringBuilder sb = new StringBuilder();
@@ -163,6 +196,7 @@ public class RecordMaintain {
 		propertyMap.put("classroomName", "cr.`name`");
 		propertyMap.put("termName", "t.`name`");
 		propertyMap.put("deptNames", "d.`name`");
+		propertyMap.put("courseType", "c.`type`");
 		SqlKit.replaceProperty(criteria, propertyMap);
       		
         ParseResult result = SqlKit.parseCriteria(criteria,true,"r",true);

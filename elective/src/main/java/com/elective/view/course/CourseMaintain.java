@@ -79,16 +79,24 @@ public class CourseMaintain {
 	 * @throws Exception 
 	 */
 	private void checkClassroom(Course course) throws Exception{
+		
 		String hql = "From "+Course.class.getName()+" where classroomId=:classroomId and type=:type";
 		Map<String,Object> params = new HashMap<String, Object>();
+		//修改课程
+		Long courseId = course.getId();
+		if(courseId!=null){
+			hql += " and id<>:courseId";
+		}
 		params.put("classroomId", course.getClassroomId());
 		params.put("type", course.getType());
+		params.put("courseId", courseId);
 		int count = dao.queryCount(hql, params);
 		if(count>0){
 			throw new Exception("该教室已被占用，请选择其他教室或更改上课时间。");
 		}
 	}
 	
+	//课程管理，非管理员只能看见自己的课程
 	@DataProvider
     public void queryCourses(Page<Map<String,Object>> page, Criteria criteria){
         
@@ -103,8 +111,8 @@ public class CourseMaintain {
         sb.append(" join "+Classroom.TABLENAME+" as r on c.classroomId=r.id");
         sb.append(" join "+Term.TABLENAME+" as t on c.termId=t.id");
         sb.append(" left join "+Dept.TABLENAME+" as d on LOCATE(d.id,c.deptIds)>0");
-        sb.append(" where 1=1");
-        
+        sb.append(" where 1=1 ");
+       
         //替换前台传入的字段名称
 		Map<String,String> propertyMap = new HashMap<String, String>();
 		propertyMap.put("teacherName", "u.cname");
@@ -116,10 +124,16 @@ public class CourseMaintain {
         ParseResult result = SqlKit.parseCriteria(criteria,true,"c",true);
         String orderSql = SqlKit.buildOrderSql(criteria,"c");
         Map<String,Object> params = new HashMap<String, Object>();
+        User user = (User)ContextHolder.getLoginUser();
+		//非管理员只能查看自己的课程
+        if(user.getType()!=3){
+        	sb.append(" and u.id=:userId ");
+        	params.put("userId", user.getId());
+		}
         if(result!=null){
             sb.append(" AND ");
             sb.append(result.getAssemblySql());
-            params = result.getValueMap();
+            params.putAll(result.getValueMap());
         }
         sb.append(" group by c.id");
         if(StringUtils.isEmpty(orderSql)){
@@ -177,4 +191,46 @@ public class CourseMaintain {
 		String hql = "update "+Course.class.getName()+" set isEnable="+isEnable+" where id="+courseId;
 		dao.executeHQL(hql, null);
 	}
+	
+	//供学生查看的课程列表，审核通过的，可用的
+	@DataProvider
+    public void queryCourseList(Page<Map<String,Object>> page, Criteria criteria){
+        
+		StringBuilder sb = new StringBuilder();
+        sb.append(" select c.*,");
+        sb.append(" u.cname as teacherName,");
+        sb.append(" r.`name` as classroomName,");
+        sb.append(" t.`name` as termName,");
+        sb.append(" group_concat(d.`name`) as deptNames ");
+        sb.append(" from "+Course.TABLENAME+" as c ");
+        sb.append(" join "+User.TABLENAME+" as u on c.teacherId=u.id ");
+        sb.append(" join "+Classroom.TABLENAME+" as r on c.classroomId=r.id");
+        sb.append(" join "+Term.TABLENAME+" as t on c.termId=t.id");
+        sb.append(" left join "+Dept.TABLENAME+" as d on LOCATE(d.id,c.deptIds)>0");
+        sb.append(" where c.isAudit=1 and c.isEnable=1 ");
+        
+        //替换前台传入的字段名称
+		Map<String,String> propertyMap = new HashMap<String, String>();
+		propertyMap.put("teacherName", "u.cname");
+		propertyMap.put("classroomName", "r.`name`");
+		propertyMap.put("termName", "t.`name`");
+		propertyMap.put("deptNames", "d.`name`");
+		SqlKit.replaceProperty(criteria, propertyMap);
+      		
+        ParseResult result = SqlKit.parseCriteria(criteria,true,"c",true);
+        String orderSql = SqlKit.buildOrderSql(criteria,"c");
+        Map<String,Object> params = new HashMap<String, Object>();
+        if(result!=null){
+            sb.append(" AND ");
+            sb.append(result.getAssemblySql());
+            params = result.getValueMap();
+        }
+        sb.append(" group by c.id");
+        if(StringUtils.isEmpty(orderSql)){
+            sb.append(" ORDER BY c.crTime desc");
+        }
+        sb.append(orderSql);
+        
+        dao.pagingQueryBySql(page, sb.toString(), params);
+    }
 }

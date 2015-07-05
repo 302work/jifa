@@ -115,7 +115,8 @@ public class UserService implements IUserService{
         user.setEmail(email);
         user.setMobile(mobile);
         user.setCompanyId(companyId);
-        dao.saveOrUpdate(user);
+        //系统注册功能
+//        dao.saveOrUpdate(user);
     }
 
     @Override
