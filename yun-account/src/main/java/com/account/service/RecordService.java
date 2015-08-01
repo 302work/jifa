@@ -56,8 +56,47 @@ public class RecordService {
         params.put("accountIds",aIds);
         params.put("isDeleted",false);
         dao.pagingQuery(page,sb.toString(),params);
+        getTotal(page,aIds,criteria);
     }
     /**
+     * 将统计信息放进每条记录
+     * @param page
+     * @param aIds
+     * @param criteria
+     */
+    private void getTotal(Page<Record> page, Long[] aIds, Criteria criteria) {
+    	StringBuilder sb = new StringBuilder();
+    	Map<String,Object> params = new HashMap<String, Object>();
+    	sb.append("select sum(money) as total from "+Record.TABLENAME+" where isDeleted=:isDeleted and accountId in (:accountIds) and type=:type ");
+    	params.put("isDeleted", false);
+    	params.put("accountIds", aIds);
+    	params.put("type", 1);
+        ParseResult result = SqlKit.parseCriteria(criteria,true,null,true);
+        if(result!=null){
+            sb.append(" AND ");
+            sb.append(result.getAssemblySql());
+            params.putAll(result.getValueMap());
+        }
+        String sql = sb.toString();
+        Object obj = dao.queryBySql(sql, params).get(0).get("total");
+    	double zhichu = 0.0;
+    	if(obj!=null){
+    		zhichu =  Double.valueOf(obj.toString());
+    	}
+    	params.put("type", 2);
+    	Object obj2 = dao.queryBySql(sql, params).get(0).get("total");
+    	double shouru = 0.0;
+    	if(obj2!=null){
+    		shouru =  Double.valueOf(obj2.toString());
+    	}
+    	for(Record record :page.getEntities()){
+			record.setZhichu(zhichu);
+			record.setShouru(shouru);
+			record.setShengyu(StringUtil.sub(shouru, zhichu));
+		}
+	}
+	
+	/**
      * 查找所有子分类
      * @param accountId
      * @return

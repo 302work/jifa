@@ -131,6 +131,21 @@
       <PropertyDef name="delUser">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="zhichu">
+        <Property name="dataType">double</Property>
+        <Property name="label">支出合计</Property>
+        <Property name="displayFormat">#,##0.00</Property>
+      </PropertyDef>
+      <PropertyDef name="shouru">
+        <Property name="dataType">double</Property>
+        <Property name="displayFormat">#,##0.00</Property>
+        <Property name="label">收入合计</Property>
+      </PropertyDef>
+      <PropertyDef name="shengyu">
+        <Property name="dataType">double</Property>
+        <Property name="displayFormat">#,##0.00</Property>
+        <Property name="label">剩余合计</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View layout="padding:20">
@@ -261,13 +276,14 @@
               <IndicatorColumn/>
               <DataColumn>
                 <Property name="property">name</Property>
-                <Property name="width">140</Property>
+                <Property name="width">160</Property>
                 <Property name="align">right</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
                 <Property name="property">money</Property>
                 <Property name="align">right</Property>
+                <Property name="width">120</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
@@ -275,6 +291,7 @@
                 <Property name="editable">false</Property>
                 <Property name="trigger">listDropDown1</Property>
                 <Property name="align">right</Property>
+                <Property name="width">80</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn>
@@ -282,30 +299,54 @@
                 <Property name="editable">false</Property>
                 <Property name="trigger">dateDropDown1</Property>
                 <Property name="align">right</Property>
+                <Property name="width">120</Property>
                 <Editor/>
               </DataColumn>
               <DataColumn name="remark">
                 <Property name="property">remark</Property>
-                <Property name="width">140</Property>
-                <Property name="align">right</Property>
-              </DataColumn>
-              <DataColumn name="accountName">
-                <Property name="property">accountName</Property>
-                <Property name="align">right</Property>
-              </DataColumn>
-              <DataColumn name="tag">
-                <Property name="property">tag</Property>
+                <Property name="width">160</Property>
                 <Property name="align">right</Property>
               </DataColumn>
               <DataColumn name="crTime">
                 <Property name="property">crTime</Property>
                 <Property name="readOnly">true</Property>
                 <Property name="align">right</Property>
+                <Property name="width">150</Property>
               </DataColumn>
               <DataColumn name="crUser">
                 <Property name="property">crUser</Property>
                 <Property name="readOnly">true</Property>
                 <Property name="align">right</Property>
+                <Property name="width">160</Property>
+              </DataColumn>
+              <DataColumn name="accountName">
+                <Property name="property">accountName</Property>
+                <Property name="align">right</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="tag">
+                <Property name="property">tag</Property>
+                <Property name="align">right</Property>
+                <Property name="width">120</Property>
+              </DataColumn>
+              <DataColumn name="zhichu">
+                <Property name="property">zhichu</Property>
+                <Property name="visible">true</Property>
+                <Property name="summaryType">average</Property>
+                <Property name="width">1</Property>
+                <Property name="ignored">false</Property>
+              </DataColumn>
+              <DataColumn name="shouru">
+                <Property name="property">shouru</Property>
+                <Property name="visible">true</Property>
+                <Property name="summaryType">average</Property>
+                <Property name="width">1</Property>
+              </DataColumn>
+              <DataColumn name="shengyu">
+                <Property name="property">shengyu</Property>
+                <Property name="visible">true</Property>
+                <Property name="summaryType">average</Property>
+                <Property name="width">1</Property>
               </DataColumn>
             </DataGrid>
             <Export2ReportAction id="export2ReportAction1">

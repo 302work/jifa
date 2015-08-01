@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.dosola.core.dao.interfaces.IPojo;
 
@@ -71,6 +72,13 @@ public class Record implements IPojo {
 
     @Column
     private Long accountId;//所属记账本id
+    
+    @Transient
+    private double zhichu;//合计的支出
+    @Transient
+    private double shouru;//合计的收入
+    @Transient
+    private double shengyu;//合计的剩余
 
     public Long getId() {
         return id;
@@ -191,4 +199,29 @@ public class Record implements IPojo {
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
+
+	public double getZhichu() {
+		return zhichu;
+	}
+
+	public void setZhichu(double zhichu) {
+		this.zhichu = zhichu;
+	}
+
+	public double getShouru() {
+		return shouru;
+	}
+
+	public void setShouru(double shouru) {
+		this.shouru = shouru;
+	}
+
+	public double getShengyu() {
+		return shengyu;
+	}
+
+	public void setShengyu(double shengyu) {
+		this.shengyu = shengyu;
+	}
+    
 }

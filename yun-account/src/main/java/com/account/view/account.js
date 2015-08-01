@@ -107,20 +107,33 @@ function refreshActions() {
 	arg.dom.innerText = "剩余资金：";
 };
 
+//@Bind #recordDataGrid.#doDate.onRenderCell
+!function(arg) {
+	window.zhichu = arg.data.get("zhichu");
+	window.shouru = arg.data.get("shouru");
+	window.shengyu =arg.data.get("shengyu");
+};
+
 //@Bind #recordDataGrid.#money.onRenderFooterCell
 !function(arg) {
 	//支出合计
-	arg.dom.innerText = window.zhichu;
+//	arg.dom.innerText = window.zhichu;
+	arg.dom.innerText = dorado.util.Common.formatFloat(arg.data.get("zhichu"), "#,##0.00");
+//	arg.dom.innerText = view.id("recordDataGrid").getCurrentEntity().get("zhichu");
 };
 //@Bind #recordDataGrid.#doDate.onRenderFooterCell
 !function(arg) {
 	//收入合计
-	arg.dom.innerText = window.shouru;
+//	arg.dom.innerText = window.shouru;
+	arg.dom.innerText = dorado.util.Common.formatFloat(arg.data.get("shouru"), "#,##0.00");
+	//recordDataGrid选中数据
+//	view.id("recordDataGrid").get("dataSet").getData("!CURRENT_ACCOUNT.#records");
 };
-//@Bind #recordDataGrid.#accountName.onRenderFooterCell
+//@Bind #recordDataGrid.#crTime.onRenderFooterCell
 !function(arg) {
 	//剩余资金
-	arg.dom.innerText = window.shengyu;
+//	arg.dom.innerText = window.shengyu;
+	arg.dom.innerText = dorado.util.Common.formatFloat(arg.data.get("shengyu"), "#,##0.00");
 };
 
 //@Bind #dataTreeAccount.onDataRowClick
