@@ -107,13 +107,6 @@ function refreshActions() {
 	arg.dom.innerText = "剩余资金：";
 };
 
-//@Bind #recordDataGrid.#doDate.onRenderCell
-!function(arg) {
-	window.zhichu = arg.data.get("zhichu");
-	window.shouru = arg.data.get("shouru");
-	window.shengyu =arg.data.get("shengyu");
-};
-
 //@Bind #recordDataGrid.#money.onRenderFooterCell
 !function(arg) {
 	//支出合计
