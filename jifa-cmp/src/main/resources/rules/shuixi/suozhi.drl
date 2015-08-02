@@ -1,0 +1,104 @@
+package com.cmp.main.view.record.shuixi
+ 
+import com.cmp.main.model.Record;
+import com.cmp.core.common.StringUtil;
+
+//梭织类别的上限价格
+function boolean isSuoZhi(String leibie){
+	 if(StringUtil.isEmpty(leibie)){
+	 	return false;
+	 }
+	 return leibie.equals("梭织");
+}
+
+//计算上限价格
+function Double getSuoZhiShangXianJiaGe(Record record,double price){
+   	//衣服重量
+   	double yifuzhongliang =  record.getYifuzhongliang();
+   	if(yifuzhongliang<=0){
+   		System.err.println("rules.shuixi.suozhi:衣服重量小于等于0");
+   		return null;
+   	}
+   	 //上限价格
+    double shangxianjiage = 0.0;
+    //单价
+   	shangxianjiage = StringUtil.mul(price,yifuzhongliang);
+   	//保留两位小数
+   	return StringUtil.round(shangxianjiage,getXiaoShu());
+}
+//普通水洗
+rule "jiagongpinzhong1"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("普通水洗"))
+    then
+        //普通水洗 3元/KG
+        $record.setShangxianjiage(getSuoZhiShangXianJiaGe($record,3.0));
+end
+
+//酵素洗+漂洗
+rule "jiagongpinzhong2"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("酵素洗+漂洗"))
+    then
+        //酵素洗+漂洗 9元/KG
+        $record.setShangxianjiage(getSuoZhiShangXianJiaGe($record,9.0));
+end
+
+//酵素洗
+rule "jiagongpinzhong3"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("酵素洗"))
+    then
+        //酵素洗 5元/KG
+        $record.setShangxianjiage(getSuoZhiShangXianJiaGe($record,5.0));
+end
+
+//酵素洗+漂洗+喷砂+破洞
+rule "jiagongpinzhong4"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("酵素洗+漂洗+喷砂+破洞"))
+    then
+        //酵素洗+漂洗+喷砂+破洞 6.3元/件
+        $record.setShangxianjiage(6.3);
+end
+
+//酵素洗+漂洗+喷砂+破洞+套色
+rule "jiagongpinzhong5"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("酵素洗+漂洗+喷砂+破洞+套色"))
+    then
+        //酵素洗+漂洗+喷砂+破洞+套色 6.9元/件
+        $record.setShangxianjiage(6.9);
+end
+
+//炒雪花
+rule "jiagongpinzhong6"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("炒雪花"))
+    then
+        //炒雪花 8.1元/件
+        $record.setShangxianjiage(8.1);
+end
+
+//吊染
+rule "jiagongpinzhong7"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isSuoZhi(shuixileibie),!StringUtil.isEmpty(jiagongpinzhong),jiagongpinzhong.equals("吊染"))
+    then
+        //吊染 6.3元/件
+        $record.setShangxianjiage(6.3);
+end

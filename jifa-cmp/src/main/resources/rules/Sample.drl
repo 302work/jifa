@@ -1,0 +1,30 @@
+package com
+ 
+import com.DroolsTest.Message;
+import com.cmp.main.model.Record;
+ 
+rule "Hello World"
+    when
+        m : Message( status == Message.HELLO, myMessage : message )
+    then
+        System.out.println( myMessage+"456" );
+        m.setMessage( "Goodbye cruel world" );
+        m.setStatus( Message.GOODBYE );
+        drools.update( m );
+end
+
+rule "GoodBye"
+    when
+       m : Message( status == Message.GOODBYE, myMessage : message )
+    then
+        System.out.println( myMessage+"123" );
+end
+
+rule "a"
+
+    when
+        r:Record(xiuhuazhenshu<2000)
+    then
+       r.setShangxianjiage(0.5);
+
+end

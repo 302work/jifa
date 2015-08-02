@@ -1,0 +1,102 @@
+package com.cmp.main.view.record.dingxing
+ 
+import com.cmp.main.model.Record;
+import com.cmp.core.common.StringUtil;
+
+function boolean isTrue(String str){
+	if(!StringUtil.isEmpty(str) && str.equals("是")){
+    	return true;
+    }
+    return false;
+}
+function boolean isFalse(String str){
+	if(!StringUtil.isEmpty(str) && str.equals("否")){
+    	return true;
+    }
+    return false;
+}
+
+//一面一遍磨毛
+rule "yibian"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(momaojiagongleibie1.equals("一面一遍磨毛"))
+    then
+       $record.setBasePrice(1.3);
+end
+
+//一面两遍磨毛
+rule "liangbian"
+   	salience 100  
+    lock-on-active true 
+    when
+      $record:Record(momaojiagongleibie1.equals("一面两遍磨毛"))
+    then
+       Double basePrice = 1.3;
+       Double basePrice1 = StringUtil.mul(basePrice,0.5);
+       basePrice = basePrice + (basePrice1 *(2-1));
+       $record.setBasePrice(basePrice);
+end
+
+//一面磨毛
+rule "yimianmomao"
+   	salience 99  
+    lock-on-active true 
+    when
+          $record:Record(momaojiagongleibie2.equals("一面磨毛"))
+    then
+        //基础价格
+        Double basePrice = $record.getBasePrice();
+        if(basePrice==null){
+        	System.err.println("rules.momoa.yimianmomao:基础价格为null");
+        	return;
+        }
+        double shangxianjiage = 0.0;
+        shangxianjiage = StringUtil.mul(basePrice.doubleValue(),1);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,2);
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//反正面磨毛
+rule "fanzhengmomao"
+   	salience 99  
+    lock-on-active true 
+    when
+          $record:Record(momaojiagongleibie2.equals("反正面磨毛"))
+    then
+        //基础价格
+        Double basePrice = $record.getBasePrice();
+        if(basePrice==null){
+        	System.err.println("rules.momao.fanzhengmomao:基础价格为null");
+        	return;
+        }
+        double shangxianjiage = 0.0;
+        shangxianjiage = StringUtil.mul(basePrice.doubleValue(),1.8);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,2);
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//集团内部加工企业，上浮20%
+rule "jituan"
+   	salience 98  
+    lock-on-active true 
+    when
+        $record:Record(isTrue(momaoshifoujituanneibu))
+    then
+         //上限价格
+        double shangxianjiage = 0.0;
+        //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.momao.jituan:第一级价格有误");
+        	return;
+        }
+        shangxianjiage = StringUtil.mul(firstShangxianjiage,1.2);
+         //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,2);
+        $record.setShangxianjiage(shangxianjiage);
+end

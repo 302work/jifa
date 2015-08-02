@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="rules" packages="rules">
+        <ksession name="ksession-rules"/>
+    </kbase>
+    <kbase name="xiuhua" packages="rules.xiuhua">
+        <ksession name="ksession-xiuhua"/>
+    </kbase>
+    <kbase name="shuixi" packages="rules.shuixi">
+        <ksession name="ksession-shuixi"/>
+    </kbase>
+    <kbase name="yinhua" packages="rules.yinhua">
+        <ksession name="ksession-yinhua"/>
+    </kbase>
+    <kbase name="qimao" packages="rules.qimao">
+        <ksession name="ksession-qimao"/>
+    </kbase>
+    <kbase name="dingxing" packages="rules.dingxing">
+        <ksession name="ksession-dingxing"/>
+    </kbase>
+    <kbase name="jianmao" packages="rules.jianmao">
+        <ksession name="ksession-jianmao"/>
+    </kbase>
+    <kbase name="momao" packages="rules.momao">
+        <ksession name="ksession-momao"/>
+    </kbase>
+     <kbase name="chengyi" packages="rules.chengyi">
+        <ksession name="ksession-chengyi"/>
+    </kbase>
+</kmodule>

@@ -1,0 +1,71 @@
+//created on: 2014-4-26
+package com.cmp.main.view.record.xiuhua
+
+import com.cmp.main.model.Record;
+import com.cmp.core.common.StringUtil;
+
+//计算基础价格
+rule "basePrice1"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isPingXiu(xiuhualeibie),xiuhuazhenshu<=1000)
+    then
+        $record.setBasePrice(0.4);//平绣并且小于1000,0.4
+end
+
+rule "basePrice2"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isPingXiu(xiuhualeibie),xiuhuazhenshu>1000,xiuhuazhenshu<=2000)
+    then
+        $record.setBasePrice(0.45);//平绣并且1001~2000,0.45
+end
+
+rule "basePrice3"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isPingXiu(xiuhualeibie),xiuhuazhenshu>2000,xiuhuazhenshu<=3000)
+    then
+        $record.setBasePrice(0.5);//平绣并且2001~3000,0.5
+end
+
+rule "basePrice4"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isPingXiu(xiuhualeibie),xiuhuazhenshu>3000,xiuhuazhenshu<=5000)
+    then
+         $record.setBasePrice(getBasePrice(0.19,$record.getXiuhuazhenshu()));//平绣并且3001~5000,0.19/千针
+end
+
+rule "basePrice5"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isPingXiu(xiuhualeibie),xiuhuazhenshu>5000)
+    then
+        $record.setBasePrice(getBasePrice(0.16,$record.getXiuhuazhenshu()));//平绣并且5000以上,0.16/千针
+end
+
+//贴布绣的针数按平绣计算，2015-06-27
+rule "basePrice6"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isTieBu(xiuhualeibie),xiuhuazhenshu<2001)
+    then
+         //绣花针数
+        $record.setBasePrice(0.38);//贴布绣并且2000以下,0.38
+end
+
+rule "basePrice7"
+	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(isTieBu(xiuhualeibie),xiuhuazhenshu>2000)
+    then
+        $record.setBasePrice(getBasePrice(0.19,$record.getXiuhuazhenshu()));//贴布绣并且2000以上,0.19/千针
+end

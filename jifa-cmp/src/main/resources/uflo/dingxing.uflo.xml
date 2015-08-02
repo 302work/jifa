@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uflo-process category-id="jifa" name="定型审批流程" key="dingxing_process">
+   <start g="30,24,101,63" name="分公司计划员" task-name="${msg}分公司计划员" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d">
+      <sequence-flow to="分公司技术人员" g="-51,-26" name="to 分公司技术人员"/>
+      <component-authority authority="Hide" component="dingxingpibupinzhong_id"/>
+      <component-authority authority="Hide" component="dingxingduifangsonghuo_id"/>
+      <component-authority authority="Hide" component="dingxingshifoujituanneibu_id"/>
+      <component-authority authority="Hide" component="factoryName_id"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+      <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </start>
+   <task g="300,28,142,60" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="technicalStaffHandler" task-name="${msg}分公司技术人员" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="分公司技术人员">
+      <sequence-flow to="分管负责人" g="-30,-17" name="to 分管负责人"/>
+	   <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+	  <component-authority authority="Hide" component="factoryName_id"/>
+	  <component-authority authority="Hide" component="zuidijia2013_id"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="44,128,115,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fcczHandler" task-name="${msg}分管负责人" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="分管负责人">
+      <sequence-flow to="分公司分管" g="-40,-19" name="to 分公司分管"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+	  <component-authority authority="Hide" component="autoFormDingXing"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="286,187,132,55" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgsfgHandler" task-name="${msg}分公司分管" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="分公司分管">
+      <sequence-flow to="外加工管理小组" g="-49,-12" name="to 外加工管理小组"/>
+	   <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="27,279,147,51" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgscWHandler" task-name="${msg}外加工管理小组" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="外加工管理小组">
+      <sequence-flow to="分公司领导" g="-50,-18" name="to 分公司领导"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+      <component-authority authority="Hide" component="zxshangxianjiage_id"/>
+   </task>
+   <task g="300,332,129,51" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgsfzrHandler" task-name="${msg}分公司领导" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="分公司领导">
+      <sequence-flow to="事业部长" g="-43,-9" name="to 事业部长"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+	  <component-authority authority="Hide" component="autoFormDingXing"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="45,393,115,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="sybzHandler" task-name="${msg}事业部长" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="事业部长">
+      <sequence-flow to="企管部" g="-51,-16" name="to 企管部"/>
+	   <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+	  <component-authority authority="Hide" component="autoFormDingXing"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="281,456,138,60" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="qgbfzrHandler" task-name="${msg}企管部" url="com.cmp.main.view.auditRecord.dingxing.DingXing.d" assignment-type="Handler" name="企管部">
+      <sequence-flow to="结束" g="-15,-12" name="to 结束"/>
+      <component-authority authority="Hide" component="添加"/>
+      <component-authority authority="Hide" component="删除"/>
+      <component-authority authority="Hide" component="放弃"/>
+   </task>
+   <end g="57,505,52,62" terminate="true" name="结束"/>
+</uflo-process>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uflo-process category-id="jifa" name="织布审批流程" key="zhibu_process">
+   <start g="63,27,101,63" name="分公司计划员" task-name="${msg}分公司计划员" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d">
+      <sequence-flow to="分公司技术人员" g="-47,-22" name="to 分公司技术人员"/>
+      <component-authority authority="Hide" component="factoryName_id"/>
+      <component-authority authority="Hide" component="fangjileibie_id"/>
+      <component-authority authority="Hide" component="shebeimingcheng_id"/>
+      <component-authority authority="Hide" component="pibuzuzhileibie_id"/>
+      <component-authority authority="Hide" component="shiyongshaxian_id"/>
+      <component-authority authority="Hide" component="chicun_id"/>
+      <component-authority authority="Hide" component="zhenju_id"/>
+      <component-authority authority="Hide" component="zuzhijiegou_id"/>
+      <component-authority authority="Hide" component="gongyisichang_id"/>
+      <component-authority authority="Hide" component="xiaohao_id"/>
+      <component-authority authority="Hide" component="fanghuoshijian_id"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+	   <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="zxshangxianjiage_id"/>
+   </start>
+   <task g="317,52,142,60" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="technicalStaffHandler" task-name="${msg}分公司技术人员" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d" assignment-type="Handler" name="分公司技术人员">
+      <sequence-flow to="分管负责人" g="-30,-17" name="to 分管负责人"/>
+	  <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+	  <component-authority authority="Hide" component="factoryName_id"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+      <component-authority authority="Hide" component="zxshangxianjiage_id"/>
+   </task>
+   <task g="86,160,115,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fcczHandler" task-name="${msg}分管负责人" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d" assignment-type="Handler" name="分管负责人">
+      <sequence-flow to="内部织布工厂" g="-54,-15" name="to 内部织布工厂"/>
+	  <component-authority authority="Hide" component="autoFormZhiBu"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+   </task>
+   <task g="63,284,132,55" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgsfgHandler" task-name="${msg}分公司分管" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d" assignment-type="Handler" name="分公司分管">
+      <sequence-flow to="分公司领导" g="-44,-19" name="to 分公司领导"/>
+	  <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="zxshangxianjiage_id"/>
+   </task>
+   <task g="303,341,129,51" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgsfzrHandler" task-name="${msg}分公司领导" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d" assignment-type="Handler" name="分公司领导">
+      <sequence-flow to="企管部" g="-32,-13" name="to 企管部"/>
+      <component-authority authority="Hide" component="添加"/>
+      <component-authority authority="Hide" component="删除"/>
+      <component-authority authority="Hide" component="保存"/>
+      <component-authority authority="Hide" component="放弃"/>
+      <component-authority authority="Hide" component="autoFormZhiBu"/>
+   </task>
+   <task g="56,429,138,60" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="qgbfzrHandler" task-name="${msg}企管部" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d" assignment-type="Handler" name="企管部">
+      <sequence-flow to="结束" g="-15,-12" name="to 结束"/>
+      <component-authority authority="Hide" component="添加"/>
+      <component-authority authority="Hide" component="删除"/>
+      <component-authority authority="Hide" component="放弃"/>
+   </task>
+   <end g="347,492,52,62" terminate="true" name="结束"/>
+   <task g="339,211,115,50" allow-specify-assignee="false" task-type="Countersign" assignment-handler-bean="nbzbgcHandler" task-name="${msg}内部织布工厂" url="com.cmp.main.view.auditRecord.zhibu.ZhiBu.d" assignment-type="Handler" name="内部织布工厂">
+      <sequence-flow to="分公司分管" g="-25,-16" name="to 分公司分管"/>
+      <component-authority authority="Hide" component="autoFormZhiBu"/>
+      <component-authority authority="Hide" component="添加"/>
+      <component-authority authority="Hide" component="删除"/>
+      <component-authority authority="Hide" component="放弃"/>
+      <component-authority authority="Hide" component="保存"/>
+   </task>
+</uflo-process>

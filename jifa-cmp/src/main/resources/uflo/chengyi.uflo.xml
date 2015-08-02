@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uflo-process category-id="jifa" name="成衣审批流程" key="chengyi_process">
+   <start g="20,14,91,67" name="分公司计划员" task-name="${msg}分公司计划员" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d">
+      <description/>
+      <sequence-flow to="分管负责人" g="-32,-23" name="to 分管负责人"/>
+      <component-authority authority="Hide" component="chanpinpinzhong_id"/>
+      <component-authority authority="Hide" component="zhuanleibie_id"/>
+      <component-authority authority="Hide" component="zbxs_id"/>
+      <component-authority authority="Hide" component="gszbxs_id"/>
+      <component-authority authority="Hide" component="gsfjxs_id"/>
+      <component-authority authority="Hide" component="factoryName_id"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+      <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="fjxs_id"/>
+      <component-authority authority="Hide" component="xslr_btn_id"/>
+      <component-authority authority="Hide" component="gongxu_id"/>
+      <component-authority authority="Hide" component="un_pass_btn_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </start>
+   <task g="294,41,115,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fcczHandler" task-name="${msg}分管负责人" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="分管负责人">
+      <description/>
+      <sequence-flow to="分公司分管" g="-42,-12" name="to 分公司分管"/>
+	  <component-authority authority="Hide" component="autoFormChengYi"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="15,118,132,55" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgsfgHandler" task-name="${msg}分公司分管" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="分公司分管">
+      <description/>
+      <sequence-flow to="分公司核系数人员" g="-47,-10" name="to 分公司核系数人员"/>
+	  <component-authority authority="Hide" component="chanpinpinzhong_id"/>
+      <component-authority authority="Hide" component="zhuanleibie_id"/>
+      <component-authority authority="Hide" component="zbxs_id"/>
+      <component-authority authority="Hide" component="gszbxs_id"/>
+      <component-authority authority="Hide" component="gsfjxs_id"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+	   <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+      <component-authority authority="Hide" component="fjxs_id"/>
+      <component-authority authority="Hide" component="xslr_btn_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+    <task g="289,178,151,56" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgshxsryHandler" task-name="${msg}分公司核系数人员" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="分公司核系数人员">
+      <description/>
+      <sequence-flow to="企管部审核系数" g="-55,-8" name="to 企管部审核系数"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+	  <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+      <component-authority authority="Hide" component="gszbxs_id"/>
+      <component-authority authority="Hide" component="gsfjxs_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   
+   <task g="23,237,144,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="qgbshxsHandler" task-name="${msg}企管部审核系数" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="企管部审核系数">
+      <description/>
+      <sequence-flow to="分公司外加工负责人" g="-38,-12" name="to 分公司外加工负责人"/>
+	   <component-authority authority="Hide" component="fenchangshenhejiage_id"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="zuidijia2013_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   
+    <task g="316,284,158,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgswjgfzrHandler" task-name="${msg}分公司外加工负责人" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="分公司外加工负责人">
+      <description/>
+      <sequence-flow to="分公司领导" g="-42,-12" name="to 分公司领导"/>
+      <component-authority authority="Hide" component="shijijiage_id"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   
+   <task g="21,350,129,51" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="fgsfzrHandler" task-name="${msg}分公司领导" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="分公司领导">
+      <description/>
+      <sequence-flow to="事业部长" g="-30,-10" name="to 事业部长"/>
+	  <component-authority authority="Hide" component="autoFormChengYi"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="312,384,115,50" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="sybzHandler" task-name="${msg}事业部长" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="事业部长">
+      <description>${msg}</description>
+      <sequence-flow to="企管部" g="-35,-17" name="to 企管部"/>
+	  <component-authority authority="Hide" component="autoFormChengYi"/>
+	  <component-authority authority="Hide" component="添加"/>
+	  <component-authority authority="Hide" component="删除"/>
+	  <component-authority authority="Hide" component="放弃"/>
+	  <component-authority authority="Hide" component="保存"/>
+      <component-authority authority="Hide" component="shangxianjiage"/>
+      <component-authority authority="Hide" component="zxshangxianjiage"/>
+   </task>
+   <task g="19,457,138,60" allow-specify-assignee="false" task-type="Normal" assignment-handler-bean="qgbfzrHandler" task-name="${msg}企管部" url="com.cmp.main.view.auditRecord.chengyi.ChengYi.d" assignment-type="Handler" name="企管部">
+      <description/>
+      <sequence-flow to="结束" g="-15,-12" name="to 结束"/>
+      <component-authority authority="Hide" component="添加"/>
+      <component-authority authority="Hide" component="删除"/>
+      <component-authority authority="Hide" component="放弃"/>
+   </task>
+   <end g="333,493,52,62" terminate="true" name="结束">
+      <description>${msg}</description>
+   </end>
+  
+  
+</uflo-process>

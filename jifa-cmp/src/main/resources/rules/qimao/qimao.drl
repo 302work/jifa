@@ -1,0 +1,93 @@
+package com.cmp.main.view.record.qimao
+ 
+import com.cmp.main.model.Record;
+import com.cmp.core.common.StringUtil;
+
+function boolean isTrue(String str){
+	if(!StringUtil.isEmpty(str) && str.equals("是")){
+    	return true;
+    }
+    return false;
+}
+
+//毛圈
+rule "maoquan"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(pibupinzhong.equals("毛圈"))
+    then
+       $record.setBasePrice(1.8);
+end
+
+//其它坯布
+rule "qitapibu"
+   	salience 100  
+    lock-on-active true 
+    when
+        $record:Record(pibupinzhong.equals("其它坯布"))
+    then
+       $record.setBasePrice(2.1);
+end
+
+//反正面起毛，*1.8
+rule "jiagongleibie"
+   	salience 99  
+    lock-on-active true 
+    when
+        $record:Record(jiagongleibie.equals("反正面起毛"))
+    then
+        //基础价格
+        Double basePrice = $record.getBasePrice();
+        if(basePrice==null){
+        	System.err.println("rules.qimao.jiagongleibie:基础价格为null");
+        	return;
+        }
+        double shangxianjiage = 0.0;
+        shangxianjiage = StringUtil.mul(basePrice.doubleValue(),1.8);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,2);
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//一面起毛，*1
+rule "jiagongleibie2"
+   	salience 99  
+    lock-on-active true 
+    when
+        $record:Record(jiagongleibie.equals("一面起毛"))
+    then
+        //基础价格
+        Double basePrice = $record.getBasePrice();
+        if(basePrice==null){
+        	System.err.println("rules.qimao.jiagongleibie:基础价格为null");
+        	return;
+        }
+        double shangxianjiage = 0.0;
+        shangxianjiage = StringUtil.mul(basePrice.doubleValue(),1);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,2);
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//集团内部加工企业，上浮20%
+rule "jituan"
+   	salience 98  
+    lock-on-active true 
+    when
+        $record:Record(isTrue(shifoujituanneibu))
+    then
+         //上限价格
+        double shangxianjiage = 0.0;
+        //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.qimao.jituan:第一级价格有误");
+        	return;
+        }
+        shangxianjiage = StringUtil.mul(firstShangxianjiage,1.2);
+         //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,2);
+        $record.setShangxianjiage(shangxianjiage);
+end

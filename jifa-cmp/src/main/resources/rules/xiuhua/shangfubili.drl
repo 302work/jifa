@@ -1,0 +1,43 @@
+//created on: 2014-4-26
+package com.cmp.main.view.record.xiuhua
+
+import com.cmp.main.model.Record;
+import com.cmp.core.common.StringUtil;
+
+
+//计算上浮比例
+rule "shangfubili1"
+	salience 99  
+    lock-on-active true 
+    when
+        $record:Record()
+    then
+        $record.setShangfubili(0.0);//默认0
+end
+
+rule "shangfubili2"
+	salience 98  
+    lock-on-active true 
+    when
+        $record:Record(isMaoJinXiu(xiuhualeibie2))
+    then
+        $record.setShangfubili(10.0);//毛巾绣，上浮10%
+end
+
+rule "shangfubili3"
+	salience 98  
+    lock-on-active true 
+    when
+        $record:Record(isYangMaoXiu(xiuhualeibie2))
+    then
+        $record.setShangfubili(8.0);//羊毛绣，上浮8%
+end
+
+rule "shangfubili4"
+	salience 98  
+    lock-on-active true 
+    when
+        $record:Record(isJxYxCiXiu(xiuhualeibie2))
+    then
+        $record.setShangfubili(30.0);//金线银线刺绣，上浮30%
+end

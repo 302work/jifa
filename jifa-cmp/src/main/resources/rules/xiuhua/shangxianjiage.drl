@@ -1,0 +1,277 @@
+//created on: 2014-4-26
+package com.cmp.main.view.record.xiuhua
+
+import com.cmp.main.model.Record;
+import com.cmp.core.common.StringUtil;
+import java.util.Arrays;
+
+
+//计算上限价格
+
+//[平绣，贴布绣] 计算公式：绣花基准单价*“（针数/1000）”*（1+上浮比例）*“（1+隔头绣30%）”(计算第一级)
+rule "shangxianjiage1"
+	salience 97  
+    lock-on-active true 
+    when
+        //不为空
+        $record:Record(!StringUtil.isEmpty(xiuhualeibie));
+    then
+        //绣花针数
+        int xiuhuazhenshu = $record.getXiuhuazhenshu();
+        //基础单价
+        double basePrice = $record.getBasePrice();
+        //上浮比例
+        double shangfubili = $record.getShangfubili();
+        
+        double shangxianjiage = 0.0;
+        //shangxianjiage = StringUtil.mul(basePrice,StringUtil.div(xiuhuazhenshu,1000));//绣花基准单价*“（针数/1000）”
+        //System.out.println("======================基础价格2："+basePrice);
+        //System.out.println("======================shangxianjiage："+shangxianjiage);
+        shangxianjiage = StringUtil.mul(basePrice,(1+StringUtil.div(shangfubili,100)));//*（1+上浮比例）
+        //System.out.println("======================shangxianjiage2："+shangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        if(shangxianjiage>0.0){
+        	$record.setShangxianjiage(shangxianjiage);
+        }
+        System.out.println("第一级价格："+shangxianjiage);
+end
+
+//绣花类别2为亮片绣（第二级）
+rule "shangxianjiage2"
+	salience 96  
+    lock-on-active true 
+    when
+        $record:Record(isLiangPianXiu(xiuhualeibie2))
+    then
+        //块数（亮片数量）
+        Integer liangpianshu = $record.getLiangpianshu();
+        if(liangpianshu==null || liangpianshu.intValue()<0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:亮片数量有误");
+        	return;
+        }
+         //上限价格
+        double shangxianjiage = 0.0;
+        //第二级上限价格
+        double secondShangxianjiage = 0.0;
+         //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:亮片绣第一级上限价格为空");
+        	return;
+        }
+        //亮片0.004元/枚
+       	secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.004,liangpianshu.intValue()));
+        //System.out.println("亮片绣第二级价格："+secondShangxianjiage);
+        //上限价格等于第一级价格+第二级价格
+        shangxianjiage = StringUtil.add(firstShangxianjiage.doubleValue(),secondShangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//印花刺绣（第二级）
+rule "shangxianjiage3"
+	salience 96  
+    lock-on-active true 
+    when
+        $record:Record(isYinHuaCiXiu(xiuhualeibie2))
+    then
+        //图案定点数
+        Integer yinhuacixiudianshu = $record.getYinhuacixiudianshu();
+        if(yinhuacixiudianshu==null || yinhuacixiudianshu.intValue()<0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:印花刺绣的图案定点数有误");
+        	return;
+        }
+         //上限价格
+        double shangxianjiage = 0.0;
+        //第二级上限价格
+        double secondShangxianjiage = 0.0;
+         //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:印花刺绣第一级上限价格为空");
+        	return;
+        }
+        //每处加0.20元
+       	secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.2,yinhuacixiudianshu.intValue()));
+        System.out.println("印花刺绣第二级价格："+secondShangxianjiage);
+        //上限价格等于第一级价格+第二级价格
+        shangxianjiage = StringUtil.add(firstShangxianjiage.doubleValue(),secondShangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//贴布绣（第二级）
+rule "shangxianjiage4"
+	salience 96  
+    lock-on-active true 
+    when
+        $record:Record(isTieBu(xiuhualeibie))
+    then
+        //绣花类别
+        String xiuhualeibie = $record.getXiuhualeibie();
+        //块数
+        Integer kuaishu = $record.getKuaishu();
+        if(kuaishu==null || kuaishu.intValue()<0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:贴布绣块数有误");
+        	return;
+        }
+        //上限价格
+        double shangxianjiage = 0.0;
+        //第二级上限价格
+        double secondShangxianjiage = 0.0;
+        //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:贴布绣第一级上限价格为空");
+        	return;
+        }
+        //贴布单层+0.11元/块
+       	if(xiuhualeibie.equals("贴布绣单层")){
+       		secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.11,kuaishu.intValue()));
+       	}
+       	//多层+0.055元/块（上下一样）
+       	if(xiuhualeibie.equals("贴布绣多层（上下一样）")){
+       		secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.055,kuaishu.intValue()));
+       	}
+       	//多层+0.09元/块（上下不一样）
+       	if(xiuhualeibie.equals("贴布绣多层（上下不一样）")){
+       		secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.09,kuaishu.intValue()));
+       	}
+       	//手剪印花贴布加0.225元/块
+       	if(xiuhualeibie.equals("贴布绣手剪")){
+       		secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.225,kuaishu.intValue()));
+       	}
+        //System.out.println("贴布绣第二级价格："+secondShangxianjiage);
+        //上限价格等于第一级价格+第二级价格
+        shangxianjiage = StringUtil.add(firstShangxianjiage.doubleValue(),secondShangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//亮片绣点数大于0
+rule "shangxianjiage5"
+	salience 96  
+    lock-on-active true 
+    when
+        $record:Record(liangpianshu!=null,liangpianshu.intValue()>0)
+    then
+        //块数（亮片数量）
+        Integer liangpianshu = $record.getLiangpianshu();
+        if(liangpianshu==null || liangpianshu.intValue()<0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:亮片数量有误");
+        	return;
+        }
+         //上限价格
+        double shangxianjiage = 0.0;
+        //第二级上限价格
+        double secondShangxianjiage = 0.0;
+         //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:亮片绣第一级上限价格为空");
+        	return;
+        }
+        //亮片0.004元/枚
+       	secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.004,liangpianshu.intValue()));
+        //System.out.println("亮片绣第二级价格："+secondShangxianjiage);
+        //上限价格等于第一级价格+第二级价格
+        shangxianjiage = StringUtil.add(firstShangxianjiage.doubleValue(),secondShangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//印花刺绣点数大于0
+rule "shangxianjiage6"
+	salience 96  
+    lock-on-active true 
+    when
+       $record:Record(yinhuacixiudianshu!=null,yinhuacixiudianshu.intValue()>0)
+    then
+        //图案定点数
+        Integer yinhuacixiudianshu = $record.getYinhuacixiudianshu();
+        if(yinhuacixiudianshu==null || yinhuacixiudianshu.intValue()<0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:印花刺绣的图案定点数有误");
+        	return;
+        }
+         //上限价格
+        double shangxianjiage = 0.0;
+        //第二级上限价格
+        double secondShangxianjiage = 0.0;
+         //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage:印花刺绣第一级上限价格为空");
+        	return;
+        }
+        //每处加0.20元
+       	secondShangxianjiage = StringUtil.add(secondShangxianjiage,StringUtil.mul(0.2,yinhuacixiudianshu.intValue()));
+        //System.out.println("印花刺绣第二级价格："+secondShangxianjiage);
+        //上限价格等于第一级价格+第二级价格
+        shangxianjiage = StringUtil.add(firstShangxianjiage.doubleValue(),secondShangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//先绣标（第三级）
+rule "shangxianjiage7"
+	salience 95  
+    lock-on-active true 
+    when
+        $record:Record(isTrue(shifouxianxiubiao))
+    then
+        //上限价格
+        double shangxianjiage = 0.0;
+        //先绣标,0.4
+        double secondShangxianjiage = 0.4;
+        //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage7:第一级上限价格为空");
+        	return;
+        }
+        //上限价格等于第一级价格+第二级价格
+        shangxianjiage = StringUtil.add(firstShangxianjiage.doubleValue(),secondShangxianjiage);
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
+
+//最后计算，隔头绣 *1.3
+rule "shangxianjiage8"
+	salience 94  
+    lock-on-active true 
+    when
+        $record:Record(isTrue(shifougetouxiu))
+    then
+        //上限价格
+        double shangxianjiage = 0.0;
+        //第一级上限价格
+        Double firstShangxianjiage = $record.getShangxianjiage();
+        if(firstShangxianjiage==null || firstShangxianjiage.doubleValue()<0.0){
+        	$record.setShangxianjiage(null);
+        	System.err.println("rules.xiuhua.shangxiangjiage8:第一级上限价格为空");
+        	return;
+        }
+        //*1.3
+        shangxianjiage = StringUtil.mul(firstShangxianjiage,getGeTouBiLi());
+        //保留2位小数
+        shangxianjiage = StringUtil.round(shangxianjiage,getXiaoShu());
+        $record.setShangxianjiage(shangxianjiage);
+end
