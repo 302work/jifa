@@ -2,6 +2,7 @@ package com.elective.view.record;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -9,13 +10,16 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
+import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.context.ContextHolder;
+import com.bstek.bdf2.core.service.IDeptService;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
+import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Classroom;
 import com.elective.pojo.Course;
@@ -34,6 +38,10 @@ public class RecordMaintain {
 	@Resource
     private IMasterDao dao;
 
+	@Resource(name=IDeptService.BEAN_ID)
+	private IDeptService deptService;
+	
+	
 	
 	@Expose
 	public String saveRecord(Map<String,Object> param) throws Exception {
@@ -46,7 +54,87 @@ public class RecordMaintain {
 		params.put("courseId", courseId);
 		params.put("studentId", studentId);
 		if(dao.queryCount(hql, params)>0){
-			return "已选了该课程";
+			return "该学生已选了该课程";
+		}
+		
+		Course course = dao.getObjectById(Course.class, courseId);
+		int isEnable = course.getIsEnable();//是否可用，1为可用，2为不可用
+		int isAudit = course.getIsAudit();//是否已审核，1为已审核，2为未审核，3为审核未通过
+		int userType = user.getType();//类型，1为学生，2为老师，3为管理员
+		if(userType==1 && isEnable==2 || isAudit!=1){
+			return "课程不可用，请联系管理员";
+		}
+		if(userType==2){
+			if(isAudit!=1){
+				return "课程还没有审核通过，请联系管理员";
+			}
+			if(!course.getCrUser().equals(user.getUsername())){
+				return "只能维护自己的课程";
+			}
+		}
+		
+		//查询当前用户的dept id
+		List<IDept> deptList = user.getDepts();
+		User student = null;
+		//如果是老师指定学生
+		if(userType!=1){
+			student = dao.getObjectById(User.class, studentId);
+			deptList = deptService.loadUserDepts(student.getUsername());
+		}
+		
+		//课程限制的年级
+		String deptIds = course.getDeptIds();//这里存的是部门名字
+		if(!StringUtil.isEmpty(deptIds)){
+			boolean flg = false;
+			for(IDept dept : deptList){
+				String parentId = dept.getParentId();
+				if(StringUtil.isEmpty(deptIds)){
+					flg = true;
+					break;
+				}
+				String[] array = deptIds.split(",");
+				for (String str : array) {
+					if(str.equals(parentId) || str.equals(dept.getId())){
+						flg = true;
+						break;
+					}
+				}
+				
+			}
+			if(!flg){
+				return "对不起，您没有权限选择该们课程";
+			}
+		}
+		
+		// 班限制人数
+		int num = course.getNum();
+		//查询该班级的报名人数
+		//String sql = "select count(r.id),ud.deptId from e_record as r join e_user_dept as ud on r.studentId=ud.userId  join e_course as c on r.courseId=c.id where r.isDeleted=0 and r.courseId=12  and ud.deptId='aa'";
+		StringBuilder sb = new StringBuilder();
+		sb.append(" select count(r.id) as ct,ud.deptId ");
+		sb.append(" from "+Record.TABLENAME+" as r ");
+		sb.append(" join "+DeptUser.TABLENAME+" as ud on r.studentId=ud.userId ");
+		sb.append(" join "+Course.TABLENAME+" as c on r.courseId=c.id ");
+		sb.append(" where r.isDeleted=0 and r.courseId=:courseId ");
+		sb.append(" and ud.deptId=:deptId ");
+		Map<String,Object> countParams = new HashMap<String, Object>();
+		countParams.put("courseId", courseId);
+		countParams.put("deptId", deptList.get(0));
+		List<Map<String,Object>> countList = dao.queryBySql(sb.toString(), countParams);
+		if(countList!=null && countList.size()>0){
+			int deptCount = Integer.valueOf(countList.get(0).get("ct").toString());
+			if(num<=deptCount){
+				return "对不起，该课程名额已满，您可以选择其他课程。";
+			}
+		}
+		//总人数限制
+		int total = course.getTotal();
+		String countSql = "select id from "+Record.TABLENAME+" as r where r.isDeleted=0 and r.courseId=:courseId";
+		Map<String,Object> totalParams = new HashMap<String, Object>();
+		totalParams.put("courseId", courseId);
+		int curTotal = dao.queryCountBySql(countSql, totalParams);
+		if(curTotal>=total){
+			return "对不起，该课程名额已满，您可以选择其他课程";
 		}
 		Record record = new Record();
 		record.setCourseId(courseId);
@@ -59,6 +147,8 @@ public class RecordMaintain {
 		return null;
 	}
 	
+
+
 	@Expose
 	public void deleteRecord(Map<String,Object> param) throws Exception {
 		Long courseId = Long.valueOf(param.get("courseId").toString());

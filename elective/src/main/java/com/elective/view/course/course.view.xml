@@ -609,6 +609,8 @@ dialog.hide();</ClientEvent>
             <Property name="name">type</Property>
             <Property name="property">type</Property>
             <Property name="tags">tagA</Property>
+            <Property name="trigger">listDropDown1</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement name="name">
@@ -654,6 +656,8 @@ dialog.hide();</ClientEvent>
             <Property name="name">deptNames</Property>
             <Property name="property">deptNames</Property>
             <Property name="tags">tagA</Property>
+            <Property name="trigger">listDropDownDept</Property>
+            <Property name="editable">false</Property>
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
@@ -663,6 +667,14 @@ dialog.hide();</ClientEvent>
             <Editor/>
           </AutoFormElement>
         </AutoForm>
+        <ListDropDown id="listDropDown1">
+          <Property name="items">单周,双周</Property>
+          <Property name="autoOpen">true</Property>
+        </ListDropDown>
+        <ListDropDown id="listDropDownDept">
+          <Property name="items">无限制,七年级,八年级</Property>
+          <Property name="autoOpen">true</Property>
+        </ListDropDown>
       </Children>
       <Tools/>
     </Dialog>

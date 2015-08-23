@@ -50,7 +50,9 @@ public class DeptService implements IDeptService{
         try {
             List<IDept> depts = new ArrayList<IDept>();
             for(Map<String,Object> map : list){
-                depts.add((Dept)DosolaUtil.convertMap(Dept.class,map));
+                Dept dept = new Dept();
+                DosolaUtil.buildPoJo(dept,map);
+            	depts.add(dept);
             }
             return depts;
         } catch (Exception e) {

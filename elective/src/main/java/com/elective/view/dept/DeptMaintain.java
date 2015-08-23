@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -19,12 +20,14 @@ import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.bdf2.core.exception.NoneLoginException;
+import com.bstek.bdf2.core.security.SecurityUtils;
 import com.bstek.bdf2.core.security.UserShaPasswordEncoder;
 import com.bstek.bdf2.core.service.IDeptService;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
+import com.dosola.core.common.DateUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Dept;
 import com.elective.pojo.DeptUser;
@@ -185,6 +188,8 @@ public class DeptMaintain {
 			du.setDeptId(deptId);
 			du.setUserId(user.getId());
 			dao.saveOrUpdate(du);
+			//添加到角色中
+			saveRoleMember(user.getUsername(), user.getType());
 		}else if(EntityState.MODIFIED.equals(state)){
 			user.setIsDeleted(false);
 			dao.saveOrUpdate(user);
@@ -192,8 +197,49 @@ public class DeptMaintain {
 			du.setDeptId(deptId);
 			du.setUserId(user.getId());
 			dao.saveOrUpdate(du);
+			//添加到角色中
+			saveRoleMember(user.getUsername(), user.getType());
 		}else if (EntityState.DELETED.equals(state)) {
 			userService.deleteUser(user);
+			//从角色删除
+			deleteRoleMember(user.getUsername(), user.getType());
 		}	
+		//刷新缓存
+		SecurityUtils.refreshUrlSecurityMetadata();
+		SecurityUtils.refreshComponentSecurityMetadata();
+	}
+	
+	private void saveRoleMember(String userName,int userType){
+		deleteRoleMember(userName, userType);;
+		String roleId = getRoleId(userType);
+		deleteRoleMember(userName, userType);
+		String sql = "INSERT INTO `BDF2_ROLE_MEMBER` VALUES ('"+UUID.randomUUID().toString()+"', '"+DateUtil.getDateTimeStr(new Date())+"', null, b'1', null, '"+roleId+"', '"+userName+"', null)";
+		dao.executeSQL(sql, null);
+	}
+	
+	private void deleteRoleMember(String userName,int userType){
+		String roleId = getRoleId(userType);
+		String sql = " delete from `BDF2_ROLE_MEMBER` where username_='"+userName+"' and role_id_='"+roleId+"'";
+		dao.executeSQL(sql, null);
+	}
+	
+	private String getRoleId(int userType){
+		//2c32476e-0f95-48d5-8023-423036a99b25 老师
+		//c2517ee5-e6a1-43ed-a4f6-676437655bb8 管理员
+		//f2b74c58-205f-4b71-96cf-7ea00854d7db 学生
+		String roleId = "";
+		//1为学生，2为老师，3为管理员
+		switch (userType) {
+			case 1:
+				roleId = "f2b74c58-205f-4b71-96cf-7ea00854d7db";
+				break;
+			case 2:
+				roleId = "2c32476e-0f95-48d5-8023-423036a99b25";	
+				break;
+			case 3:
+				roleId = "c2517ee5-e6a1-43ed-a4f6-676437655bb8";
+				break;
+		}
+		return roleId;
 	}
 }

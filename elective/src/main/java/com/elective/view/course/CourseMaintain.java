@@ -22,6 +22,7 @@ import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
 import com.dosola.core.common.DosolaUtil;
+import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Classroom;
 import com.elective.pojo.Course;
@@ -45,6 +46,12 @@ public class CourseMaintain {
 		for (int i =0;i<maps.size();i++) {
 			EntityState state = EntityUtils.getState(maps.get(i));
 			Course course = (Course)DosolaUtil.convertMap(Course.class, maps.get(i));
+			String deptNames = maps.get(i).get("deptNames")==null?"":maps.get(i).get("deptNames").toString();
+			if(deptNames.equals("无限制")){
+				course.setDeptIds(null);
+			}else{
+				course.setDeptIds(getDeptIdByName(deptNames));
+			}
 			IUser user2 = ContextHolder.getLoginUser();
 	    	String userName = user2.getUsername();
 			if(EntityState.NEW.equals(state)){
@@ -72,6 +79,33 @@ public class CourseMaintain {
 			}
 		}
 	}
+	
+	/**
+	 * @param deptIds
+	 * @return 
+	 */
+	@SuppressWarnings("unchecked")
+	private String getDeptIdByName(String deptNames) {
+		if(StringUtil.isEmpty(deptNames)){
+			return null;
+		}
+		String[] array = deptNames.split(",");
+		String ids = "";
+		for (String str : array) {
+			String hql = "From "+Dept.class.getName()+" where name=:name";
+			Map<String,Object> params = new HashMap<String, Object>();
+			params.put("name", str);
+			List<Dept> deptList = (List<Dept>) dao.query(hql, params);
+			if(deptList==null || deptList.size()==0){
+				throw new RuntimeException("系统异常，组织不存在，请联系管理员");
+			}
+			if(!StringUtil.isEmpty(ids)){
+				ids += ",";
+			}
+			ids += deptList.get(0).getId();
+		}
+		return ids;
+	}
 	/**
 	 * 检查教室是否被占用
 	 * @param course
@@ -89,7 +123,7 @@ public class CourseMaintain {
 		}
 		params.put("classroomId", course.getClassroomId());
 		params.put("type", course.getType());
-		params.put("courseId", courseId);
+//		params.put("courseId", courseId);
 		int count = dao.queryCount(hql, params);
 		if(count>0){
 			throw new Exception("该教室已被占用，请选择其他教室或更改上课时间。");
