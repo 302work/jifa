@@ -119,14 +119,27 @@ switch(arg.code){&#xD;
       </DataPilot>
       <Separator/>
       <ToolBarButton>
-        <Property name="caption">查看作业</Property>
-        <Property name="iconClass">fa fa-search</Property>
-      </ToolBarButton>
-      <Separator/>
-      <ToolBarButton>
         <Property name="caption">导出</Property>
         <Property name="iconClass">fa fa-file-excel-o</Property>
         <Property name="action">recordExport2ReportAction</Property>
+      </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">var data = view.id(&quot;dataSetRecord&quot;).getData(&quot;#&quot;);
+if(data){
+	var recordId = data.get(&quot;id&quot;);
+	var studentName = data.get(&quot;studentName&quot;);
+	var deptNames = data.get(&quot;deptNames&quot;);
+	view.id(&quot;ajaxActionSelectHomework&quot;).set(&quot;parameter&quot;,{recordId:recordId}).execute(function(result){
+		view.id(&quot;homeworkHtml&quot;).set(&quot;content&quot;,result);
+		var dialog = view.id(&quot;studentHomeworkDialog&quot;);
+		dialog.set(&quot;caption&quot;,deptNames+&quot; &quot;+studentName+&quot;的作业&quot;);
+		dialog.show();
+	});
+}
+</ClientEvent>
+        <Property name="caption">查看学生作业</Property>
+        <Property name="iconClass">fa fa-search</Property>
       </ToolBarButton>
     </ToolBar>
     <DataGrid id="recordDataGrid">
@@ -185,5 +198,75 @@ switch(arg.code){&#xD;
       <Property name="maxSize">10000</Property>
       <Property name="dataScope">serverAll</Property>
     </Export2ReportAction>
+    <Dialog id="studentHomeworkDialog">
+      <Property name="width">700</Property>
+      <Property name="height">480</Property>
+      <Property name="caption">查看作业</Property>
+      <Property name="maximizeable">true</Property>
+      <Property name="iconClass">fa fa-th-large</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;studentHomeworkDialog&quot;).hide();
+
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="iconClass">fa fa-times</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <HtmlContainer id="homeworkHtml">
+          <Property name="height">300</Property>
+        </HtmlContainer>
+        <GroupBox>
+          <Property name="caption">作业评分</Property>
+          <Property name="collapseable">false</Property>
+          <Buttons/>
+          <Children>
+            <AutoForm>
+              <Property name="dataSet">dataSetRecord</Property>
+              <AutoFormElement>
+                <Property name="property">score</Property>
+                <Property name="editable">false</Property>
+                <Editor>
+                  <RadioGroup id="scoreRadio">
+                    <Property name="columnCount">4</Property>
+                    <RadioButton>
+                      <Property name="text">A</Property>
+                      <Property name="value">A</Property>
+                      <Property name="readOnly">true</Property>
+                    </RadioButton>
+                    <RadioButton>
+                      <Property name="text">B</Property>
+                      <Property name="value">B</Property>
+                      <Property name="readOnly">true</Property>
+                    </RadioButton>
+                    <RadioButton>
+                      <Property name="text">C</Property>
+                      <Property name="value">C</Property>
+                      <Property name="readOnly">true</Property>
+                    </RadioButton>
+                    <RadioButton>
+                      <Property name="text">D</Property>
+                      <Property name="value">D</Property>
+                      <Property name="readOnly">true</Property>
+                    </RadioButton>
+                  </RadioGroup>
+                </Editor>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+        </GroupBox>
+        <AjaxAction id="ajaxActionSaveScore">
+          <Property name="service">recordPR#saveScore</Property>
+          <Property name="executingMessage">正在提交...</Property>
+          <Property name="successMessage">提交成功</Property>
+        </AjaxAction>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <AjaxAction id="ajaxActionSelectHomework">
+      <Property name="executingMessage">正在查询作业...</Property>
+      <Property name="service">recordPR#queryStudentHomework</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

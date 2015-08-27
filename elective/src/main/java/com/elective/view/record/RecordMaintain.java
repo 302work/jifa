@@ -19,6 +19,7 @@ import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
+import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Classroom;
@@ -46,21 +47,14 @@ public class RecordMaintain {
 	@Expose
 	public String saveRecord(Map<String,Object> param) throws Exception {
 		User user = (User)ContextHolder.getLoginUser();
+		int userType = user.getType();//类型，1为学生，2为老师，3为管理员
 		Long courseId = Long.valueOf(param.get("courseId").toString());
 		Long studentId = Long.valueOf(param.get("studentId").toString());
-		//查询是否已存在
-		String hql = "From "+Record.class.getName()+" where courseId=:courseId and studentId=:studentId and isDeleted=false ";
-		Map<String,Object> params = new HashMap<String, Object>();
-		params.put("courseId", courseId);
-		params.put("studentId", studentId);
-		if(dao.queryCount(hql, params)>0){
-			return "该学生已选了该课程";
-		}
 		
 		Course course = dao.getObjectById(Course.class, courseId);
 		int isEnable = course.getIsEnable();//是否可用，1为可用，2为不可用
 		int isAudit = course.getIsAudit();//是否已审核，1为已审核，2为未审核，3为审核未通过
-		int userType = user.getType();//类型，1为学生，2为老师，3为管理员
+		
 		if(userType==1 && isEnable==2 || isAudit!=1){
 			return "课程不可用，请联系管理员";
 		}
@@ -72,9 +66,49 @@ public class RecordMaintain {
 				return "只能维护自己的课程";
 			}
 		}
-		
+		//查询是否已存在
+		String sql = "select r.* from e_record as r"
+				+ " join e_course as c on r.courseId=c.id"
+				+ " join e_term as t on c.termId=t.id "
+				+ " where r.studentId=:studentId "
+				+ " and t.`year`=:year"
+				+ " and c.type=:type and r.isDeleted=0";
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("studentId", studentId);
+		String year = DateUtil.getYear(new Date());
+		Date date = DateUtil.getDate("yyyy-mm", year+"-6");
+		if(new Date().getTime()>date.getTime()){
+			year = year+"下半年";
+		}else{
+			year = year+"上半年";
+		}
+		int courseType = course.getType();
+		params.put("year", year);
+		params.put("type", courseType);
+		int count = dao.queryCountBySql(sql, params);
+		String error = courseType==6?"单周":"双周";
+		if(count>0 && userType!=1){
+			return "该学生已选了"+error+"的课程";
+		}
+		if(count>0 && userType==1){
+			return "您已选了"+error+"的课程，可以在\"我的课程\"中查看";
+		}
+				
+		//所属学期
+		Term term = dao.getObjectById(Term.class, course.getTermId());
+		long nowTime = new Date().getTime();
+		if(nowTime<term.getStartTime().getTime()){
+			return "选课时间还没有开始";
+		}
+		if(nowTime>term.getEndTime().getTime()){
+			return "选课时间已经结束啦";
+		}
+				
 		//查询当前用户的dept id
 		List<IDept> deptList = user.getDepts();
+		if(deptList==null){
+			deptList = deptService.loadUserDepts(user.getUsername());
+		}
 		User student = null;
 		//如果是老师指定学生
 		if(userType!=1){
@@ -305,5 +339,52 @@ public class RecordMaintain {
         
         dao.pagingQueryBySql(page, sb.toString(), params);
     }
+	
+	@Expose
+	public String queryHomework(long courseId){
+		Course course = dao.getObjectById(Course.class, courseId);
+		if(course!=null){
+			return course.getHomework();
+		}
+		return null;
+	}
+	
+	@Expose
+	public String queryStudentHomework(long recordId){
+		Record record = dao.getObjectById(Record.class, recordId);
+		if(record!=null){
+			return record.getHomework();
+		}
+		return null;
+	}
+	
+	@Expose
+	public void saveHomework(String homework,long recordId){
+		User user = (User)ContextHolder.getLoginUser();
+		Record record = dao.getObjectById(Record.class, recordId);
+		if(record==null){
+			throw new RuntimeException("没有找到您的选课记录，无法提交作业。");
+		}
+		if(record!=null && record.getStudentId()==user.getId()){
+			record.setHomework(homework);
+			dao.saveOrUpdate(record);
+		}else{
+			throw new RuntimeException("只能提交自己的作业");
+		}
+	}
+	
+	@Expose
+	public void saveScore(String score,long recordId){
+		User user = (User)ContextHolder.getLoginUser();
+		if(user.getType()==1){
+			throw new RuntimeException("您没有权限批改作业。");
+		}
+		Record record = dao.getObjectById(Record.class, recordId);
+		if(record==null){
+			throw new RuntimeException("没有找到该选课记录，无法批改作业。");
+		}
+		record.setScore(score);
+		dao.saveOrUpdate(record);
+	}
 
 }

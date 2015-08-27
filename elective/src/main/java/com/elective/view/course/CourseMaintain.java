@@ -59,8 +59,8 @@ public class CourseMaintain {
 				checkClassroom(course);
 				course.setCrTime(new Date());
 				course.setCrUser(userName);
-				course.setIsEnable(1);
-				course.setIsAudit(2);
+				course.setIsEnable(2);//默认未启用
+				course.setIsAudit(2);//默认未审核
 				dao.saveOrUpdate(course);
 				
 			}else if(EntityState.MODIFIED.equals(state)){
@@ -120,10 +120,11 @@ public class CourseMaintain {
 		Long courseId = course.getId();
 		if(courseId!=null){
 			hql += " and id<>:courseId";
+			params.put("courseId", courseId);
 		}
 		params.put("classroomId", course.getClassroomId());
 		params.put("type", course.getType());
-//		params.put("courseId", courseId);
+		
 		int count = dao.queryCount(hql, params);
 		if(count>0){
 			throw new Exception("该教室已被占用，请选择其他教室或更改上课时间。");

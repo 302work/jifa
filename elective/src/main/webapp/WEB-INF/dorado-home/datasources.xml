@@ -131,5 +131,4 @@
 	<bdf:anonymous-url urlPattern="/images/*.jpg"/>
 	<bdf:anonymous-url urlPattern="/images/*.css"/>
 	<bdf:anonymous-url urlPattern="/images/*.png"/>
-	
 </beans>

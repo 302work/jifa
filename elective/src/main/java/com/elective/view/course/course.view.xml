@@ -77,7 +77,7 @@
       <PropertyDef name="isEnable">
         <Property name="dataType">Integer</Property>
         <Property name="label">是否启用</Property>
-        <Property name="defaultValue">1</Property>
+        <Property name="defaultValue">2</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
@@ -578,6 +578,7 @@ dialog.hide();</ClientEvent>
           <ClientEvent name="onClick">var dialog=view.get(&quot;#dialogCourse&quot;);&#xD;
 var action=view.get(&quot;#actionUpdate&quot;);&#xD;
 action.execute(function(){&#xD;
+	view.id(&quot;dataSetCourse&quot;).flushAsync();&#xD;
 	dialog.hide();&#xD;
 });&#xD;
 </ClientEvent>
@@ -714,18 +715,38 @@ dialog.hide();</ClientEvent>
       <Property name="height">480</Property>
       <Property name="caption">作业设置</Property>
       <Property name="iconClass">fa fa-file-word-o</Property>
+      <Property name="maximizeable">true</Property>
       <Buttons>
         <Button>
+          <ClientEvent name="onClick">var dialog=view.get(&quot;#homeworkDialog&quot;);
+var action=view.get(&quot;#actionUpdate&quot;);
+action.execute(function(){
+	dialog.hide();
+});</ClientEvent>
           <Property name="caption">保存</Property>
           <Property name="iconClass">fa fa-check-circle-o</Property>
         </Button>
         <Button>
+          <ClientEvent name="onClick">view.id(&quot;homeworkDialog&quot;).hide();
+</ClientEvent>
           <Property name="caption">取消</Property>
           <Property name="iconClass">fa fa-times-circle-o</Property>
         </Button>
       </Buttons>
       <Children>
-        <UEditor/>
+        <AutoForm>
+          <Property name="dataSet">dataSetCourse</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement layoutConstraint="colSpan:*">
+            <Property name="property">homework</Property>
+            <Property name="labelWidth">0</Property>
+            <Property name="labelSpacing">0</Property>
+            <Property name="labelPosition">top</Property>
+            <Editor>
+              <UEditor/>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
       </Children>
       <Tools/>
     </Dialog>
@@ -796,6 +817,24 @@ switch(arg.code){
             <Property name="caption">导出</Property>
             <Property name="iconClass">fa fa-file-excel-o</Property>
             <Property name="action">recordExport2ReportAction</Property>
+          </ToolBarButton>
+          <Separator/>
+          <ToolBarButton>
+            <ClientEvent name="onClick">var data = view.id(&quot;dataSetRecord&quot;).getData(&quot;#&quot;);
+if(data){
+	var recordId = data.get(&quot;id&quot;);
+	var studentName = data.get(&quot;studentName&quot;);
+	var deptNames = data.get(&quot;deptNames&quot;);
+	view.id(&quot;ajaxActionSelectHomework&quot;).set(&quot;parameter&quot;,{recordId:recordId}).execute(function(result){
+		view.id(&quot;homeworkHtml&quot;).set(&quot;content&quot;,result);
+		var dialog = view.id(&quot;studentHomeworkDialog&quot;);
+		dialog.set(&quot;caption&quot;,deptNames+&quot; &quot;+studentName+&quot;的作业&quot;);
+		dialog.show();
+	});
+}
+</ClientEvent>
+            <Property name="caption">查看学生作业</Property>
+            <Property name="iconClass">fa fa-search</Property>
           </ToolBarButton>
         </ToolBar>
         <DataGrid id="recordDataGrid">
@@ -997,6 +1036,86 @@ dialog.hide();</ClientEvent>
           <Property name="maxSize">10000</Property>
           <Property name="dataScope">serverAll</Property>
         </Export2ReportAction>
+        <Dialog id="studentHomeworkDialog">
+          <Property name="width">700</Property>
+          <Property name="height">480</Property>
+          <Property name="caption">查看作业</Property>
+          <Property name="maximizeable">true</Property>
+          <Property name="iconClass">fa fa-th-large</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">var data = view.id(&quot;dataSetRecord&quot;).getData(&quot;#&quot;);
+if(data){
+	var recordId = data.get(&quot;id&quot;);
+	//评分
+	var score = view.id(&quot;scoreRadio&quot;).get(&quot;value&quot;);
+	view.id(&quot;ajaxActionSaveScore&quot;).set(&quot;parameter&quot;,{recordId:recordId,score:score}).execute(function(result){
+		dorado.MessageBox.alert(&quot;提交成功！&quot;,function(){
+			view.id(&quot;studentHomeworkDialog&quot;).hide();
+		});
+	});
+}</ClientEvent>
+              <Property name="caption">提交</Property>
+              <Property name="iconClass">fa fa-floppy-o</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.id(&quot;studentHomeworkDialog&quot;).hide();
+
+</ClientEvent>
+              <Property name="caption">关闭</Property>
+              <Property name="iconClass">fa fa-times</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <HtmlContainer id="homeworkHtml">
+              <Property name="height">300</Property>
+            </HtmlContainer>
+            <GroupBox>
+              <Property name="caption">作业评分</Property>
+              <Property name="collapseable">false</Property>
+              <Buttons/>
+              <Children>
+                <AutoForm>
+                  <Property name="dataSet">dataSetRecord</Property>
+                  <AutoFormElement>
+                    <Property name="property">score</Property>
+                    <Editor>
+                      <RadioGroup id="scoreRadio">
+                        <Property name="columnCount">4</Property>
+                        <RadioButton>
+                          <Property name="text">A</Property>
+                          <Property name="value">A</Property>
+                        </RadioButton>
+                        <RadioButton>
+                          <Property name="text">B</Property>
+                          <Property name="value">B</Property>
+                        </RadioButton>
+                        <RadioButton>
+                          <Property name="text">C</Property>
+                          <Property name="value">C</Property>
+                        </RadioButton>
+                        <RadioButton>
+                          <Property name="text">D</Property>
+                          <Property name="value">D</Property>
+                        </RadioButton>
+                      </RadioGroup>
+                    </Editor>
+                  </AutoFormElement>
+                </AutoForm>
+              </Children>
+            </GroupBox>
+            <AjaxAction id="ajaxActionSaveScore">
+              <Property name="service">recordPR#saveScore</Property>
+              <Property name="executingMessage">正在提交...</Property>
+              <Property name="successMessage">提交成功</Property>
+            </AjaxAction>
+          </Children>
+          <Tools/>
+        </Dialog>
+        <AjaxAction id="ajaxActionSelectHomework">
+          <Property name="executingMessage">正在查询作业...</Property>
+          <Property name="service">recordPR#queryStudentHomework</Property>
+        </AjaxAction>
       </Children>
       <Tools/>
     </Dialog>

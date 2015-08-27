@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <bean parent="dorado.viewConfigFactoryRegister">
+        <property name="viewNamePattern" value="**" />
+        <property name="viewConfigFactory">
+            <bean parent="dorado.xmlViewConfigDefinitionFactory">
+                <property name="pathPrefix" value="classpath:" />
+                <property name="pathSubfix" value=".view.xml" />
+            </bean>
+        </property>
+    </bean>
+
+ <!-- 配置 UEditor 的图片保存路径 -->
+    <bean parent="dorado.resolverRegister">
+        <property name="url" value="/dorado/ueditor/imageupload" /> <!-- /imageupload全局  -->
+        <property name="resolver">
+            <bean class="com.bstek.dorado.ueditor.resolver.ImageUploadResolver">
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
+                <property name="diskFileDownloadUrl" value="/dorado/ueditor/imagedownload"/>
+                <property name="allowedExtensions" value="jpg|gif|jpeg|png|bmp"/>
+                <property name="maxUploadSize" value="1024"/>
+            </bean>
+        </property>
+    </bean>
+    <!-- 配置 UEditor 的图片下载 -->
+    <bean parent="dorado.resolverRegister">
+        <property name="url" value="/dorado/ueditor/imagedownload"/>
+        <property name="resolver">
+            <bean class="com.bstek.dorado.ueditor.resolver.FileDownloadResolver">
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
+            </bean>
+        </property>
+    </bean>
+    <!-- 修改 UEditor 的图片管理器 -->
+    <bean parent="dorado.resolverRegister">
+        <property name="url" value="/dorado/ueditor/imagemanager"/>
+        <property name="resolver">
+            <bean class="com.bstek.dorado.ueditor.resolver.ImageManagerResolver">
+                <property name="imagePath" value="file:/Users/june/Desktop/ueditor/upload"/>
+            </bean>
+        </property>
+    </bean>
+    <!-- UEditor 远程图片  -->
+    <bean parent="dorado.resolverRegister">
+        <property name="url" value="/dorado/ueditor/getremoteimage"/>
+        <property name="resolver">
+            <bean class="com.bstek.dorado.ueditor.resolver.RemoteImageResolver">
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
+                <property name="diskFileDownloadUrl" value="/dorado/ueditor/remoteimagedownload-wNews"/>
+            </bean>
+        </property>
+    </bean>
+    <!-- UEditor 远程图片下载  -->
+    <bean parent="dorado.resolverRegister">
+        <property name="url" value="/dorado/ueditor/remoteimagedownload"/>
+        <property name="resolver">
+            <bean class="com.bstek.dorado.ueditor.resolver.FileDownloadResolver">
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
+            </bean>
+        </property>
+    </bean>
+    
+    <!-- UEditor 附件上传  -->
+    <bean parent="dorado.resolverRegister">
+	    <property name="url" value="/dorado/ueditor/fileupload" />
+	    <property name="resolver">
+	        <bean class="com.bstek.dorado.ueditor.resolver.FileUploadResolver">
+	            <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload" />
+	            <property name="diskFileDownloadUrl" value="/dorado/ueditor/filedownload" />                
+	            <property name="allowedExtensions" value="rar|doc|docx|zip|pdf|txt|xls|xlsx" />
+	        </bean>
+	    </property>
+	</bean>
+	 
+	 <!-- UEditor 附件下载  -->
+	<bean parent="dorado.resolverRegister">
+	    <property name="url" value="/dorado/ueditor/filedownload" />
+	    <property name="resolver">
+	        <bean class="com.bstek.dorado.ueditor.resolver.FileDownloadResolver">
+	            <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload" />             
+	        </bean>
+	    </property>
+	</bean>
+
+</beans>
