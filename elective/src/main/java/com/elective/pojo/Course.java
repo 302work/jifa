@@ -59,7 +59,7 @@ public class Course implements IPojo {
     private String deptIds;//年级限制
     
     @Column(nullable = false)
-    private Integer type;//上课时间类型，每周（周一1、周二2、周三3、周四4、周五5），隔周（单周6、双周7），隔两周（标明哪些周）
+    private Integer type;//上课时间类型，每周1，隔周（单周6、双周7），隔两周（1、4、7、10、13、16、19、22周8，2、5、8、11、14、17、20、23周9，3、6、9、12、15、18、21、24周10）
     
     @Column(length = 1,columnDefinition="tinyint default 1")
     private Integer isEnable;//是否可用，1为可用，2为不可用

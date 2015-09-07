@@ -86,12 +86,34 @@ public class RecordMaintain {
 		params.put("year", year);
 		params.put("type", courseType);
 		int count = dao.queryCountBySql(sql, params);
-		String error = courseType==6?"单周":"双周";
+		String error = "";
+		switch (courseType) {
+			case 1:
+				error = "";
+				break;
+			case 6:
+				error = "单周";
+				break;
+			case 7:
+				error = "双周";
+				break;
+			case 8:
+				error = "1、4、7、10、13、16、19、22周";
+				break;
+			case 9:
+				error = "2、5、8、11、14、17、20、23周";
+				break;
+			case 10:
+				error = "3、6、9、12、15、18、21、24周";
+				break;
+			default:
+				break;
+		}
 		if(count>0 && userType!=1){
-			return "该学生已选了"+error+"的课程";
+			return "该学生已选了"+error+"课程";
 		}
 		if(count>0 && userType==1){
-			return "您已选了"+error+"的课程，可以在\"我的课程\"中查看";
+			return "您已选了"+error+"课程，可以在\"我的课程\"中查看";
 		}
 				
 		//所属学期

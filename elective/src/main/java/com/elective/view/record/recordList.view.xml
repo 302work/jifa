@@ -58,9 +58,12 @@
         <Property name="dataType">String</Property>
         <Property name="label">所属学期</Property>
       </PropertyDef>
+      <PropertyDef name="deptNames">
+        <Property name="dataType">String</Property>
+        <Property name="label">所属班级</Property>
+      </PropertyDef>
       <PropertyDef name="courseType">
         <Property name="dataType">Integer</Property>
-        <Property name="label">上课时间</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
@@ -72,13 +75,27 @@
                 <Property name="key">7</Property>
                 <Property name="value">双周</Property>
               </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">每周</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">8</Property>
+                <Property name="value">1、4、7、10、13、16、19、22周</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">9</Property>
+                <Property name="value">2、5、8、11、14、17、20、23周</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">10</Property>
+                <Property name="value">3、6、9、12、15、18、21、24周</Property>
+              </Entity>
             </Collection>
           </Property>
         </Property>
-      </PropertyDef>
-      <PropertyDef name="deptNames">
-        <Property name="dataType">String</Property>
-        <Property name="label">所属班级</Property>
+        <Property name="label">上课时间</Property>
+        <Property name="required">true</Property>
       </PropertyDef>
     </DataType>
   </Model>

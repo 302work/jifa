@@ -1,5 +1,6 @@
 package com.elective.view.course;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.view.widget.form.trigger.ListDropDown;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
 import com.dosola.core.common.DosolaUtil;
@@ -268,4 +270,31 @@ public class CourseMaintain {
         
         dao.pagingQueryBySql(page, sb.toString(), params);
     }
+	
+	@SuppressWarnings("unchecked")
+    private List<String> queryCourseType(){
+		String hql = "From "+Term.class.getName()+" order by crTime desc";
+		List<Term> list = (List<Term>) dao.query(hql, null);
+		List<String> returnList = new ArrayList<String>();
+		if(list!=null && list.size()>0){
+			Term term = list.get(0);
+			String type = term.getType();//上课时间，每周、单双周、隔两周
+			if(type.equals("每周")){
+				returnList.add(type);
+			}else if(type.equals("隔周")){
+				returnList.add("单周");
+				returnList.add("双周");
+			}else if(type.equals("隔两周")){
+				returnList.add("1、4、7、10、13、16、19、22周");
+				returnList.add("2、5、8、11、14、17、20、23周");
+				returnList.add("3、6、9、12、15、18、21、24周");
+			}
+		}
+		return returnList;
+	}
+	
+	public void onInitListDropDown(ListDropDown listDropDown){
+		listDropDown.setItems(queryCourseType());
+		listDropDown.setAutoOpen(true);
+	}
 }
