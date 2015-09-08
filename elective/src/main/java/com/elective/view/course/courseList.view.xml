@@ -215,6 +215,13 @@ if(course){
         <Property name="caption">选修该课程</Property>
         <Property name="iconClass">fa fa-rss</Property>
       </ToolBarButton>
+      <Separator/>
+      <ToolBarButton>
+        <ClientEvent name="onClick">view.id(&quot;courseDialog&quot;).show();
+</ClientEvent>
+        <Property name="caption">查看课程</Property>
+        <Property name="iconClass">fa fa-search</Property>
+      </ToolBarButton>
     </ToolBar>
     <DataGrid id="courseDataGrid">
       <Property name="dataSet">dataSetCourse</Property>
@@ -257,5 +264,77 @@ if(course){
       <Property name="service">coursePR#getUserInfo</Property>
       <Property name="async">false</Property>
     </AjaxAction>
+    <Dialog id="courseDialog">
+      <Property name="width">680</Property>
+      <Property name="height">480</Property>
+      <Property name="caption">查看课程</Property>
+      <Property name="iconClass">fa fa-search</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.id(&quot;courseDialog&quot;).hide();
+</ClientEvent>
+          <Property name="caption">关闭</Property>
+          <Property name="iconClass">fa fa-times</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dataSetCourse</Property>
+          <Property name="readOnly">true</Property>
+          <Property name="cols">*</Property>
+          <AutoFormElement layoutConstraint="colSpan:2">
+            <Property name="name">termName</Property>
+            <Property name="property">termName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">type</Property>
+            <Property name="property">type</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">name</Property>
+            <Property name="property">name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">intro</Property>
+            <Property name="property">intro</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">150</Property>
+                <Property name="draggable">false</Property>
+                <Property name="droppable">false</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">teacherName</Property>
+            <Property name="property">teacherName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">classroomName</Property>
+            <Property name="property">classroomName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deptNames</Property>
+            <Property name="property">deptNames</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">remark</Property>
+            <Property name="property">remark</Property>
+            <Editor>
+              <TextArea>
+                <Property name="height">150</Property>
+              </TextArea>
+            </Editor>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
   </View>
 </ViewConfig>
