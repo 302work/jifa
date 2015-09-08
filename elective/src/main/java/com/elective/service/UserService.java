@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -16,12 +17,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
+import com.bstek.bdf2.core.security.SecurityUtils;
 import com.bstek.bdf2.core.security.UserShaPasswordEncoder;
 import com.bstek.bdf2.core.service.IUserService;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
+import com.dosola.core.common.DateUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.DeptUser;
 import com.elective.pojo.User;
@@ -137,6 +140,18 @@ public class UserService implements IUserService{
         }
         return (User)users.get(0);
     }
+    
+    public User queryUser(String username) throws UsernameNotFoundException {
+        String hql = " From "+ User.class.getName() +" where username=:username and isDeleted=:isDeleted ";
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("username",username);
+        params.put("isDeleted", false);
+        List<?> users = dao.query(hql,params);
+        if(users==null || users.size()==0){
+            return null;
+        }
+        return (User)users.get(0);
+    }
     /**
      * 保存新增的用户
      * @param user
@@ -158,6 +173,61 @@ public class UserService implements IUserService{
 		user = dao.saveOrUpdate(user).get(0);
 		return user;
     }
+    
+    public User saveUser(String deptId, User user) {
+		//先删除关联关系
+		if(user.getId()!=null && user.getId()!=0){
+			String hql = "delete from "+DeptUser.class.getName()+" where userId=:userId and deptId=:deptId";
+			Map<String,Object> params = new HashMap<String,Object>();
+	        params.put("userId",user.getId());
+	        params.put("deptId",deptId);
+	        dao.executeHQL(hql, params);
+		}
+        user = saveUser(user);
+		DeptUser du = new DeptUser();
+		du.setDeptId(deptId);
+		du.setUserId(user.getId());
+		dao.saveOrUpdate(du);
+		//添加到角色中
+		saveRoleMember(user.getUsername(), user.getType());	
+		//刷新缓存
+		SecurityUtils.refreshUrlSecurityMetadata();
+		SecurityUtils.refreshComponentSecurityMetadata();
+		return user;
+	}
+    
+	private void saveRoleMember(String userName,int userType){
+		deleteRoleMember(userName, userType);;
+		String roleId = getRoleId(userType);
+		deleteRoleMember(userName, userType);
+		String sql = "INSERT INTO `BDF2_ROLE_MEMBER` VALUES ('"+UUID.randomUUID().toString()+"', '"+DateUtil.getDateTimeStr(new Date())+"', null, b'1', null, '"+roleId+"', '"+userName+"', null)";
+		dao.executeSQL(sql, null);
+	}
+	
+	private void deleteRoleMember(String userName,int userType){
+		String roleId = getRoleId(userType);
+		String sql = " delete from `BDF2_ROLE_MEMBER` where username_='"+userName+"' and role_id_='"+roleId+"'";
+		dao.executeSQL(sql, null);
+	}
+	private String getRoleId(int userType){
+		//2c32476e-0f95-48d5-8023-423036a99b25 老师
+		//c2517ee5-e6a1-43ed-a4f6-676437655bb8 管理员
+		//f2b74c58-205f-4b71-96cf-7ea00854d7db 学生
+		String roleId = "";
+		//1为学生，2为老师，3为管理员
+		switch (userType) {
+			case 1:
+				roleId = "f2b74c58-205f-4b71-96cf-7ea00854d7db";
+				break;
+			case 2:
+				roleId = "2c32476e-0f95-48d5-8023-423036a99b25";	
+				break;
+			case 3:
+				roleId = "c2517ee5-e6a1-43ed-a4f6-676437655bb8";
+				break;
+		}
+		return roleId;
+	}
     /**
      * 删除用户
      */

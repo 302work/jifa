@@ -62,7 +62,7 @@ public class RecordMaintain {
 			if(isAudit!=1){
 				return "课程还没有审核通过，请联系管理员";
 			}
-			if(!course.getCrUser().equals(user.getUsername())){
+			if(course.getTeacherId().longValue()!=user.getId().longValue()){
 				return "只能维护自己的课程";
 			}
 		}

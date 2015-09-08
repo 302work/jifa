@@ -85,4 +85,22 @@ public class DeptService implements IDeptService{
         params.put("companyId",companyId);
         return (List<IDept>)dao.query(hql,params);
     }
+    
+    /**
+     * 根据部门名称查询
+     * @param deptName
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+	public List<IDept> loadDeptsByName(String deptName) {
+        if(StringUtils.isEmpty(deptName)){
+            return null;
+        }
+        String hql = "From "+Dept.class.getName()+" where name=:deptName and isDeleted=:isDeleted";
+        Map<String,Object> params = new HashMap<>();
+        params.put("isDeleted", false);
+        params.put("deptName",deptName);
+        return (List<IDept>)dao.query(hql,params);
+    }
+    
 }

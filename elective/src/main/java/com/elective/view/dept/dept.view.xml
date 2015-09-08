@@ -118,6 +118,15 @@
               <ToolBarButton>
                 <Property name="caption">导出</Property>
                 <Property name="action">export2ReportAction1</Property>
+                <Property name="iconClass">fa fa-download</Property>
+              </ToolBarButton>
+              <Separator/>
+              <ToolBarButton>
+                <ClientEvent name="onClick">var importExcelAction=view.id(&quot;xueShengImport&quot;);
+importExcelAction.execute(function(arg){
+    dorado.MessageBox.alert(&quot;成功解析导入[&quot; + arg + &quot;]数据！&quot;);
+});</ClientEvent>
+                <Property name="caption">导入学生</Property>
                 <Property name="iconClass">fa fa-file-excel-o</Property>
               </ToolBarButton>
             </ToolBar>
@@ -169,6 +178,11 @@
               <Property name="items">学生,老师,管理员</Property>
               <Property name="autoOpen">true</Property>
             </ListDropDown>
+            <ImportExcelAction id="xueShengImport">
+              <Property name="startRow">2</Property>
+              <Property name="successMessage">导入成功</Property>
+              <Property name="excelModelId">xuesheng</Property>
+            </ImportExcelAction>
           </Container>
         </CardBook>
       </MainControl>
