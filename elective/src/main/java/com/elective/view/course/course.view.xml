@@ -45,6 +45,7 @@
       </PropertyDef>
       <PropertyDef name="crTime">
         <Property name="dataType">Date</Property>
+        <Property name="displayFormat">Y-m-d H:i:s</Property>
       </PropertyDef>
       <PropertyDef name="crUser">
         <Property></Property>

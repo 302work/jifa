@@ -27,7 +27,7 @@
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
       <Property name="label">创建时间</Property>
-      <Property name="displayFormat">Y-m-d H:m:s</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
     </PropertyDef>
     <PropertyDef name="crUser">
       <Property name="dataType">String</Property>
@@ -107,7 +107,7 @@
     </PropertyDef>
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
-      <Property name="displayFormat">Y-m-d H:m:s</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
       <Property name="label">创建时间</Property>
     </PropertyDef>
     <PropertyDef name="crUser">
@@ -173,6 +173,7 @@
     </PropertyDef>
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
     </PropertyDef>
     <PropertyDef name="crUser">
       <Property name="dataType">String</Property>
@@ -207,7 +208,7 @@
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
       <Property name="label">报名时间</Property>
-      <Property name="displayFormat">Y-m-d H:m:s</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
     </PropertyDef>
     <PropertyDef name="crUser">
       <Property name="dataType">String</Property>
@@ -242,6 +243,7 @@
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
       <Property name="label">创建时间</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
     </PropertyDef>
     <PropertyDef name="endTime">
       <Property name="dataType">Date</Property>
@@ -339,6 +341,7 @@
     <PropertyDef name="crTime">
       <Property name="dataType">Date</Property>
       <Property name="label">创建时间</Property>
+      <Property name="displayFormat">Y-m-d H:i:s</Property>
     </PropertyDef>
     <PropertyDef name="crUser">
       <Property name="dataType">String</Property>
