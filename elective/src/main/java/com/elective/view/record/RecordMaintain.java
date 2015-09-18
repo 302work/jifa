@@ -1,9 +1,6 @@
 package com.elective.view.record;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -407,6 +404,22 @@ public class RecordMaintain {
 		}
 		record.setScore(score);
 		dao.saveOrUpdate(record);
+	}
+
+	@DataProvider
+	public List<Map<String,Object>> queryCount(){
+		String sql = "select d.name as dName,count(u.id) as total,";
+		sql += " x.xCount as yCount, ";
+		sql += " count(u.id)-x.xCount as wCount ";
+		sql += " from e_user as u join e_user_dept as ud on u.id=ud.userId";
+		sql += " join e_dept as d on ud.deptId=d.id ";
+		sql += " join (";
+		sql += "   select d.`name` as dName ,count(r.id) as xCount";
+		sql += "   from e_record as r join e_user as u on r.studentId=u.id ";
+		sql += "   join e_user_dept as ud on u.id=ud.userId ";
+		sql += "   join e_dept as d on ud.deptId=d.id GROUP BY d.id";
+		sql += ") as x on d.name=x.dName GROUP BY d.id ORDER BY d.name";
+		return dao.queryBySql(sql,null);
 	}
 
 }

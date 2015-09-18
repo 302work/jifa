@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="countDataType">
+			<PropertyDef name="dName">
+				<Property name="dataType">String</Property>
+				<Property name="label">班级</Property>
+			</PropertyDef>
+			<PropertyDef name="total">
+				<Property name="dataType">int</Property>
+				<Property name="label">总人数</Property>
+			</PropertyDef>
+			<PropertyDef name="yCount">
+				<Property name="dataType">int</Property>
+				<Property name="label">已报名人数</Property>
+			</PropertyDef>
+			<PropertyDef name="wCount">
+				<Property name="dataType">int</Property>
+				<Property name="label">未报名人数</Property>
+			</PropertyDef>
+		</DataType>
+	</Model>
+	<View>
+		<Property name="packages">font-awesome</Property>
+		<DataSet id="countDataSet">
+			<Property name="dataProvider">recordPR#queryCount</Property>
+			<Property name="dataType">[countDataType]</Property>
+		</DataSet>
+		<ToolBar>
+			<DataPilot/>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">countExportAction</Property>
+				<Property name="caption">导出</Property>
+				<Property name="iconClass">fa fa-file-excel-o</Property>
+			</ToolBarButton>
+		</ToolBar>
+		<DataGrid id="countDataGrid">
+			<Property name="dataSet">countDataSet</Property>
+			<DataColumn>
+				<Property name="caption">班级</Property>
+				<Property name="property">dName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">总人数</Property>
+				<Property name="property">total</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">已报名人数</Property>
+				<Property name="property">yCount</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">未报名人数</Property>
+				<Property name="property">wCount</Property>
+				<Editor/>
+			</DataColumn>
+		</DataGrid>
+		<Export2ReportAction id="countExportAction">
+			<Property name="confirmMessage">是否要导出选课统计？</Property>
+			<Property name="fileName">count</Property>
+			<Property name="showTitle">true</Property>
+			<Property name="successMessage">导出成功</Property>
+			<Property name="template">countDataGrid</Property>
+			<Property name="titleName">选课统计</Property>
+		</Export2ReportAction>
+	</View>
+</ViewConfig>
