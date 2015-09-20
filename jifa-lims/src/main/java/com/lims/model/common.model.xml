@@ -74,6 +74,7 @@
 		</PropertyDef>
 		<PropertyDef name="status">
 			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">1</Property>
 			<Property name="label">状态</Property>
 			<Property name="mapping">
 				<Property name="mapValues">
