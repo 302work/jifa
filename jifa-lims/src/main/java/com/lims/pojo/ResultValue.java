@@ -3,6 +3,7 @@ package com.lims.pojo;
 import com.dosola.core.dao.interfaces.IPojo;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 检测结果的列和值
@@ -28,6 +29,12 @@ public class ResultValue implements IPojo {
 
     @Column(nullable = false)
     private String value;//值
+
+    @Column(nullable = false)
+    private Date crTime;//创建时间
+
+    @Column(nullable = false,length=60)
+    private String crUser;//创建人
 
     public Long getId() {
         return id;
@@ -59,5 +66,21 @@ public class ResultValue implements IPojo {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Date getCrTime() {
+        return crTime;
+    }
+
+    public void setCrTime(Date crTime) {
+        this.crTime = crTime;
+    }
+
+    public String getCrUser() {
+        return crUser;
+    }
+
+    public void setCrUser(String crUser) {
+        this.crUser = crUser;
     }
 }
