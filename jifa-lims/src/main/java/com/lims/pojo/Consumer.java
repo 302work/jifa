@@ -6,29 +6,35 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 产品标准
+ * 客户
  * @author june
- * 2015年09月19日 10:33
+ * 2015年09月20日 22:54
  */
 @SuppressWarnings("serial")
 @Entity
-@Table(name=Standard.TABLENAME)
-public class Standard implements IPojo {
+@Table(name=Consumer.TABLENAME)
+public class Consumer implements IPojo {
 
-    public static final String TABLENAME = "lims_standard";
+    public static final String TABLENAME = "lims_consumer";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(length=100,nullable = false)
-    private String name;//标准名称
+    private String name;//客户名称
 
-    @Column(length=100,nullable = false)
-    private String standardNo;//标准号
+    @Column(length=50)
+    private String contacts;//联系人
+
+    @Column(length=50)
+    private String tel;//电话
+
+    @Column(length=200)
+    private String address;//地址
 
     @Column(nullable = false)
-    private Integer status;//状态，1现行，2为作废
+    private Integer status;//状态，1可用，2为不可用
 
     @Column
     private Integer isDeleted;//逻辑删除标识，1为已删除
@@ -41,6 +47,22 @@ public class Standard implements IPojo {
 
     @Column(nullable = false,length=60)
     private String crUser;//创建人
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
 
     public Date getCrTime() {
         return crTime;
@@ -82,20 +104,20 @@ public class Standard implements IPojo {
         this.remark = remark;
     }
 
-    public String getStandardNo() {
-        return standardNo;
-    }
-
-    public void setStandardNo(String standardNo) {
-        this.standardNo = standardNo;
-    }
-
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public Integer getIsDeleted() {

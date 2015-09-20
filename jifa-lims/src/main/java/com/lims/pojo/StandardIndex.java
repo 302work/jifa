@@ -33,6 +33,9 @@ public class StandardIndex implements IPojo {
     @Column(length=100,nullable = false)
     private String value;//指标数值，>4，<4，>=4，<=4，=4，>1 & <4
 
+    @Column
+    private Integer isDeleted;//逻辑删除标识，1为已删除
+
     @Column(length=200)
     private String remark;//备注
 
@@ -106,5 +109,11 @@ public class StandardIndex implements IPojo {
         this.unit = unit;
     }
 
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
 
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

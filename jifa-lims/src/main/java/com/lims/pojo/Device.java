@@ -39,6 +39,9 @@ public class Device implements IPojo {
     @Column
     private Date buyDate;//购买日期
 
+    @Column
+    private Integer isDeleted;//逻辑删除标识，1为已删除
+
     @Column(length=500)
     private String remark;//备注
 
@@ -127,5 +130,13 @@ public class Device implements IPojo {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

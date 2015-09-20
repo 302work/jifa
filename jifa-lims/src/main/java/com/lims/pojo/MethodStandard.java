@@ -39,6 +39,9 @@ public class MethodStandard implements IPojo {
     @Column(length=20)
     private String unit;//单位，保留字段暂时无用
 
+    @Column
+    private Integer isDeleted;//逻辑删除标识，1为已删除
+
     @Column(length=500)
     private String remark;//备注
 
@@ -126,5 +129,13 @@ public class MethodStandard implements IPojo {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

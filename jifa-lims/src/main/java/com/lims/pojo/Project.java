@@ -36,6 +36,9 @@ public class Project implements IPojo {
     @Column(length=1000)
     private String testCondition;//测试条件
 
+    @Column
+    private Integer isDeleted;//逻辑删除标识，1为已删除
+
     @Column(length=500)
     private String remark;//备注
 
@@ -116,5 +119,13 @@ public class Project implements IPojo {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
