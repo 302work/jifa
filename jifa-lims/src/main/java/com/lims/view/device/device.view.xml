@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtDevice" parent="deviceDataType">
+		</DataType>
+	</Model>
+	<View>
+		<Property name="packages">font-awesome</Property>
+		<DataSet id="dsDevice">
+			<Property name="dataProvider">deviceService#queryDevice</Property>
+			<Property name="dataType">[dtDevice]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<ToolBar>
+			<DataPilot>
+				<Property name="itemCodes">pages,+,-</Property>
+				<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dsDevice.data&quot;);
+var action = view.get(&quot;#updateAction&quot;);
+switch(arg.code){
+	case &quot;+&quot;:{
+		datas.insert();
+		view.get(&quot;#deviceDialog&quot;).show();
+		arg.processDefault=false;
+		break;
+	}
+	case &quot;-&quot;:{
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
+			datas.remove();
+			actionUpdate.execute();
+		});
+		arg.processDefault=false;
+		break;
+	}
+}</ClientEvent>
+			</DataPilot>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">编辑</Property>
+				<Property name="iconClass">fa fa-pencil</Property>
+				<ClientEvent name="onClick" signature="self,arg">var dsDevice = view.id(&quot;dsDevice&quot;);
+var currData = dsDevice.getData(&quot;#&quot;);
+if(currData){
+ 	view.id(&quot;deviceDialog&quot;).show();
+}</ClientEvent>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">deviceExportAction</Property>
+				<Property name="caption">导出</Property>
+				<Property name="iconClass">fa fa-file-excel-o</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">启用</Property>
+				<Property name="iconClass">fa fa-play</Property>
+				<ClientEvent name="onClick" signature="self,arg">var action = view.id(&quot;deviceAjaxAction&quot;);
+var dsDevice = view.id(&quot;dsDevice&quot;);
+var currData = dsDevice.getData(&quot;#&quot;);
+if(currData){
+  var deviceId = currData.get(&quot;id&quot;);
+  action.set(&quot;parameter&quot;,{deviceId:deviceId,type:1}).execute(function(){
+  		dorado.MessageBox.alert(&quot;启用成功！&quot;);
+    	dsDevice.flushAsync();
+  });
+}</ClientEvent>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">停用</Property>
+				<Property name="iconClass">fa fa-stop</Property>
+				<ClientEvent name="onClick" signature="self,arg">var action = view.id(&quot;deviceAjaxAction&quot;);
+var dsDevice = view.id(&quot;dsDevice&quot;);
+var currData = dsDevice.getData(&quot;#&quot;);
+if(currData){
+  var deviceId = currData.get(&quot;id&quot;);
+  action.set(&quot;parameter&quot;,{deviceId:deviceId,type:2}).execute(function(){
+  		dorado.MessageBox.alert(&quot;停用成功！&quot;);
+    	dsDevice.flushAsync();
+  });
+}</ClientEvent>
+			</ToolBarButton>
+		</ToolBar>
+		<DataGrid id="dgDevice">
+			<Property name="dataSet">dsDevice</Property>
+			<Property name="filterMode">serverSide</Property>
+			<Property name="readOnly">true</Property>
+			<Property name="showFilterBar">true</Property>
+			<Property name="sortMode">serverSide</Property>
+			<DataColumn>
+				<Property name="caption">设备名称</Property>
+				<Property name="property">name</Property>
+				<Property name="width">120</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">设备编号</Property>
+				<Property name="property">deviceNo</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">设备型号</Property>
+				<Property name="property">model</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">状态</Property>
+				<Property name="property">status</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">购买日期</Property>
+				<Property name="property">buyDate</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">保存地点</Property>
+				<Property name="property">address</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">备注</Property>
+				<Property name="property">remark</Property>
+				<Editor/>
+			</DataColumn>
+		</DataGrid>
+		<Export2ReportAction id="deviceExportAction">
+			<Property name="confirmMessage">是否真的导出吗？</Property>
+			<Property name="fileName">device</Property>
+			<Property name="maxSize">10000</Property>
+			<Property name="showTitle">true</Property>
+			<Property name="successMessage">导出成功</Property>
+			<Property name="template">dgDevice</Property>
+			<Property name="titleName">仪器设备</Property>
+		</Export2ReportAction>
+		<AjaxAction id="deviceAjaxAction">
+			<Property name="executingMessage">正在执行...</Property>
+			<Property name="service">deviceService#changeStatus</Property>
+			<Property name="successMessage">启用/停用成功！</Property>
+		</AjaxAction>
+		<UpdateAction id="updateAction">
+			<Property name="dataResolver">deviceService#saveDevice</Property>
+			<Property name="executingMessage">正在提交...</Property>
+			<Property name="successMessage">提交成功</Property>
+			<UpdateItem>
+				<Property name="dataSet">dsDevice</Property>
+			</UpdateItem>
+		</UpdateAction>
+		<Dialog id="deviceDialog">
+			<Property name="caption">设备维护</Property>
+			<Property name="height">480</Property>
+			<Property name="iconClass">fa fa-cogs</Property>
+			<Property name="width">480</Property>
+			<Buttons>
+				<Button id="saveBtn">
+					<Property name="caption">提交</Property>
+					<Property name="iconClass">fa fa-floppy-o</Property>
+					<ClientEvent name="onClick" signature="self,arg">var updateAction = view.id(&quot;updateAction&quot;);
+var dialog = view.id(&quot;deviceDialog&quot;);
+updateAction.execute(function(){
+  dialog.hide();
+});
+</ClientEvent>
+				</Button>
+				<Button>
+					<Property name="caption">关闭</Property>
+					<Property name="iconClass">fa fa-times</Property>
+					<ClientEvent name="onClick" signature="self,arg">view.id(&quot;deviceDialog&quot;).hide();</ClientEvent>
+				</Button>
+			</Buttons>
+			<Children>
+				<AutoForm id="deviceAutoForm">
+					<Property name="cols">*</Property>
+					<Property name="dataSet">dsDevice</Property>
+					<AutoFormElement layoutConstraint="colSpan:2;">
+						<Property name="label">设备名称</Property>
+						<Property name="property">name</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement layoutConstraint="colSpan:2;">
+						<Property name="label">设备型号</Property>
+						<Property name="property">model</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement layoutConstraint="colSpan:2;">
+						<Property name="label">设备编号</Property>
+						<Property name="property">deviceNo</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement layoutConstraint="colSpan:2;">
+						<Property name="label">购买日期</Property>
+						<Property name="property">buyDate</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement layoutConstraint="colSpan:2;">
+						<Property name="label">保存地点</Property>
+						<Property name="property">address</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement layoutConstraint="colSpan:2;">
+						<Property name="label">备注</Property>
+						<Property name="property">remark</Property>
+						<Editor>
+							<TextArea>
+								<Property name="height">50</Property>
+							</TextArea>
+						</Editor>
+					</AutoFormElement>
+				</AutoForm>
+			</Children>
+			<Tools/>
+		</Dialog>
+	</View>
+</ViewConfig>

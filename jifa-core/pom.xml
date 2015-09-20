@@ -296,17 +296,17 @@
             <artifactId>bdf2-export</artifactId>
             <version>${bdf2-export.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.bstek.bdf2</groupId>
-            <artifactId>bdf2-job-daemon</artifactId>
-            <version>${bdf2-job-daemon.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.bstek.bdf2</groupId>
-                    <artifactId>bdf2-orm-hibernate3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.bstek.bdf2</groupId>-->
+            <!--<artifactId>bdf2-job-daemon</artifactId>-->
+            <!--<version>${bdf2-job-daemon.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.bstek.bdf2</groupId>-->
+                    <!--<artifactId>bdf2-orm-hibernate3</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.bstek.bdf2</groupId>

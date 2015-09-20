@@ -11,7 +11,8 @@
         <module>yun-account</module>
         <module>elective</module>
     <module>jifa-cmp</module>
-  </modules>
+        <module>jifa-lims</module>
+    </modules>
     <properties>
         <java.version>1.7</java.version>
     </properties>

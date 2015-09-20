@@ -3,6 +3,7 @@ target
 /*/target
 
 # Mobile Tools for Java (J2ME)
+.studio
 .mtj.tmp/
 
 # Package Files #
@@ -31,7 +32,6 @@ Icon?
 ehthumbs.db
 Thumbs.db
 </span>
-.studio/
 /bin/
 
 #eclipse file

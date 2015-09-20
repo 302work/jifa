@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bdf="http://www.bstek.com/bdf/schema"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.bstek.com/bdf/schema http://www.bstek.com/dorado/schema/bdf2.0.xsd 
+	http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+    <!-- 加载配置文件 如配置了多个PropertyPlaceholderConfigurer，ignore-unresolvable则需设置为true-->
+    <context:property-placeholder location="classpath:application.properties" ignore-unresolvable="true" order="2"/>
+
+
+    <bean id="masterTransactionManager" class="com.bstek.bdf2.core.orm.transaction.JdbcTransactionManager">
+		<property name="dataSource" ref="masterDataSource" />
+	</bean>	
+
+	<bean id="abstractDataSource" abstract="true">
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1" />
+        <property name="minIdle" value="1" />
+        <property name="maxActive" value="20" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
+        <!-- 定期50分钟把druid-datasource的统计信息输出到日志中。 -->
+        <!--<property name="timeBetweenLogStatsMillis" value="3000000" />-->
+    </bean>
+	<bean id="masterDataSource" parent="abstractDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.name}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+    
+	<bean parent="bdf2.dataSourceRegister">
+		<property name="dataSource" ref="masterDataSource" />
+		<property name="name" value="mysql" />
+		<property name="asDefault" value="true" />
+	</bean>
+	<bean id="sessionFactory" parent="bdf2.sessionFactory">
+		<property name="dataSourceName" value="mysql" />
+		<property name="entityInterceptor" ref="bdf2.unByteCodeProxyInterceptor" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="com"/>
+		<property name="useTransactionAwareDataSource" value="true"/>
+	</bean>
+    <bean id="masterHibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean id="masterDao" class="com.dosola.core.dao.MasterDao">
+        <property name="hibernateTemplate"
+                  ref="masterHibernateTemplate"></property>
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
+     <tx:advice id="masterTxAdvice" transaction-manager="masterTransactionManager">
+        <tx:attributes>
+            <tx:method name="add*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="save*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="insert*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="update*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="remove*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="delete*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="clear*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="restore*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="replace*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="start*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="process*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="execute*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="submit*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="audit*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="assign*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="end*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="commit*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="complete*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="with*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="reset*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="do*" read-only="false" propagation="REQUIRED" />
+            
+            <tx:method name="*" read-only="true" propagation="NOT_SUPPORTED" />
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config>
+        <aop:pointcut expression="execution(* com.lims..*.*(..))" id="myPointcut"/>
+        <aop:advisor advice-ref="masterTxAdvice" pointcut-ref="myPointcut"/>
+    </aop:config>
+    
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 添加对注解的支持 -->
+    <context:annotation-config />
+    <!-- 要扫描的包 -->
+    <context:component-scan base-package="com"/>
+
+    <!--<bean id="bdf2.frameworkService" class="com.lims.service.FrameworkService"></bean>-->
+    <!--<bean id="bdf2.userService" class="com.lims.service.UserService"></bean>-->
+    <!--<bean id="bdf2.deptService" class="com.lims.service.DeptService"></bean>-->
+
+	<bdf:anonymous-url urlPattern="/index.jsp"/>
+	<bdf:anonymous-url urlPattern="/images/*.jpg"/>
+	<bdf:anonymous-url urlPattern="/images/*.css"/>
+	<bdf:anonymous-url urlPattern="/images/*.png"/>
+</beans>

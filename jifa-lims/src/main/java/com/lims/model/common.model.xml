@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+	<DataType name="projectDataType">
+		<Property name="creationType">com.lims.pojo.Project</Property>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+		<PropertyDef name="enName">
+			<Property name="dataType">String</Property>
+			<Property name="label">英文名称</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">项目名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="shortName">
+			<Property name="dataType">String</Property>
+			<Property name="label">项目别名</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="deviceDataType">
+		<Property name="creationType">com.lims.pojo.Device</Property>
+		<PropertyDef name="address">
+			<Property name="dataType">String</Property>
+			<Property name="label">保存地点</Property>
+		</PropertyDef>
+		<PropertyDef name="buyDate">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d</Property>
+			<Property name="label">购买日期</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+		<PropertyDef name="deviceNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">设备编号</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="model">
+			<Property name="dataType">String</Property>
+			<Property name="label">设备型号</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">设备名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+			<Property name="label">状态</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">在用</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">停用</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+	</DataType>
+</Model>

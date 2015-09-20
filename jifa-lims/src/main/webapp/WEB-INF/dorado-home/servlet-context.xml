@@ -16,7 +16,7 @@
         <property name="url" value="/dorado/ueditor/imageupload" /> <!-- /imageupload全局  -->
         <property name="resolver">
             <bean class="com.bstek.dorado.ueditor.resolver.ImageUploadResolver">
-                <property name="savePath" value="file:/data/elective-file"/>
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
                 <property name="diskFileDownloadUrl" value="/dorado/ueditor/imagedownload"/>
                 <property name="allowedExtensions" value="jpg|gif|jpeg|png|bmp"/>
                 <property name="maxUploadSize" value="1024"/>
@@ -28,7 +28,7 @@
         <property name="url" value="/dorado/ueditor/imagedownload"/>
         <property name="resolver">
             <bean class="com.bstek.dorado.ueditor.resolver.FileDownloadResolver">
-                <property name="savePath" value="file:/data/elective-file"/>
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
             </bean>
         </property>
     </bean>
@@ -37,7 +37,7 @@
         <property name="url" value="/dorado/ueditor/imagemanager"/>
         <property name="resolver">
             <bean class="com.bstek.dorado.ueditor.resolver.ImageManagerResolver">
-                <property name="imagePath" value="file:/data/elective-file"/>
+                <property name="imagePath" value="file:/Users/june/Desktop/ueditor/upload"/>
             </bean>
         </property>
     </bean>
@@ -46,7 +46,7 @@
         <property name="url" value="/dorado/ueditor/getremoteimage"/>
         <property name="resolver">
             <bean class="com.bstek.dorado.ueditor.resolver.RemoteImageResolver">
-                <property name="savePath" value="file:/data/elective-file"/>
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
                 <property name="diskFileDownloadUrl" value="/dorado/ueditor/remoteimagedownload-wNews"/>
             </bean>
         </property>
@@ -56,7 +56,7 @@
         <property name="url" value="/dorado/ueditor/remoteimagedownload"/>
         <property name="resolver">
             <bean class="com.bstek.dorado.ueditor.resolver.FileDownloadResolver">
-                <property name="savePath" value="file:/data/elective-file"/>
+                <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload"/>
             </bean>
         </property>
     </bean>
@@ -66,7 +66,7 @@
 	    <property name="url" value="/dorado/ueditor/fileupload" />
 	    <property name="resolver">
 	        <bean class="com.bstek.dorado.ueditor.resolver.FileUploadResolver">
-	            <property name="savePath" value="file:/data/elective-file" />
+	            <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload" />
 	            <property name="diskFileDownloadUrl" value="/dorado/ueditor/filedownload" />                
 	            <property name="allowedExtensions" value="rar|doc|docx|zip|pdf|txt|xls|xlsx" />
 	        </bean>
@@ -78,7 +78,7 @@
 	    <property name="url" value="/dorado/ueditor/filedownload" />
 	    <property name="resolver">
 	        <bean class="com.bstek.dorado.ueditor.resolver.FileDownloadResolver">
-	            <property name="savePath" value="file:/data/elective-file" />             
+	            <property name="savePath" value="file:/Users/june/Desktop/ueditor/upload" />             
 	        </bean>
 	    </property>
 	</bean>
