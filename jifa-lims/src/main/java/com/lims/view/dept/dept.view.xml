@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtDept" parent="deptDataType">
+			<Property name="defaultDisplayProperty">name</Property>
+			<Reference name="child">
+				<Property name="dataProvider">deptMaintain#getDeptsByParentId</Property>
+				<Property name="dataType">[SELF]</Property>
+				<Property name="parameter">$${this.id}</Property>
+			</Reference>
+			<Reference name="users">
+				<Property name="dataProvider">userMaintain#getUsersByDeptId</Property>
+				<Property name="dataType">[dtUser]</Property>
+				<Property name="pageSize">20</Property>
+				<Property name="parameter">$${this.id}</Property>
+			</Reference>
+		</DataType>
+		<DataType name="dtUser" parent="userDataType">
+		</DataType>
+	</Model>
+	<View layout="padding:20;">
+		<Property name="packages">font-awesome</Property>
+		<Action id="actionAdd">
+			<Property name="caption">添加新部门</Property>
+			<Property name="iconClass">fa fa-plus</Property>
+			<Property name="tip">点击树的空白处，不选中任何部门，就可以添加顶层部门了。</Property>
+		</Action>
+		<Action id="actionMove">
+			<Property name="caption">移动部门</Property>
+			<Property name="disabled">true</Property>
+			<Property name="iconClass">fa fa-arrows</Property>
+			<Property name="tags">onCurrentNode</Property>
+		</Action>
+		<Action id="actionRemove">
+			<Property name="caption">删除部门</Property>
+			<Property name="confirmMessage">如果删除部门，该部门下的记录也会一并删除，是否确定删除？</Property>
+			<Property name="disabled">true</Property>
+			<Property name="iconClass">fa fa-trash-o</Property>
+			<Property name="tags">onCurrentNode</Property>
+		</Action>
+		<Action id="actionCancel">
+			<Property name="caption">取消</Property>
+			<Property name="disabled">true</Property>
+			<Property name="iconClass">fa fa-reply</Property>
+			<Property name="tags">onDirtyNode</Property>
+		</Action>
+		<UpdateAction id="actionSaveAll">
+			<Property name="caption">保存所有</Property>
+			<Property name="dataResolver">deptMaintain#saveDepts</Property>
+			<Property name="executingMessage">系统正在保存</Property>
+			<Property name="hotkey">ctrl+s</Property>
+			<Property name="iconClass">fa fa-floppy-o</Property>
+			<Property name="successMessage">数据保存成功</Property>
+			<Property name="tags">onDirty</Property>
+			<UpdateItem>
+				<Property name="dataSet">dsDepts</Property>
+			</UpdateItem>
+		</UpdateAction>
+		<DataSet id="dsDepts">
+			<Property name="dataProvider">deptMaintain#getDeptsByParentId</Property>
+			<Property name="dataType">[dtDept]</Property>
+			<Property name="readOnly">false</Property>
+		</DataSet>
+		<ToolBar>
+			<ToolBarButton>
+				<Property name="action">actionAdd</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionMove</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionRemove</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionCancel</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionSaveAll</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+		</ToolBar>
+		<SplitPanel>
+			<Property name="position">180</Property>
+			<MainControl>
+				<CardBook id="cardbook">
+					<Container>
+						<AutoForm id="deptForm">
+							<Property name="cols">*</Property>
+							<Property name="createPrivateDataSet">false</Property>
+							<Property name="dataPath">!CURRENT_DEPT</Property>
+							<Property name="dataSet">dsDepts</Property>
+							<AutoFormElement id="deptName">
+								<Property name="name">name</Property>
+								<Property name="property">name</Property>
+								<Editor/>
+							</AutoFormElement>
+							<AutoFormElement>
+								<Property name="name">remark</Property>
+								<Property name="property">remark</Property>
+								<Editor/>
+							</AutoFormElement>
+						</AutoForm>
+						<ToolBar>
+							<DataPilot id="userDataPilot">
+								<Property name="dataPath">!CURRENT_DEPT.users</Property>
+								<Property name="dataSet">dsDepts</Property>
+								<Property name="itemCodes">pages,pageSize,+,-,x</Property>
+							</DataPilot>
+							<Separator/>
+							<ToolBarButton>
+								<Property name="action">export2ReportAction1</Property>
+								<Property name="caption">导出</Property>
+								<Property name="iconClass">fa fa-download</Property>
+							</ToolBarButton>
+						</ToolBar>
+						<DataGrid id="userDataGrid">
+							<Property name="allowNoCurrent">true</Property>
+							<Property name="appendOnLastEnter">true</Property>
+							<Property name="dataPath">!CURRENT_DEPT.users</Property>
+							<Property name="dataSet">dsDepts</Property>
+							<Property name="filterMode">serverSide</Property>
+							<Property name="highlightCurrentRow">true</Property>
+							<Property name="showFilterBar">true</Property>
+							<Property name="showFooter">false</Property>
+							<Property name="sortMode">serverSide</Property>
+							<IndicatorColumn/>
+							<DataColumn>
+								<Property name="name">username</Property>
+								<Property name="property">username</Property>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">cname</Property>
+								<Property name="property">cname</Property>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">enabled</Property>
+								<Property name="property">enabled</Property>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">email</Property>
+								<Property name="property">email</Property>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">mobile</Property>
+								<Property name="property">mobile</Property>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">remark</Property>
+								<Property name="property">remark</Property>
+							</DataColumn>
+						</DataGrid>
+						<Export2ReportAction id="export2ReportAction1">
+							<Property name="confirmMessage">确定导出这些记录吗？</Property>
+							<Property name="dataScope">serverAll</Property>
+							<Property name="executingMessage">正在导出...</Property>
+							<Property name="fileName">user</Property>
+							<Property name="maxSize">10000</Property>
+							<Property name="showTitle">true</Property>
+							<Property name="template">userDataGrid</Property>
+							<Property name="titleName">记录明细</Property>
+						</Export2ReportAction>
+					</Container>
+				</CardBook>
+			</MainControl>
+			<SideControl>
+				<DataTree id="dataTreeDept">
+					<Property name="allowNoCurrent">true</Property>
+					<Property name="currentNodeDataPath">CURRENT_DEPT</Property>
+					<Property name="dataSet">dsDepts</Property>
+					<Property name="dragMode">item</Property>
+					<Property name="dragTags">node</Property>
+					<Property name="draggable">true</Property>
+					<Property name="dropMode">onOrInsertItems</Property>
+					<Property name="droppable">true</Property>
+					<Property name="droppableTags">node</Property>
+					<BindingConfigs>
+						<BindingConfig>
+							<Property name="childrenProperty">child</Property>
+							<Property name="expandLevel">1</Property>
+							<Property name="hasChild">true</Property>
+							<Property name="hasChildProperty">hasChild</Property>
+							<Property name="iconClass">fa fa-folder-o</Property>
+							<Property name="labelProperty">name</Property>
+							<Property name="name">Dept</Property>
+							<Property name="recursive">true</Property>
+						</BindingConfig>
+					</BindingConfigs>
+				</DataTree>
+			</SideControl>
+		</SplitPanel>
+		<Menu id="menuDepts">
+			<MenuItem>
+				<Property name="action">actionAdd</Property>
+			</MenuItem>
+			<MenuItem>
+				<Property name="action">actionMove</Property>
+			</MenuItem>
+			<Separator/>
+			<MenuItem>
+				<Property name="action">actionRemove</Property>
+			</MenuItem>
+		</Menu>
+		<Dialog id="dialogSelectDept" layout="padding:4;">
+			<Property name="buttonAlign">right</Property>
+			<Property name="caption">请选择一个部门...</Property>
+			<Property name="height">400</Property>
+			<Property name="width">400</Property>
+			<Buttons>
+				<Button id="buttonOk">
+					<Property name="caption">确定</Property>
+					<Property name="ui">highlight</Property>
+					<Property name="width">80</Property>
+				</Button>
+				<Button id="buttonCancel">
+					<Property name="caption">取消</Property>
+					<Property name="width">60</Property>
+				</Button>
+			</Buttons>
+			<Children>
+				<DataTree id="selectDataTreeDept">
+					<Property name="allowNoCurrent">false</Property>
+					<Property name="dataSet">dsDepts</Property>
+					<Property name="dragMode">item</Property>
+					<Property name="draggable">false</Property>
+					<Property name="droppable">false</Property>
+					<BindingConfigs>
+						<BindingConfig>
+							<Property name="childrenProperty">child</Property>
+							<Property name="expandLevel">2</Property>
+							<Property name="hasChild">true</Property>
+							<Property name="iconClass">fa fa-folder-o</Property>
+							<Property name="labelProperty">name</Property>
+							<Property name="name">Dept</Property>
+							<Property name="recursive">true</Property>
+						</BindingConfig>
+					</BindingConfigs>
+				</DataTree>
+			</Children>
+		</Dialog>
+	</View>
+</ViewConfig>

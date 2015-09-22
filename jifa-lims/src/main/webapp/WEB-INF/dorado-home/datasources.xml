@@ -123,9 +123,9 @@
     <!-- 要扫描的包 -->
     <context:component-scan base-package="com"/>
 
-    <!--<bean id="bdf2.frameworkService" class="com.lims.service.FrameworkService"></bean>-->
-    <!--<bean id="bdf2.userService" class="com.lims.service.UserService"></bean>-->
-    <!--<bean id="bdf2.deptService" class="com.lims.service.DeptService"></bean>-->
+    <bean id="bdf2.frameworkService" class="com.lims.service.FrameworkService"></bean>
+    <bean id="bdf2.userService" class="com.lims.service.UserService"></bean>
+    <bean id="bdf2.deptService" class="com.lims.service.DeptService"></bean>
 
 	<bdf:anonymous-url urlPattern="/index.jsp"/>
 	<bdf:anonymous-url urlPattern="/images/*.jpg"/>

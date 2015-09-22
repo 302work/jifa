@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtUser" parent="userDataType">
+		</DataType>
+	</Model>
+	<View>
+		<Property name="title">User信息维护</Property>
+		<DataSet id="dataSetUser">
+			<Property name="dataProvider">userMaintain#queryUser</Property>
+			<Property name="dataType">[dtUser]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<UpdateAction id="actionUpdate">
+			<Property name="dataResolver">userMaintain#saveUser</Property>
+			<Property name="executingMessage">正在保存...</Property>
+			<Property name="successMessage">保存成功!</Property>
+			<UpdateItem>
+				<Property name="dataSet">dataSetUser</Property>
+			</UpdateItem>
+		</UpdateAction>
+		<ToolBar>
+			<DataPilot>
+				<Property name="dataSet">dataSetUser</Property>
+				<Property name="itemCodes">pages,+,-,x</Property>
+				<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dataSetUser.data&quot;);
+var action = view.get(&quot;#actionUpdate&quot;);
+switch(arg.code){
+	case &quot;+&quot;:{
+		datas.insert();
+		view.get(&quot;#dialogUser&quot;).show();
+		arg.processDefault=false;
+		break;
+	}
+	case &quot;-&quot;:{
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
+			datas.remove();
+			actionUpdate.execute();
+		});
+		arg.processDefault=false;
+		break;
+	}
+}</ClientEvent>
+			</DataPilot>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">修改</Property>
+				<Property name="icon">url(&gt;skin&gt;common/icons.gif) -200px -0px</Property>
+				<ClientEvent name="onClick" signature="self,arg">var data=view.get(&quot;#dataSetUser.data&quot;);
+if(data.current){
+	view.get(&quot;#dialogUser&quot;).show();
+}else{
+	dorado.MessageBox.alert(&quot;当前表没有信息可供编辑!&quot;);
+}</ClientEvent>
+			</ToolBarButton>
+			<ToolBarButton>
+				<Property name="action">actionUpdate</Property>
+				<Property name="caption">保存</Property>
+				<Property name="icon">url(&gt;skin&gt;common/icons.gif) -140px -20px</Property>
+			</ToolBarButton>
+			<ToolBarButton>
+				<Property name="caption">查询</Property>
+				<Property name="icon">url(&gt;skin&gt;common/icons.gif) -20px -40px</Property>
+				<ClientEvent name="onClick" signature="self,arg">var data = view.get(&quot;#formCondition.entity&quot;);
+with (view.get(&quot;#dataSetUser&quot;)){
+	set(&quot;parameter&quot;, data);
+	flushAsync();
+}</ClientEvent>
+			</ToolBarButton>
+		</ToolBar>
+		<AutoForm id="formCondition">
+			<Property name="cols">*,*,*</Property>
+			<AutoFormElement>
+				<Property name="label">cname</Property>
+				<Property name="name">cname</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">username</Property>
+				<Property name="name">username</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">mobile</Property>
+				<Property name="name">mobile</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">remark</Property>
+				<Property name="name">remark</Property>
+				<Editor/>
+			</AutoFormElement>
+		</AutoForm>
+		<DataGrid>
+			<Property name="dataSet">dataSetUser</Property>
+			<Property name="dataType">[dtUser]</Property>
+			<Property name="readOnly">true</Property>
+			<DataColumn>
+				<Property name="name">username</Property>
+				<Property name="property">username</Property>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">cname</Property>
+				<Property name="property">cname</Property>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">enabled</Property>
+				<Property name="property">enabled</Property>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">mobile</Property>
+				<Property name="property">mobile</Property>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">email</Property>
+				<Property name="property">email</Property>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">ename</Property>
+				<Property name="property">ename</Property>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">remark</Property>
+				<Property name="property">remark</Property>
+			</DataColumn>
+		</DataGrid>
+		<Dialog id="dialogUser">
+			<Property name="caption">数据编辑</Property>
+			<Property name="center">true</Property>
+			<Property name="closeable">false</Property>
+			<Property name="height">400</Property>
+			<Property name="modal">true</Property>
+			<Property name="width">600</Property>
+			<Buttons>
+				<Button>
+					<Property name="caption">确定</Property>
+					<Property name="icon">url(&gt;skin&gt;common/icons.gif) -140px -20px</Property>
+					<ClientEvent name="onClick" signature="self,arg">var dialog=view.get(&quot;#dialogUser&quot;);
+var action=view.get(&quot;#actionUpdate&quot;);
+dorado.MessageBox.confirm(&quot;您真的要保存吗?&quot;,function(){
+	action.execute(function(){
+		dialog.hide();
+	});
+})</ClientEvent>
+				</Button>
+				<Button>
+					<Property name="caption">取消</Property>
+					<Property name="icon">url(&gt;skin&gt;common/icons.gif) -40px -0px</Property>
+					<ClientEvent name="onClick" signature="self,arg">var data=view.get(&quot;#dataSetUser&quot;).getData();
+var dialog=view.get(&quot;#dialogUser&quot;);
+dorado.MessageBox.confirm(&quot;您真的要取消当前操作吗？&quot;,function(){
+	data.cancel();
+	dialog.hide();
+});</ClientEvent>
+				</Button>
+			</Buttons>
+			<Children>
+				<AutoForm>
+					<Property name="cols">*,*</Property>
+					<Property name="dataSet">dataSetUser</Property>
+					<AutoFormElement>
+						<Property name="name">username</Property>
+						<Property name="property">username</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">cname</Property>
+						<Property name="property">cname</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">enabled</Property>
+						<Property name="property">enabled</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">mobile</Property>
+						<Property name="property">mobile</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">email</Property>
+						<Property name="property">email</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">ename</Property>
+						<Property name="property">ename</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">type</Property>
+						<Property name="property">type</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">remark</Property>
+						<Property name="property">remark</Property>
+						<Editor/>
+					</AutoFormElement>
+				</AutoForm>
+			</Children>
+			<Tools/>
+		</Dialog>
+	</View>
+</ViewConfig>

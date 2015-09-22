@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtConsumer" parent="consumerDataType">
+		</DataType>
+	</Model>
+	<View>
+		<Property name="packages">font-awesome</Property>
+		<DataSet id="dsConsumer">
+			<Property name="dataProvider">consumerService#queryConsumer</Property>
+			<Property name="dataType">[dtConsumer]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<ToolBar>
+			<DataPilot>
+				<Property name="dataSet">dsConsumer</Property>
+				<Property name="itemCodes">pages,+,-</Property>
+				<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dsConsumer.data&quot;);
+var action = view.get(&quot;#updateAction&quot;);
+switch(arg.code){
+	case &quot;+&quot;:{
+		datas.insert();
+		view.get(&quot;#consumerDialog&quot;).show();
+		arg.processDefault=false;
+		break;
+	}
+	case &quot;-&quot;:{
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
+			datas.remove();
+			action.execute();
+		});
+		arg.processDefault=false;
+		break;
+	}
+}</ClientEvent>
+			</DataPilot>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">编辑</Property>
+				<Property name="iconClass">fa fa-pencil</Property>
+				<ClientEvent name="onClick" signature="self,arg">var dsConsumer = view.id(&quot;dsConsumer&quot;);
+var currData = dsConsumer.getData(&quot;#&quot;);
+if(currData){
+ 	view.id(&quot;consumerDialog&quot;).show();
+}</ClientEvent>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">consumerExportAction</Property>
+				<Property name="caption">导出</Property>
+				<Property name="iconClass">fa fa-file-excel-o</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">启用</Property>
+				<Property name="iconClass">fa fa-play</Property>
+				<ClientEvent name="onClick" signature="self,arg">var action = view.id(&quot;consumerAjaxAction&quot;);
+var dsConsumer = view.id(&quot;dsConsumer&quot;);
+var currData = dsConsumer.getData(&quot;#&quot;);
+if(currData){
+  var consumerId = currData.get(&quot;id&quot;);
+  action.set(&quot;parameter&quot;,{consumerId:consumerId,type:1}).execute(function(){
+  		dorado.MessageBox.alert(&quot;启用成功！&quot;);
+    	dsConsumer.flushAsync();
+  });
+}</ClientEvent>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="caption">停用</Property>
+				<Property name="iconClass">fa fa-stop</Property>
+				<ClientEvent name="onClick" signature="self,arg">var action = view.id(&quot;consumerAjaxAction&quot;);
+var dsConsumer = view.id(&quot;dsConsumer&quot;);
+var currData = dsConsumer.getData(&quot;#&quot;);
+if(currData){
+  var consumerId = currData.get(&quot;id&quot;);
+  action.set(&quot;parameter&quot;,{consumerId:consumerId,type:2}).execute(function(){
+  		dorado.MessageBox.alert(&quot;停用成功！&quot;);
+    	dsConsumer.flushAsync();
+  });
+}</ClientEvent>
+			</ToolBarButton>
+		</ToolBar>
+		<DataGrid id="dgConsumer">
+			<Property name="dataSet">dsConsumer</Property>
+			<Property name="filterMode">serverSide</Property>
+			<Property name="readOnly">true</Property>
+			<Property name="showFilterBar">true</Property>
+			<Property name="sortMode">serverSide</Property>
+			<DataColumn>
+				<Property name="name">name</Property>
+				<Property name="property">name</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">contacts</Property>
+				<Property name="property">contacts</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">tel</Property>
+				<Property name="property">tel</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">status</Property>
+				<Property name="property">status</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">address</Property>
+				<Property name="property">address</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">remark</Property>
+				<Property name="property">remark</Property>
+				<Editor/>
+			</DataColumn>
+		</DataGrid>
+		<Export2ReportAction id="consumerExportAction">
+			<Property name="confirmMessage">是否真的导出吗？</Property>
+			<Property name="fileName">consumer</Property>
+			<Property name="maxSize">10000</Property>
+			<Property name="showTitle">true</Property>
+			<Property name="successMessage">导出成功</Property>
+			<Property name="template">dgConsumer</Property>
+			<Property name="titleName">客户</Property>
+		</Export2ReportAction>
+		<AjaxAction id="consumerAjaxAction">
+			<Property name="executingMessage">正在执行...</Property>
+			<Property name="service">consumerService#changeStatus</Property>
+			<Property name="successMessage">启用/停用成功！</Property>
+		</AjaxAction>
+		<UpdateAction id="updateAction">
+			<Property name="dataResolver">consumerService#saveConsumer</Property>
+			<Property name="executingMessage">正在提交...</Property>
+			<Property name="successMessage">提交成功</Property>
+			<UpdateItem>
+				<Property name="dataSet">dsConsumer</Property>
+			</UpdateItem>
+		</UpdateAction>
+		<Dialog id="consumerDialog">
+			<Property name="caption">客户维护</Property>
+			<Property name="height">480</Property>
+			<Property name="iconClass">fa fa-user</Property>
+			<Property name="width">480</Property>
+			<Buttons>
+				<Button id="saveBtn">
+					<Property name="caption">提交</Property>
+					<Property name="iconClass">fa fa-floppy-o</Property>
+					<ClientEvent name="onClick" signature="self,arg">var updateAction = view.id(&quot;updateAction&quot;);
+var dialog = view.id(&quot;consumerDialog&quot;);
+updateAction.execute(function(){
+  dialog.hide();
+});
+</ClientEvent>
+				</Button>
+				<Button>
+					<Property name="caption">关闭</Property>
+					<Property name="iconClass">fa fa-times</Property>
+					<ClientEvent name="onClick" signature="self,arg">view.id(&quot;consumerDialog&quot;).hide();</ClientEvent>
+				</Button>
+			</Buttons>
+			<Children>
+				<AutoForm id="consumerAutoForm">
+					<Property name="cols">*</Property>
+					<Property name="dataSet">dsConsumer</Property>
+					<AutoFormElement>
+						<Property name="name">name</Property>
+						<Property name="property">name</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">contacts</Property>
+						<Property name="property">contacts</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">tel</Property>
+						<Property name="property">tel</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">address</Property>
+						<Property name="property">address</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="name">remark</Property>
+						<Property name="property">remark</Property>
+						<Editor/>
+					</AutoFormElement>
+				</AutoForm>
+			</Children>
+			<Tools/>
+		</Dialog>
+	</View>
+</ViewConfig>

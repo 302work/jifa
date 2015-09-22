@@ -93,4 +93,150 @@
 			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
+	<DataType name="deptDataType">
+		<Property name="creationType">com.lims.pojo.Dept</Property>
+		<PropertyDef name="id">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="parentId">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="sortFlag">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">名称</Property>
+		</PropertyDef>
+		<PropertyDef name="parent">
+			<Property name="dataType">deptDataType</Property>
+		</PropertyDef>
+		<PropertyDef name="companyId">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="hasChild">
+			<Property name="dataType">Boolean</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="userDataType">
+		<Property name="creationType">com.lims.pojo.User</Property>
+		<PropertyDef name="enabled">
+			<Property name="dataType">boolean</Property>
+			<Property name="defaultValue">true</Property>
+			<Property name="label">是否可用</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="password">
+			<Property name="dataType">String</Property>
+			<Property name="label">密码</Property>
+			<Property name="required">false</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="username">
+			<Property name="dataType">String</Property>
+			<Property name="label">用户名</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="email">
+			<Property name="dataType">String</Property>
+			<Property name="label">邮箱</Property>
+		</PropertyDef>
+		<PropertyDef name="ename">
+			<Property name="dataType">String</Property>
+			<Property name="label">英文名</Property>
+		</PropertyDef>
+		<PropertyDef name="companyId">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+		<PropertyDef name="cname">
+			<Property name="dataType">String</Property>
+			<Property name="label">中文名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="salt">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="mobile">
+			<Property name="dataType">String</Property>
+			<Property name="label">手机号</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="consumerDataType">
+		<Property name="creationType">com.lims.pojo.Consumer</Property>
+		<PropertyDef name="address">
+			<Property name="dataType">String</Property>
+			<Property name="label">联系地址</Property>
+		</PropertyDef>
+		<PropertyDef name="contacts">
+			<Property name="dataType">String</Property>
+			<Property name="label">联系人</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">客户名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="tel">
+			<Property name="dataType">String</Property>
+			<Property name="label">联系电话</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">1</Property>
+			<Property name="label">状态</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">在用</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">停用</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+	</DataType>
 </Model>
