@@ -3,22 +3,20 @@
  */
 package com.dosola.core.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
-
 import org.apache.commons.lang.StringUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -254,45 +252,5 @@ public class DosolaUtil {
 		String sql = "SELECT tmp1.id, tmp1.sendid, tmp1.senduser, tmp1.receiveid, tmp1.receiveuser, tmp1.message, tmp1.createtime, CASE WHEN tmp2.newtotal IS NULL THEN 0 ELSE tmp2.newtotal END AS newtotal FROM ( SELECT * FROM haierapp_ucenter_msg a WHERE receiveuser = 'maidixiaojun'   AND '2012-03-19 15:36:48'< createtime AND id = ( SELECT max(id) FROM haierapp_ucenter_msg WHERE senduser = a.senduser and receiveuser = 'maidixiaojun' ) UNION select * from (SELECT * FROM haierapp_ucenter_msg WHERE senduser = 'maidixiaojun' AND sendstatus = 1 AND '2012-03-19 15:36:48'< createtime AND receiveuser NOT IN ( SELECT senduser FROM haierapp_ucenter_msg WHERE receiveuser = 'maidixiaojun'   AND '2012-03-19 15:36:48'< createtime) order by id desc) a GROUP BY receiveuser ) tmp1 LEFT JOIN ( SELECT senduser, sum(isnew) AS newtotal FROM haierapp_ucenter_msg a WHERE receiveuser = 'maidixiaojun' GROUP BY senduser ) tmp2 ON tmp1.senduser = tmp2.senduser ORDER BY id DESC";
 		System.out.println(replaceFormatSqlOrderBy(sql));
 	}
-	
-	/**
-     * 根据map的值 构建pojo
-     * @param t
-     * @param resultMap
-     * @return
-     */
-    public static void  buildPoJo(Object obj,Map<String,Object> resultMap){
-        if(obj==null || resultMap==null || resultMap.isEmpty()){
-            return;
-        }
-        Class<?> clz = obj.getClass();
-        Field[] fields = clz.getDeclaredFields();
-        //将map转为json
-        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(resultMap));
-        for (Field field : fields){
-            String name = field.getName();
-            //序列化字段
-            if(name.toLowerCase().equals("serialVersionUID")){
-                continue;
-            }
-            //声明的表名字段
-            if(name.toLowerCase().equals("tablename")){
-                continue;
-            }
-            //声明的用于操作数据库的me字段
-            if(name.toLowerCase().equals("me")){
-                continue;
-            }
-            if (resultMap.containsKey(name)){
-            	//字段的类型
-                Class<?> type = field.getType();
-                //map里的值转成字符串
-                String value = jsonObject.getString(name);
-            	Object objValue = ClassKit.getObjectValue(value, type.getName());
-            	ClassKit.inject(obj, name, objValue);
-            }
-           
-        }
-    }
    
 }

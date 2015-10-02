@@ -1,21 +1,19 @@
 package com.elective.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.service.IDeptService;
-import com.dosola.core.common.DosolaUtil;
+import com.dosola.core.common.PojoKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.elective.pojo.Dept;
 import com.elective.pojo.DeptUser;
 import com.elective.pojo.User;
+import org.apache.commons.lang.StringUtils;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 部门管理
@@ -51,7 +49,7 @@ public class DeptService implements IDeptService{
             List<IDept> depts = new ArrayList<IDept>();
             for(Map<String,Object> map : list){
                 Dept dept = new Dept();
-                DosolaUtil.buildPoJo(dept,map);
+                PojoKit.build(dept, map);
             	depts.add(dept);
             }
             return depts;

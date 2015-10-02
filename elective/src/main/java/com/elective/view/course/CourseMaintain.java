@@ -1,16 +1,5 @@
 package com.elective.view.course;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
-
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
@@ -26,12 +15,12 @@ import com.dorado.common.SqlKit;
 import com.dosola.core.common.DosolaUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.elective.pojo.Classroom;
-import com.elective.pojo.Course;
-import com.elective.pojo.Dept;
-import com.elective.pojo.Record;
-import com.elective.pojo.Term;
-import com.elective.pojo.User;
+import com.elective.pojo.*;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * 单表维护服务类
@@ -83,7 +72,7 @@ public class CourseMaintain {
 	}
 	
 	/**
-	 * @param deptIds
+	 * @param deptNames
 	 * @return 
 	 */
 	@SuppressWarnings("unchecked")

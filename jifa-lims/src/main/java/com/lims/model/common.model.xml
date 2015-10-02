@@ -31,6 +31,15 @@
 			<Property name="dataType">String</Property>
 			<Property name="label">项目别名</Property>
 		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="parentId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="testCondition">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
 	</DataType>
 	<DataType name="deviceDataType">
 		<Property name="creationType">com.lims.pojo.Device</Property>
@@ -237,6 +246,121 @@
 				</Property>
 			</Property>
 			<Property name="required">true</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="standardDataType">
+		<Property name="creationType">com.lims.pojo.Standard</Property>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="standardNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准号</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">1</Property>
+			<Property name="label">状态</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">现行</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">作废</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="methodStandardDataType">
+		<Property name="creationType">com.lims.pojo.MethodStandard</Property>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="standardNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准号</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">1</Property>
+			<Property name="label">状态</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">现行</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">作废</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+		<PropertyDef name="price">
+			<Property name="dataType">Double</Property>
+			<Property name="label">基准价格</Property>
+		</PropertyDef>
+		<PropertyDef name="standardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="unit">
+			<Property name="dataType">String</Property>
+			<Property name="label">单位</Property>
 		</PropertyDef>
 	</DataType>
 </Model>

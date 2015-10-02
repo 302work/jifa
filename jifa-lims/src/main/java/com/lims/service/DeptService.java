@@ -2,7 +2,7 @@ package com.lims.service;
 
 import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.service.IDeptService;
-import com.dosola.core.common.DosolaUtil;
+import com.dosola.core.common.PojoKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.Dept;
 import com.lims.pojo.DeptUser;
@@ -49,7 +49,7 @@ public class DeptService implements IDeptService{
             List<IDept> depts = new ArrayList<IDept>();
             for(Map<String,Object> map : list){
                 Dept dept = new Dept();
-                DosolaUtil.buildPoJo(dept,map);
+                PojoKit.build(dept, map);
             	depts.add(dept);
             }
             return depts;

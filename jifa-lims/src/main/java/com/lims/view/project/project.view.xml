@@ -4,61 +4,257 @@
 	<Context/>
 	<Model>
 		<DataType name="dtProject" parent="projectDataType">
+			<Reference name="methodStandards">
+				<Property name="dataProvider">projectService#queryMethodStandardsById</Property>
+				<Property name="dataType">[dtMethodStandard]</Property>
+				<Property name="pageSize">20</Property>
+				<Property name="parameter">$${this.id}</Property>
+			</Reference>
+			<Reference name="child">
+				<Property name="dataProvider">projectService#getProjectsByParentId</Property>
+				<Property name="dataType">[SELF]</Property>
+				<Property name="parameter">$${this.id}</Property>
+			</Reference>
+		</DataType>
+		<DataType name="dtMethodStandard" parent="methodStandardDataType">
 		</DataType>
 	</Model>
 	<View>
 		<Property name="packages">font-awesome</Property>
 		<DataSet id="dsProject">
+			<Property name="dataProvider">projectService#getProjectsByParentId</Property>
 			<Property name="dataType">[dtProject]</Property>
 		</DataSet>
-		<ToolBar>
-			<DataPilot>
+		<Action id="actionAdd">
+			<Property name="caption">添加新项目</Property>
+			<Property name="iconClass">fa fa-plus</Property>
+			<Property name="tip">点击树的空白处，不选中任何部门，就可以添加顶层部门了。</Property>
+		</Action>
+		<Action id="actionMove">
+			<Property name="caption">移动项目</Property>
+			<Property name="disabled">true</Property>
+			<Property name="iconClass">fa fa-arrows</Property>
+			<Property name="tags">onCurrentNode</Property>
+		</Action>
+		<Action id="actionRemove">
+			<Property name="caption">删除项目</Property>
+			<Property name="confirmMessage">如果删除项目，该项目下的方法标准也会一并删除，是否确定删除？</Property>
+			<Property name="disabled">true</Property>
+			<Property name="iconClass">fa fa-trash-o</Property>
+			<Property name="tags">onCurrentNode</Property>
+		</Action>
+		<Action id="actionCancel">
+			<Property name="caption">取消</Property>
+			<Property name="disabled">true</Property>
+			<Property name="iconClass">fa fa-reply</Property>
+			<Property name="tags">onDirtyNode</Property>
+		</Action>
+		<UpdateAction id="actionSaveAll">
+			<Property name="caption">保存所有</Property>
+			<Property name="dataResolver">projectService#saveProjects</Property>
+			<Property name="executingMessage">系统正在保存</Property>
+			<Property name="hotkey">ctrl+s</Property>
+			<Property name="iconClass">fa fa-floppy-o</Property>
+			<Property name="successMessage">数据保存成功</Property>
+			<Property name="tags">onDirty</Property>
+			<UpdateItem>
 				<Property name="dataSet">dsProject</Property>
-			</DataPilot>
+			</UpdateItem>
+		</UpdateAction>
+		<ToolBar>
+			<ToolBarButton>
+				<Property name="action">actionAdd</Property>
+			</ToolBarButton>
 			<Separator/>
 			<ToolBarButton>
-				<Property name="caption">导出</Property>
-				<Property name="iconClass">fa fa-file-excel-o</Property>
-				<ClientEvent name="onClick" signature="self,arg">var dataSet = view.get(&quot;#dsProject&quot;);
-view.id(&quot;dsProject&quot;)</ClientEvent>
+				<Property name="action">actionMove</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionRemove</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionCancel</Property>
+				<Property name="disabled">false</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">actionSaveAll</Property>
+				<Property name="disabled">false</Property>
 			</ToolBarButton>
 		</ToolBar>
-		<DataGrid>
-			<Property name="dataSet">dsProject</Property>
-			<DataColumn>
-				<Property name="caption">创建时间</Property>
-				<Property name="property">crTime</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
-				<Property name="caption">创建人</Property>
-				<Property name="property">crUser</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
-				<Property name="caption">英文名称</Property>
-				<Property name="property">enName</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
-				<Property name="property">id</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
-				<Property name="caption">项目名称</Property>
-				<Property name="property">name</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
-				<Property name="caption">备注</Property>
-				<Property name="property">remark</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
-				<Property name="caption">项目别名</Property>
-				<Property name="property">shortName</Property>
-				<Editor/>
-			</DataColumn>
-		</DataGrid>
+		<SplitPanel>
+			<Property name="position">180</Property>
+			<MainControl>
+				<CardBook id="cardbook">
+					<Container>
+						<AutoForm id="projectForm">
+							<Property name="cols">*</Property>
+							<Property name="createPrivateDataSet">false</Property>
+							<Property name="dataPath">!CURRENT_PROJECT</Property>
+							<Property name="dataSet">dsProject</Property>
+							<AutoFormElement layoutConstraint="colSpan:2;">
+								<Property name="name">name</Property>
+								<Property name="property">name</Property>
+								<Editor/>
+							</AutoFormElement>
+							<AutoFormElement layoutConstraint="colSpan:2;">
+								<Property name="name">enName</Property>
+								<Property name="property">enName</Property>
+								<Editor/>
+							</AutoFormElement>
+							<AutoFormElement layoutConstraint="colSpan:2;">
+								<Property name="name">shortName</Property>
+								<Property name="property">shortName</Property>
+								<Editor/>
+							</AutoFormElement>
+							<AutoFormElement layoutConstraint="colSpan:2;">
+								<Property name="name">testCondition</Property>
+								<Property name="property">testCondition</Property>
+								<Editor/>
+							</AutoFormElement>
+							<AutoFormElement layoutConstraint="colSpan:2;">
+								<Property name="name">remark</Property>
+								<Property name="property">remark</Property>
+								<Editor/>
+							</AutoFormElement>
+						</AutoForm>
+						<ToolBar>
+							<DataPilot id="methodStandardDataPilot">
+								<Property name="dataPath">!CURRENT_PROJECT.methodStandards</Property>
+								<Property name="dataSet">dsProject</Property>
+								<Property name="itemCodes">pages,pageSize,+,-,x</Property>
+							</DataPilot>
+							<Separator/>
+							<ToolBarButton>
+								<Property name="action">export2ReportAction1</Property>
+								<Property name="caption">导出</Property>
+								<Property name="iconClass">fa fa-download</Property>
+							</ToolBarButton>
+						</ToolBar>
+						<DataGrid id="methodStandardDataGrid">
+							<Property name="allowNoCurrent">true</Property>
+							<Property name="appendOnLastEnter">true</Property>
+							<Property name="dataPath">!CURRENT_PROJECT.methodStandards</Property>
+							<Property name="dataSet">dsProject</Property>
+							<Property name="filterMode">serverSide</Property>
+							<Property name="highlightCurrentRow">true</Property>
+							<Property name="readOnly">true</Property>
+							<Property name="showFilterBar">true</Property>
+							<Property name="showFooter">false</Property>
+							<Property name="sortMode">serverSide</Property>
+							<IndicatorColumn/>
+							<DataColumn>
+								<Property name="name">name</Property>
+								<Property name="property">name</Property>
+								<Editor/>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">standardNo</Property>
+								<Property name="property">standardNo</Property>
+								<Editor/>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">status</Property>
+								<Property name="property">status</Property>
+								<Editor/>
+							</DataColumn>
+							<DataColumn>
+								<Property name="name">remark</Property>
+								<Property name="property">remark</Property>
+								<Editor/>
+							</DataColumn>
+						</DataGrid>
+						<Export2ReportAction id="export2ReportAction1">
+							<Property name="confirmMessage">确定导出这些记录吗？</Property>
+							<Property name="dataScope">serverAll</Property>
+							<Property name="executingMessage">正在导出...</Property>
+							<Property name="fileName">methodStandard</Property>
+							<Property name="maxSize">10000</Property>
+							<Property name="showTitle">true</Property>
+							<Property name="template">methodStandardDataGrid</Property>
+							<Property name="titleName">方法标准明细</Property>
+						</Export2ReportAction>
+					</Container>
+				</CardBook>
+			</MainControl>
+			<SideControl>
+				<DataTree id="dataTreeProject">
+					<Property name="allowNoCurrent">true</Property>
+					<Property name="currentNodeDataPath">CURRENT_PROJECT</Property>
+					<Property name="dataSet">dsProject</Property>
+					<Property name="dragMode">item</Property>
+					<Property name="dragTags">node</Property>
+					<Property name="draggable">true</Property>
+					<Property name="dropMode">onOrInsertItems</Property>
+					<Property name="droppable">true</Property>
+					<Property name="droppableTags">node</Property>
+					<BindingConfigs>
+						<BindingConfig>
+							<Property name="childrenProperty">child</Property>
+							<Property name="expandLevel">1</Property>
+							<Property name="hasChild">true</Property>
+							<Property name="hasChildProperty">hasChild</Property>
+							<Property name="iconClass">fa fa-folder-o</Property>
+							<Property name="labelProperty">name</Property>
+							<Property name="name">Project</Property>
+							<Property name="recursive">true</Property>
+						</BindingConfig>
+					</BindingConfigs>
+				</DataTree>
+			</SideControl>
+		</SplitPanel>
+		<Menu id="menuProjects">
+			<MenuItem>
+				<Property name="action">actionAdd</Property>
+			</MenuItem>
+			<MenuItem>
+				<Property name="action">actionMove</Property>
+			</MenuItem>
+			<Separator/>
+			<MenuItem>
+				<Property name="action">actionRemove</Property>
+			</MenuItem>
+		</Menu>
+		<Dialog id="dialogSelectProject" layout="padding:4;">
+			<Property name="buttonAlign">right</Property>
+			<Property name="caption">请选择一个项目...</Property>
+			<Property name="height">400</Property>
+			<Property name="width">400</Property>
+			<Buttons>
+				<Button id="buttonOk">
+					<Property name="caption">确定</Property>
+					<Property name="ui">highlight</Property>
+					<Property name="width">80</Property>
+				</Button>
+				<Button id="buttonCancel">
+					<Property name="caption">取消</Property>
+					<Property name="width">60</Property>
+				</Button>
+			</Buttons>
+			<Children>
+				<DataTree id="selectDataTreeProject">
+					<Property name="allowNoCurrent">false</Property>
+					<Property name="dataSet">dsProject</Property>
+					<Property name="dragMode">item</Property>
+					<Property name="draggable">false</Property>
+					<Property name="droppable">false</Property>
+					<BindingConfigs>
+						<BindingConfig>
+							<Property name="childrenProperty">child</Property>
+							<Property name="expandLevel">2</Property>
+							<Property name="hasChild">true</Property>
+							<Property name="iconClass">fa fa-folder-o</Property>
+							<Property name="labelProperty">name</Property>
+							<Property name="name">Project</Property>
+							<Property name="recursive">true</Property>
+						</BindingConfig>
+					</BindingConfigs>
+				</DataTree>
+			</Children>
+		</Dialog>
 	</View>
 </ViewConfig>
