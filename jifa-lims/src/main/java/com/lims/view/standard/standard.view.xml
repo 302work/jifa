@@ -5,6 +5,8 @@
 	<Model>
 		<DataType name="dtStandards" parent="standardDataType">
 		</DataType>
+		<DataType name="dtMethodStandard" parent="methodStandardDataType">
+		</DataType>
 	</Model>
 	<View>
 		<Property name="packages">font-awesome</Property>
@@ -16,12 +18,7 @@
 		<DataSet id="dsMethodStandards">
 			<Property name="dataProvider">standardService#queryMethodStandards</Property>
 			<Property name="dataType">[methodStandardDataType]</Property>
-			<ClientEvent name="beforeLoadData" signature="self,arg">var dsStandards = view.id(&quot;dsStandards&quot;);
-var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
-var currData = dsStandards.getData(&quot;#&quot;);
-if(currData){
-	dsMethodStandards.set(&quot;parameter&quot;,currData.id);
-}</ClientEvent>
+			<Property name="pageSize">20</Property>
 		</DataSet>
 		<SplitPanel>
 			<Property name="direction">top</Property>
@@ -36,15 +33,15 @@ if(currData){
 							<Container>
 								<ToolBar>
 									<DataPilot>
-										<Property name="dataPath">#.methodStandards</Property>
-										<Property name="dataSet">dsStandards</Property>
+										<Property name="dataSet">dsMethodStandards</Property>
 										<Property name="itemCodes">pages,+,-,x</Property>
 										<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dsMethodStandards.data&quot;);
 var action = view.get(&quot;#msUpdateAction&quot;);
 var dsStandards = view.id(&quot;dsStandards&quot;);
 var currData = dsStandards.getData(&quot;#&quot;);
+var standardId = null;
 if(currData){
-  var standardId=currData.id;
+  standardId=currData.get(&quot;id&quot;);
 }
 switch(arg.code){
 	case &quot;+&quot;:{
@@ -74,9 +71,8 @@ if(currData){
 }</ClientEvent>
 									</ToolBarButton>
 								</ToolBar>
-								<DataGrid>
-									<Property name="dataPath">#.methodStandards</Property>
-									<Property name="dataSet">dsStandards</Property>
+								<DataGrid id="methodStandardDataGrid">
+									<Property name="dataSet">dsMethodStandards</Property>
 									<DataColumn>
 										<Property name="caption">标准名称</Property>
 										<Property name="property">name</Property>
@@ -233,14 +229,13 @@ if(currData){
 }</ClientEvent>
 						</ToolBarButton>
 					</ToolBar>
-					<DataGrid>
+					<DataGrid id="standardDaraGrid">
 						<Property name="dataSet">dsStandards</Property>
 						<Property name="readOnly">true</Property>
 						<Property name="selectionMode">singleRow</Property>
 						<Property name="showFilterBar">true</Property>
 						<Property name="sortMode">serverSide</Property>
-						<RowSelectorColumn/>
-						<RowNumColumn/>
+						<ClientEvent name="onDataRowClick" signature="self,arg,dsMethodStandards">dsMethodStandards.set(&quot;parameter&quot;,arg.data.get(&quot;id&quot;)).flushAsync();</ClientEvent>
 						<DataColumn>
 							<Property name="property">id</Property>
 							<Property name="visible">false</Property>

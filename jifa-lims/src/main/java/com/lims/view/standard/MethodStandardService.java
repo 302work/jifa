@@ -26,6 +26,7 @@ public class MethodStandardService {
 
     @DataResolver
     public void saveMethodStandards(Collection<MethodStandard> methodStandards) {
+
         for (MethodStandard ms : methodStandards) {
             EntityState state = EntityUtils.getState(ms);
             IUser user = ContextHolder.getLoginUser();
