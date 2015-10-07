@@ -39,6 +39,9 @@ public class Project implements IPojo {
     @Column
     private Integer isDeleted;//逻辑删除标识，1为已删除
 
+    @Column
+    private Integer sortFlag;//排序标志
+
     @Column(length=500)
     private String remark;//备注
 
@@ -47,6 +50,9 @@ public class Project implements IPojo {
 
     @Column(nullable = false,length=60)
     private String crUser;//创建人
+
+    @Transient
+    private Boolean hasChild;//是否有子项目
 
 
     public Date getCrTime() {
@@ -127,5 +133,21 @@ public class Project implements IPojo {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Boolean getHasChild() {
+        return hasChild;
+    }
+
+    public void setHasChild(Boolean hasChild) {
+        this.hasChild = hasChild;
+    }
+
+    public Integer getSortFlag() {
+        return sortFlag;
+    }
+
+    public void setSortFlag(Integer sortFlag) {
+        this.sortFlag = sortFlag;
     }
 }

@@ -1,21 +1,21 @@
 package com.dosola.core.dao;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.bstek.dorado.data.provider.Page;
+import com.dosola.core.common.DosolaUtil;
+import com.dosola.core.common.PojoKit;
+import com.dosola.core.dao.base.AbstractDao;
+import com.dosola.core.dao.interfaces.IMasterDao;
+import com.dosola.core.dao.interfaces.IPojo;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
-import com.bstek.dorado.data.provider.Page;
-import com.dosola.core.common.DosolaUtil;
-import com.dosola.core.dao.base.AbstractDao;
-import com.dosola.core.dao.interfaces.IMasterDao;
-import com.dosola.core.dao.interfaces.IPojo;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -85,6 +85,15 @@ public class MasterDao extends AbstractDao implements IMasterDao {
         return resultList;
     }
 
+    @Override
+    public <T extends IPojo> List<T> queryBySql(String sql, Map<String, Object> params, Class<T> clazz) {
+        List<Map<String, Object>> list = queryBySql(sql,params);
+        if(list!=null && list.size()>0){
+            return PojoKit.build(clazz,list);
+        }
+        return new ArrayList<T>();
+    }
+
     @SuppressWarnings("rawtypes")
 	@Override
     public Page<?> pagingQuery(String hql, Integer pageIndex, Integer pageSize, Map<String, Object> params) {
@@ -99,6 +108,13 @@ public class MasterDao extends AbstractDao implements IMasterDao {
         Page<Map<String, Object>> page  = new Page(pageSize,pageIndex);
         pagingQueryBySql(page, sql, params);
         return page;
+    }
+
+    @Override
+    public <T extends IPojo> Page<T> pagingQueryBySql(String sql, Integer pageIndex, Integer pageSize, Map<String, Object> params, Class<T> clazz) {
+        Page<T> returnPage = new Page(pageSize,pageIndex);
+        pagingQueryBySql(returnPage,sql,params,clazz);
+        return returnPage;
     }
 
     @SuppressWarnings("unchecked")
@@ -148,6 +164,20 @@ public class MasterDao extends AbstractDao implements IMasterDao {
                 this.releaseSession(session);
             }
         }
+    }
+
+    @Override
+    public <T extends IPojo> void pagingQueryBySql(Page<T> page, String sql, Map<String, Object> params, Class<T> clazz) {
+        Page<Map<String, Object>> pageMap  = pagingQueryBySql(sql,page.getPageNo(),page.getPageSize(),params);
+        if(pageMap==null || pageMap.getEntityCount()==0){
+            return;
+        }
+        List<T> list = new ArrayList<T>();
+        for(Map<String, Object> map : pageMap.getEntities()){
+            list.add(PojoKit.build(clazz,map));
+        }
+        page.setEntities(list);
+        page.setEntityCount(pageMap.getEntityCount());
     }
 
     @Override

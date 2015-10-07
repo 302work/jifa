@@ -1,12 +1,5 @@
 package com.elective.view.record;
 
-import java.util.*;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
-
 import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.bdf2.core.service.IDeptService;
@@ -19,13 +12,15 @@ import com.dorado.common.SqlKit;
 import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.elective.pojo.Classroom;
-import com.elective.pojo.Course;
-import com.elective.pojo.Dept;
-import com.elective.pojo.DeptUser;
-import com.elective.pojo.Record;
-import com.elective.pojo.Term;
-import com.elective.pojo.User;
+import com.elective.pojo.*;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 单表维护服务类
@@ -417,7 +412,7 @@ public class RecordMaintain {
 		sql += "   select d.`name` as dName ,count(r.id) as xCount";
 		sql += "   from e_record as r join e_user as u on r.studentId=u.id ";
 		sql += "   join e_user_dept as ud on u.id=ud.userId ";
-		sql += "   join e_dept as d on ud.deptId=d.id GROUP BY d.id";
+		sql += "   join e_dept as d on ud.deptId=d.id where r.isDeleted<>1 GROUP BY d.id";
 		sql += ") as x on d.name=x.dName GROUP BY d.id ORDER BY d.name";
 		return dao.queryBySql(sql,null);
 	}
