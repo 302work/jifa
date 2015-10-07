@@ -256,7 +256,12 @@ function refreshActions() {
 //打印
 // @Bind #printBtn.onClick
 !function(self, arg) {
-	$("#d_recordDataGrid").printArea();
+	var $gd = $("#d_recordDataGrid");
+	if($gd.length=0){
+		console.log("没有啊没有啊");
+	}else{
+		$gd.printArea();
+	}
 };
 
 //日期选择不能选择将来时间

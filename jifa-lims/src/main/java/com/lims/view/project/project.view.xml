@@ -4,12 +4,6 @@
 	<Context/>
 	<Model>
 		<DataType name="dtProject" parent="projectDataType">
-			<Reference name="methodStandards">
-				<Property name="dataProvider">projectService#queryMethodStandardsById</Property>
-				<Property name="dataType">[dtMethodStandard]</Property>
-				<Property name="pageSize">20</Property>
-				<Property name="parameter">$${this.id}</Property>
-			</Reference>
 			<Reference name="child">
 				<Property name="dataProvider">projectService#getProjectsByParentId</Property>
 				<Property name="dataType">[SELF]</Property>
@@ -17,6 +11,8 @@
 			</Reference>
 		</DataType>
 		<DataType name="dtMethodStandard" parent="methodStandardDataType">
+		</DataType>
+		<DataType name="dtResultColumn" parent="resultColumnDataType">
 		</DataType>
 	</Model>
 	<View>
@@ -50,7 +46,7 @@
 			<Property name="tags">onDirtyNode</Property>
 		</Action>
 		<UpdateAction id="actionSaveAll">
-			<Property name="caption">保存所有</Property>
+			<Property name="caption">保存项目</Property>
 			<Property name="dataResolver">projectService#saveProjects</Property>
 			<Property name="executingMessage">系统正在保存</Property>
 			<Property name="hotkey">ctrl+s</Property>
@@ -92,92 +88,146 @@
 				<CardBook id="cardbook">
 					<Container>
 						<AutoForm id="projectForm">
-							<Property name="cols">*</Property>
+							<Property name="cols">300,300,300</Property>
 							<Property name="createPrivateDataSet">false</Property>
 							<Property name="dataPath">!CURRENT_PROJECT</Property>
 							<Property name="dataSet">dsProject</Property>
-							<AutoFormElement layoutConstraint="colSpan:2;">
+							<AutoFormElement>
 								<Property name="name">name</Property>
 								<Property name="property">name</Property>
 								<Editor/>
 							</AutoFormElement>
-							<AutoFormElement layoutConstraint="colSpan:2;">
+							<AutoFormElement>
 								<Property name="name">enName</Property>
 								<Property name="property">enName</Property>
 								<Editor/>
 							</AutoFormElement>
-							<AutoFormElement layoutConstraint="colSpan:2;">
+							<AutoFormElement>
 								<Property name="name">shortName</Property>
 								<Property name="property">shortName</Property>
 								<Editor/>
 							</AutoFormElement>
-							<AutoFormElement layoutConstraint="colSpan:2;">
+							<AutoFormElement>
+								<Property name="editorType">TextArea</Property>
 								<Property name="name">testCondition</Property>
 								<Property name="property">testCondition</Property>
 								<Editor/>
 							</AutoFormElement>
-							<AutoFormElement layoutConstraint="colSpan:2;">
+							<AutoFormElement>
+								<Property name="editorType">TextArea</Property>
 								<Property name="name">remark</Property>
 								<Property name="property">remark</Property>
 								<Editor/>
 							</AutoFormElement>
 						</AutoForm>
-						<ToolBar>
-							<DataPilot id="methodStandardDataPilot">
-								<Property name="dataPath">!CURRENT_PROJECT.methodStandards</Property>
-								<Property name="dataSet">dsProject</Property>
-								<Property name="itemCodes">pages,pageSize,+,-,x</Property>
-							</DataPilot>
-							<Separator/>
-							<ToolBarButton>
-								<Property name="action">export2ReportAction1</Property>
-								<Property name="caption">导出</Property>
-								<Property name="iconClass">fa fa-download</Property>
-							</ToolBarButton>
-						</ToolBar>
-						<DataGrid id="methodStandardDataGrid">
-							<Property name="allowNoCurrent">true</Property>
-							<Property name="appendOnLastEnter">true</Property>
-							<Property name="dataPath">!CURRENT_PROJECT.methodStandards</Property>
-							<Property name="dataSet">dsProject</Property>
-							<Property name="filterMode">serverSide</Property>
-							<Property name="highlightCurrentRow">true</Property>
-							<Property name="readOnly">true</Property>
-							<Property name="showFilterBar">true</Property>
-							<Property name="showFooter">false</Property>
-							<Property name="sortMode">serverSide</Property>
-							<IndicatorColumn/>
-							<DataColumn>
-								<Property name="name">name</Property>
-								<Property name="property">name</Property>
-								<Editor/>
-							</DataColumn>
-							<DataColumn>
-								<Property name="name">standardNo</Property>
-								<Property name="property">standardNo</Property>
-								<Editor/>
-							</DataColumn>
-							<DataColumn>
-								<Property name="name">status</Property>
-								<Property name="property">status</Property>
-								<Editor/>
-							</DataColumn>
-							<DataColumn>
-								<Property name="name">remark</Property>
-								<Property name="property">remark</Property>
-								<Editor/>
-							</DataColumn>
-						</DataGrid>
-						<Export2ReportAction id="export2ReportAction1">
-							<Property name="confirmMessage">确定导出这些记录吗？</Property>
-							<Property name="dataScope">serverAll</Property>
-							<Property name="executingMessage">正在导出...</Property>
-							<Property name="fileName">methodStandard</Property>
-							<Property name="maxSize">10000</Property>
-							<Property name="showTitle">true</Property>
-							<Property name="template">methodStandardDataGrid</Property>
-							<Property name="titleName">方法标准明细</Property>
-						</Export2ReportAction>
+						<TabControl>
+							<ControlTab>
+								<Property name="caption">方法标准</Property>
+								<Property name="iconClass">fa fa-book</Property>
+								<Container>
+									<DataSet id="dsMethodStandard">
+										<Property name="dataProvider">projectService#queryMethodStandardsById</Property>
+										<Property name="dataType">[dtMethodStandard]</Property>
+										<Property name="pageSize">20</Property>
+									</DataSet>
+									<ToolBar>
+										<DataPilot id="methodStandardDataPilot">
+											<Property name="dataSet">dsMethodStandard</Property>
+											<Property name="itemCodes">pages,pageSize</Property>
+										</DataPilot>
+										<ToolBarButton id="addMethodStandardBtn">
+											<Property name="caption">添加</Property>
+											<Property name="iconClass">fa fa-plus</Property>
+										</ToolBarButton>
+										<Separator/>
+										<ToolBarButton id="delMethodStandardBtn">
+											<Property name="caption">删除</Property>
+											<Property name="iconClass">fa fa-minus</Property>
+										</ToolBarButton>
+									</ToolBar>
+									<DataGrid id="methodStandardDataGrid">
+										<Property name="allowNoCurrent">true</Property>
+										<Property name="appendOnLastEnter">true</Property>
+										<Property name="dataSet">dsMethodStandard</Property>
+										<Property name="filterMode">serverSide</Property>
+										<Property name="highlightCurrentRow">true</Property>
+										<Property name="readOnly">true</Property>
+										<Property name="showFilterBar">true</Property>
+										<Property name="showFooter">false</Property>
+										<Property name="sortMode">serverSide</Property>
+										<IndicatorColumn/>
+										<DataColumn>
+											<Property name="name">name</Property>
+											<Property name="property">name</Property>
+											<Editor/>
+										</DataColumn>
+										<DataColumn>
+											<Property name="name">standardNo</Property>
+											<Property name="property">standardNo</Property>
+											<Editor/>
+										</DataColumn>
+										<DataColumn>
+											<Property name="name">status</Property>
+											<Property name="property">status</Property>
+											<Editor/>
+										</DataColumn>
+										<DataColumn>
+											<Property name="name">remark</Property>
+											<Property name="property">remark</Property>
+											<Editor/>
+										</DataColumn>
+									</DataGrid>
+								</Container>
+							</ControlTab>
+							<ControlTab>
+								<Property name="caption">记录项</Property>
+								<Property name="iconClass">fa fa-bars</Property>
+								<Container>
+									<DataSet id="dsResultColumn">
+										<Property name="dataProvider">resultColumnService#query</Property>
+										<Property name="dataType">[dtResultColumn]</Property>
+										<Property name="pageSize">20</Property>
+										<Property name="parameter">${dsProject.getData(&quot;!CURRENT_PROJECT&quot;).get(&quot;id&quot;)}</Property>
+									</DataSet>
+									<ToolBar>
+										<DataPilot id="resultColumnDataPilot">
+											<Property name="dataSet">dsResultColumn</Property>
+											<Property name="itemCodes">pages,pageSize,+,-,x</Property>
+										</DataPilot>
+										<Separator/>
+										<ToolBarButton>
+											<Property name="action">saveResultColumnAction</Property>
+											<Property name="caption">保存</Property>
+											<Property name="iconClass">fa fa-floppy-o</Property>
+										</ToolBarButton>
+									</ToolBar>
+									<DataGrid id="resultColumnDataGrid">
+										<Property name="dataSet">dsResultColumn</Property>
+										<Property name="filterMode">serverSide</Property>
+										<Property name="sortMode">serverSide</Property>
+										<IndicatorColumn/>
+										<DataColumn>
+											<Property name="name">name</Property>
+											<Property name="property">name</Property>
+											<Editor/>
+										</DataColumn>
+										<DataColumn>
+											<Property name="name">enName</Property>
+											<Property name="property">enName</Property>
+											<Editor/>
+										</DataColumn>
+									</DataGrid>
+									<UpdateAction id="saveResultColumnAction">
+										<Property name="dataResolver">resultColumnService#save</Property>
+										<Property name="executingMessage">正在保存</Property>
+										<Property name="successMessage">保存成功</Property>
+										<UpdateItem>
+											<Property name="dataSet">dsResultColumn</Property>
+										</UpdateItem>
+									</UpdateAction>
+								</Container>
+							</ControlTab>
+						</TabControl>
 					</Container>
 				</CardBook>
 			</MainControl>

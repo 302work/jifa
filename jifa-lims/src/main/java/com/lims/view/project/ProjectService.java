@@ -1,6 +1,11 @@
 package com.lims.view.project;
 
+import com.bstek.bdf2.core.business.IUser;
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
+import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.data.entity.EntityState;
+import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
@@ -13,9 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author june
@@ -29,16 +32,17 @@ public class ProjectService {
 
 
     @DataProvider
-    public List<Project> getProjectsByParentId(long projectId){
+    public List<Project> getProjectsByParentId(Long projectId){
         StringBuilder sb = new StringBuilder();
         sb.append(" From "+Project.class.getName()+" where isDeleted<>1 ");
         Map<String,Object> params = new HashMap<String, Object>();
-        if(projectId==0){
+        if(projectId==null || projectId==0){
             sb.append(" and (parentId is null or parentId=0 or parentId='') ");
         }else{
             sb.append(" and parentId=:parentId");
             params.put("parentId",projectId);
         }
+        sb.append(" order by sortFlag");
         List<Project> list = (List<Project>) dao.query(sb.toString(),params);
         if(list!=null && list.size()>0){
             for (Project project : list){
@@ -81,9 +85,9 @@ public class ProjectService {
     }
 
     @DataProvider
-    public void queryMethodStandardsById(Page<MethodStandard> page, long projectId, Criteria criteria){
+    public void queryMethodStandardsById(Page<MethodStandard> page, Long projectId, Criteria criteria){
 
-        if(projectId<=0){
+        if(projectId==null || projectId<=0){
             return;
         }
 
@@ -115,5 +119,96 @@ public class ProjectService {
         sb.append(orderSql);
 
         dao.pagingQueryBySql(page,sb.toString(),params,MethodStandard.class);
+    }
+
+    @DataResolver
+    public void saveProjects(Collection<Project> projects){
+        for (Project project : projects) {
+            doSaveOrUpdateProject(null, project);
+        }
+    }
+
+    private void doSaveOrUpdateProject(Long parentId,Project project){
+        IUser user = ContextHolder.getLoginUser();
+        String userName = user.getUsername();
+        EntityState state = EntityUtils.getState(project);
+        //不是none并且不是delete
+        if(EntityState.isVisibleDirty(state)){
+            project.setParentId(parentId);
+        }
+        Project newProject = new Project();
+        //如果是删除
+        if (EntityState.DELETED.equals(state)) {
+            if (!hasChild(project) && !hasMethodStandard(project)) {
+                project.setIsDeleted(1);
+                dao.saveOrUpdate(project);
+            } else {
+                throw new RuntimeException("请先删除项目的方法标准");
+            }
+        }else if (EntityState.NEW.equals(state)) {
+            project.setCrTime(new Date());
+            project.setCrUser(userName);
+            project.setIsDeleted(0);
+            newProject = dao.saveOrUpdate(project).get(0);
+        }else if (EntityState.MODIFIED.equals(state)) {
+            project.setCrTime(new Date());
+            project.setCrUser(userName);
+            project.setIsDeleted(0);
+            dao.saveOrUpdate(project);
+        }else if(EntityState.MOVED.equals(state)){
+            project.setCrTime(new Date());
+            project.setCrUser(userName);
+            project.setIsDeleted(0);
+            dao.saveOrUpdate(project);
+        }
+        Long projectId = project.getId();
+        if(newProject.getId()!=null){
+            projectId = newProject.getId();
+        }
+        //子项目
+        List<Project> subProjects = EntityUtils.getValue(project, "child");
+        if(subProjects!=null && subProjects.size()>0){
+            for (Project subProject : subProjects) {
+                doSaveOrUpdateProject(projectId, subProject);
+            }
+        }
+        //方法标准
+//        List<MethodStandard> methodStandards = EntityUtils.getValue(project, "methodStandards");
+//        if(methodStandards!=null && methodStandards.size()>0){
+//            for (MethodStandard methodStandard : methodStandards) {
+//                if(methodStandard!=null && methodStandard.getId()!=null){
+//                    doSaveOrUpdateMethodStandard(projectId, methodStandard);
+//                }else{
+//                    throw new RuntimeException("方法标准不能为空");
+//                }
+//            }
+//        }
+
+    }
+
+    /**
+     * 添加删除方法标准
+     * @param projectId
+     * @param methodStandard
+     */
+    private void doSaveOrUpdateMethodStandard(Long projectId, MethodStandard methodStandard) {
+        EntityState state = EntityUtils.getState(methodStandard);
+
+        //先删除关联关系
+        String hql = "delete from "+ProjectMethodStandard.class.getName()+" where projectId=:projectId and methodStandardId=:methodStandardId";
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("projectId",projectId);
+        params.put("methodStandardId",methodStandard.getId());
+        dao.executeHQL(hql, params);
+
+        ProjectMethodStandard projectMethodStandard = new ProjectMethodStandard();
+        projectMethodStandard.setMethodStandardId(methodStandard.getId());
+        projectMethodStandard.setProjectId(projectId);
+
+        if(EntityState.NEW.equals(state) || EntityState.MODIFIED.equals(state)){
+            dao.saveOrUpdate(projectMethodStandard);
+        }else if (EntityState.DELETED.equals(state)) {
+            //nothing
+        }
     }
 }

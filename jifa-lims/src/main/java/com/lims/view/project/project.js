@@ -17,7 +17,6 @@ function refreshActions() {
 }
 
 // @Bind @dtProject.onStateChange
-// @Bind @dtMethodStandard.onStateChange
 !function(arg) {
 	if (arg.oldState == dorado.Entity.STATE_NONE) {
 		dirtyEntityNum++;
@@ -30,6 +29,7 @@ function refreshActions() {
 	refreshActions();
 };
 
+//插入项目时
 //@Bind @dtProject.onInsert
 !function(arg) {
 	var entityList = arg.entityList;
@@ -45,24 +45,28 @@ function refreshActions() {
 	});
 };
 
+//删除项目时
 //@Bind @dtProject.onRemove
 !function(arg) {
 	arg.entity.set("sortFlag", 0);
 };
 
-
+//单击项目
 //@Bind #dataTreeProject.onDataRowClick
-!function(dsProject,dataTreeProject,methodStandardDataPilot,methodStandardDataGrid) {
+!function(dsProject,dsMethodStandard,dsResultColumn) {
 	var currEntity = dsProject.getData("!CURRENT_PROJECT");
 	var id = currEntity.get("id");
 	if(id){
 		//点击树重新加载数据
-		currEntity.reset("methodStandards");
+		dsMethodStandard.flushAsync();
 		//dsProject.flushAsync();
 		//currEntity.reset("child");
+		dsResultColumn.flushAsync();
 	}
 	refreshActions();
 };
+
+//右键菜单
 // @Bind #dataTreeProject.onContextMenu
 !function(self, arg) {
 	view.id("menuProjects").show({
@@ -72,6 +76,8 @@ function refreshActions() {
 		}
 	});
 };
+
+//新建项目时
 //@Bind #dataTreeProject.onDataNodeCreate
 !function(self, arg) {
 	var entity = arg.data;
@@ -81,6 +87,8 @@ function refreshActions() {
 		}, 50);
 	}
 };
+
+//拖拽项目
 //@Bind #dataTreeProject.onDraggingSourceMove
 !function(arg) {
 	var draggingInfo = arg.draggingInfo;
@@ -97,6 +105,7 @@ function refreshActions() {
 	}
 };
 
+//添加项目
 //@Bind #actionAdd.onExecute
 !function(dsProject, dataTreeProject) {
 	var currentEntity = dsProject.getData("!CURRENT_PROJECT");	
@@ -120,6 +129,7 @@ function refreshActions() {
 	
 };
 
+//删除项目
 //@Bind #actionRemove.onExecute
 !function(dsProject) {
 	var currentEntity = dsProject.getData("!CURRENT_PROJECT");
@@ -133,11 +143,13 @@ function refreshActions() {
 	}
 };
 
+//移动项目
 //@Bind #actionMove.onExecute
 !function(dialogSelectProject) {
 	dialogSelectProject.show();
 };
 
+//取消
 // @Bind #actionCancel.onExecute
 !function(dsProject) {
 	var entity = dsProject.getData("!CURRENT_PROJECT");
@@ -146,13 +158,14 @@ function refreshActions() {
 	}
 };
 
+//保存项目成功后
 // @Bind #actionSaveAll.onSuccess
 !function() {
 	dirtyEntityNum = 0;
 	refreshActions();
 };
 
-
+//确定移动项目
 //@Bind #buttonOk.onClick
 !function(selectDataTreeProject, dataTreeProject, dialogSelectProject) {
 	//用户选择的项目
@@ -181,9 +194,46 @@ function refreshActions() {
 	dialogSelectProject.hide();
 };
 
+//关闭移动项目弹窗
 // @Bind #buttonCancel.onClick
 !function(dialogSelectProject) {
 	dialogSelectProject.hide();
 };
 
+//加载记录项之前，设置projectId
+// @Bind #dsResultColumn.beforeLoadData
+!function(self,arg,dsProject) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+    self.set("parameter",projectId);
+};
+
+//保存记录项之前，设置projectId
+// @Bind #saveResultColumnAction.beforeExecute
+!function(self,arg,dsProject) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+    self.set("parameter",projectId);
+};
+
+//加载方法标准之前，设置projectId
+// @Bind #dsMethodStandard.beforeLoadData
+!function(self,arg,dsProject) {
+	//http://wiki.bsdn.org/pages/viewpage.action?pageId=10912502
+	dsProject.getDataAsync("!CURRENT_PROJECT", function(entity) {
+		if(entity){
+			self.set("parameter",entity.get("id"));
+		}
+	});
+};
+
+//添加方法标准
+// @Bind #addMethodStandardBtn.onClick
+!function(self,arg,dsProject) {
+	alert("add");
+};
+
+//删除方法标准
+// @Bind #delMethodStandardBtn.onClick
+!function(self,arg,dsProject) {
+	alert("del");
+};
 

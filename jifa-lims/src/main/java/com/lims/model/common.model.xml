@@ -39,6 +39,13 @@
 		</PropertyDef>
 		<PropertyDef name="testCondition">
 			<Property name="dataType">String</Property>
+			<Property name="label">检测条件</Property>
+		</PropertyDef>
+		<PropertyDef name="sortFlag">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="hasChild">
+			<Property name="dataType">Boolean</Property>
 		</PropertyDef>
 	</DataType>
 	<DataType name="deviceDataType">
@@ -361,6 +368,33 @@
 		<PropertyDef name="unit">
 			<Property name="dataType">String</Property>
 			<Property name="label">单位</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="resultColumnDataType">
+		<Property name="creationType">com.lims.pojo.ResultColumn</Property>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="enName">
+			<Property name="dataType">String</Property>
+			<Property name="label">英文名称</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="projectId">
+			<Property name="dataType">Long</Property>
 		</PropertyDef>
 	</DataType>
 </Model>
