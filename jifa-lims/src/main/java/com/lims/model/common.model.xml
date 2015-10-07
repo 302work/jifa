@@ -239,4 +239,151 @@
 			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
+	<DataType name="standardDataType">
+		<Property name="creationType">com.lims.pojo.Standard</Property>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+			<Property name="visible">false</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="standardNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准号</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+			<Property name="label">是否删除</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+			<Property name="label">状态</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">现行</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">作废</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+		<Reference name="methodStandards">
+			<Property name="dataProvider">standardService#queryMethodStandards</Property>
+			<Property name="dataType">[methodStandardDataType]</Property>
+			<Property name="pageSize">20</Property>
+			<Property name="parameter">$${this.id}</Property>
+		</Reference>
+	</DataType>
+	<DataType name="methodStandardDataType">
+		<Property name="creationType">com.lims.pojo.MethodStandard</Property>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+			<Property name="label">创建时间</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+			<Property name="label">是否删除</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准名词</Property>
+		</PropertyDef>
+		<PropertyDef name="price">
+			<Property name="dataType">Double</Property>
+			<Property name="label">基准价格</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="standardId">
+			<Property name="dataType">Long</Property>
+			<Property name="label">所属产品标准</Property>
+		</PropertyDef>
+		<PropertyDef name="standardNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准号</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+			<Property name="label">状态</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">现行</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">作废</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+		</PropertyDef>
+		<PropertyDef name="unit">
+			<Property name="dataType">String</Property>
+			<Property name="label">单位</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="standardIndexDataType">
+		<Property name="creationType">com.lims.pojo.StandardIndex</Property>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="standardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="unit">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="value">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+	</DataType>
 </Model>
