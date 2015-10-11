@@ -227,13 +227,51 @@ function refreshActions() {
 
 //添加方法标准
 // @Bind #addMethodStandardBtn.onClick
-!function(self,arg,dsProject) {
-	alert("add");
+!function(self,arg,dsProject,methodStandardDialog) {
+	methodStandardDialog.show();
 };
 
 //删除方法标准
 // @Bind #delMethodStandardBtn.onClick
-!function(self,arg,dsProject) {
-	alert("del");
+!function(self,arg,dsProject,dsMethodStandard,deleteMethodStandardAction) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+	var currMethodStandard = dsMethodStandard.getData("#");
+	if(currMethodStandard){
+		var methodStandardId = currMethodStandard.get("id");
+		deleteMethodStandardAction.set("parameter",{projectId:projectId,methodStandardId:methodStandardId}).execute(function(data){
+			dsMethodStandard.flushAsync();
+		});
+	}else{
+		dorado.MessageBox.alert("请选择一个方法标准");
+		return false;
+	}
 };
+
+//添加方法标准
+// @Bind #saveMethodStandardBtn.onClick
+!function(self,arg,dsMethodStandard,dsProject,standardView,saveMethodStandardAction,methodStandardDialog) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+	var methodStandardId = null;
+	//获取当前选中的方法标准
+	standardView = standardView.get("subView");
+	var dsMethodStandards = standardView.id("dsMethodStandards");
+	var currMethodStandard = dsMethodStandards.getData("#");
+	if(currMethodStandard){
+		methodStandardId = currMethodStandard.get("id");
+	}else{
+		dorado.MessageBox.alert("请选择一个方法标准");
+		return false;
+	}
+	saveMethodStandardAction.set("parameter",{projectId:projectId,methodStandardId:methodStandardId}).execute(function(data){
+		dsMethodStandard.flushAsync();
+		methodStandardDialog.hide();
+	});
+};
+
+//关闭选择方法标准弹窗
+// @Bind #closeMethodStandardDialogBtn.onClick
+!function(self,arg,methodStandardDialog) {
+	methodStandardDialog.hide();
+};
+
 

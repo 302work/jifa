@@ -4,6 +4,7 @@ import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
@@ -187,28 +188,39 @@ public class ProjectService {
     }
 
     /**
-     * 添加删除方法标准
+     * 添加方法标准
      * @param projectId
-     * @param methodStandard
+     * @param methodStandardId
      */
-    private void doSaveOrUpdateMethodStandard(Long projectId, MethodStandard methodStandard) {
-        EntityState state = EntityUtils.getState(methodStandard);
-
+    @Expose
+    public void saveProjectMethodStandard(Long projectId, Long methodStandardId) {
+        if(projectId==null || methodStandardId==null){
+            throw new RuntimeException("参数有误");
+        }
         //先删除关联关系
         String hql = "delete from "+ProjectMethodStandard.class.getName()+" where projectId=:projectId and methodStandardId=:methodStandardId";
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("projectId",projectId);
-        params.put("methodStandardId",methodStandard.getId());
+        params.put("methodStandardId",methodStandardId);
         dao.executeHQL(hql, params);
 
         ProjectMethodStandard projectMethodStandard = new ProjectMethodStandard();
-        projectMethodStandard.setMethodStandardId(methodStandard.getId());
+        projectMethodStandard.setMethodStandardId(methodStandardId);
         projectMethodStandard.setProjectId(projectId);
 
-        if(EntityState.NEW.equals(state) || EntityState.MODIFIED.equals(state)){
-            dao.saveOrUpdate(projectMethodStandard);
-        }else if (EntityState.DELETED.equals(state)) {
-            //nothing
+        dao.saveOrUpdate(projectMethodStandard);
+    }
+
+    @Expose
+    public void deleteProjectMethodStandard(Long projectId, Long methodStandardId) {
+        if(projectId==null || methodStandardId==null){
+            throw new RuntimeException("参数有误");
         }
+        //删除关联关系
+        String hql = "delete from "+ProjectMethodStandard.class.getName()+" where projectId=:projectId and methodStandardId=:methodStandardId";
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("projectId",projectId);
+        params.put("methodStandardId",methodStandardId);
+        dao.executeHQL(hql, params);
     }
 }
