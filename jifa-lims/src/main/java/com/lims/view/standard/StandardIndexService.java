@@ -8,27 +8,30 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.MethodStandard;
+import com.lims.pojo.StandardIndex;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Song
  * @version 1.0
- * @since 2015-10-07 16:05
+ * @since 2015-10-11 13:12
  */
 
 @Service
-public class MethodStandardService {
+public class StandardIndexService {
     @Resource
     private IMasterDao dao;
 
     @DataProvider
-    public void queryMethodStandards(Page<MethodStandard> page, Long standardId) {
+    public void queryStandardIndexs(Page<StandardIndex> page,Long standardId){
         StringBuilder sb = new StringBuilder();
-        sb.append(" From " + MethodStandard.class.getName() + " WHERE isDeleted<>1 ");
+        sb.append(" From " + StandardIndex.class.getName() + " WHERE isDeleted<>1 ");
         sb.append("AND standardId =:standardId ");
         sb.append("ORDER BY crTime DESC");
         Map<String, Object> map = new HashMap<String, Object>();
@@ -37,25 +40,24 @@ public class MethodStandardService {
     }
 
     @DataResolver
-    public void saveMethodStandards(Collection<MethodStandard> methodStandards) {
+    public void saveMethodStandards(Collection<StandardIndex> standardIndexs) {
 
-        for (MethodStandard ms : methodStandards) {
-            EntityState state = EntityUtils.getState(ms);
+        for (StandardIndex si : standardIndexs) {
+            EntityState state = EntityUtils.getState(si);
             IUser user = ContextHolder.getLoginUser();
             String userName = user.getUsername();
             if (EntityState.NEW.equals(state)) {
-                ms.setCrTime(new Date());
-                ms.setCrUser(userName);
+                si.setCrTime(new Date());
+                si.setCrUser(userName);
                 //默认启用
-                ms.setStatus(1);
-                ms.setIsDeleted(0);
-                dao.saveOrUpdate(ms);
+                si.setIsDeleted(0);
+                dao.saveOrUpdate(si);
             } else if (EntityState.MODIFIED.equals(state)) {
-                dao.saveOrUpdate(ms);
+                dao.saveOrUpdate(si);
             } else if (EntityState.DELETED.equals(state)) {
                 //删除，逻辑删除
-                ms.setIsDeleted(1);
-                dao.saveOrUpdate(ms);
+                si.setIsDeleted(1);
+                dao.saveOrUpdate(si);
 
             }
         }

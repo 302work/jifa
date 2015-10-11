@@ -320,6 +320,7 @@
 					</Collection>
 				</Property>
 			</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="remark">
 			<Property name="dataType">String</Property>
@@ -353,7 +354,8 @@
 		</PropertyDef>
 		<PropertyDef name="name">
 			<Property name="dataType">String</Property>
-			<Property name="label">标准名词</Property>
+			<Property name="label">标准名称</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="price">
 			<Property name="dataType">Double</Property>
@@ -370,6 +372,7 @@
 		<PropertyDef name="standardNo">
 			<Property name="dataType">String</Property>
 			<Property name="label">标准号</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="status">
 			<Property name="dataType">Integer</Property>
@@ -389,6 +392,7 @@
 					</Collection>
 				</Property>
 			</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="unit">
 			<Property name="dataType">String</Property>
@@ -399,30 +403,42 @@
 		<Property name="creationType">com.lims.pojo.StandardIndex</Property>
 		<PropertyDef name="crTime">
 			<Property name="dataType">Date</Property>
+			<Property name="label">创建时间</Property>
 		</PropertyDef>
 		<PropertyDef name="crUser">
 			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
 		</PropertyDef>
 		<PropertyDef name="id">
 			<Property name="dataType">Long</Property>
+			<Property name="label">ID</Property>
 		</PropertyDef>
 		<PropertyDef name="isDeleted">
 			<Property name="dataType">Integer</Property>
+			<Property name="label">是否删除</Property>
 		</PropertyDef>
 		<PropertyDef name="name">
 			<Property name="dataType">String</Property>
+			<Property name="label">指标名称</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="remark">
 			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
 		</PropertyDef>
 		<PropertyDef name="standardId">
 			<Property name="dataType">Long</Property>
+			<Property name="label">所属产品标准id</Property>
 		</PropertyDef>
 		<PropertyDef name="unit">
 			<Property name="dataType">String</Property>
+			<Property name="label">单位</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="value">
 			<Property name="dataType">String</Property>
+			<Property name="label">指标数值</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
 </Model>

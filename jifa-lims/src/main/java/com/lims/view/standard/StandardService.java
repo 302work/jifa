@@ -53,18 +53,7 @@ public class StandardService {
         dao.pagingQuery(page, sb.toString(), params);
     }
 
-    @DataProvider
-    public void queryMethodStandards(Page<MethodStandard> page, Long standardId) {
-        List ms = new ArrayList();
-        StringBuilder sb = new StringBuilder();
-        sb.append(" From " + MethodStandard.class.getName() + " where isDeleted<>1 ");
-        sb.append("and standardId =:standardId ");
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("standardId", standardId);
-        dao.pagingQuery(page,sb.toString(),map);
-//        ms = dao.query(sb.toString(), map);
-//        return ms;
-    }
+
 
 
     @DataResolver
