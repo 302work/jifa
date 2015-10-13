@@ -22,7 +22,7 @@ public class ResultValue implements IPojo {
     private Long id;
 
     @Column(nullable = false)
-    private Long resultId;//所属检测记录
+    private Long resultId;//所属检测结果
 
     @Column(nullable = false)
     private Long resultColumnId;//所属列

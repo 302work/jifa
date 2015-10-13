@@ -24,6 +24,12 @@ public class Record implements IPojo {
     @Column(nullable = false)
     private Long orderId;
 
+    @Column(nullable = false)
+    private Long projectId;//项目id
+
+    @Column(nullable = false)
+    private Long standardId;//产品标准id
+
     @Column(length = 50,nullable = false)
     private String sampleNo;//样品编号，条形码
 
@@ -181,5 +187,21 @@ public class Record implements IPojo {
 
     public void setResultColumnIds(String resultColumnIds) {
         this.resultColumnIds = resultColumnIds;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Long getStandardId() {
+        return standardId;
+    }
+
+    public void setStandardId(Long standardId) {
+        this.standardId = standardId;
     }
 }
