@@ -220,7 +220,6 @@
 										<Property name="dataProvider">resultColumnService#query</Property>
 										<Property name="dataType">[dtResultColumn]</Property>
 										<Property name="pageSize">20</Property>
-										<Property name="parameter">${dsProject.getData(&quot;!CURRENT_PROJECT&quot;).get(&quot;id&quot;)}</Property>
 									</DataSet>
 									<ToolBar>
 										<DataPilot id="resultColumnDataPilot">
