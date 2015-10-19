@@ -3,15 +3,6 @@
  */
 package com.lims.uflo.handler.base;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
-
 import com.bstek.uflo.env.Context;
 import com.bstek.uflo.model.ProcessInstance;
 import com.bstek.uflo.process.handler.AssignmentHandler;
@@ -19,7 +10,14 @@ import com.bstek.uflo.process.node.TaskNode;
 import com.dosola.core.common.StringUtil;
 import com.lims.pojo.Order;
 import com.lims.pojo.User;
-import com.lims.service.RoleService;
+import com.lims.service.RoleUtil;
+import org.apache.log4j.Logger;
+import org.hibernate.Session;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -31,7 +29,7 @@ import com.lims.service.RoleService;
 public abstract class AbstractHandler implements AssignmentHandler{
 	
 	@Resource
-	private RoleService roleService;
+	private RoleUtil roleUtil;
 	
 	private Logger logger = Logger.getLogger(AbstractHandler.class);
 	
@@ -48,7 +46,7 @@ public abstract class AbstractHandler implements AssignmentHandler{
 		}
 		logger.info("订单编号："+order.getOrderNo()+"，当前节点的角色ID:"+roleId);
 		//当前节点的角色的用户
-		List<User> users = roleService.getUsers(roleId);
+		List<User> users = roleUtil.getUsers(roleId);
 		if(users==null || users.size()==0){
 			throw new RuntimeException("下节点没有处理人员");
 		}

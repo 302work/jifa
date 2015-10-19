@@ -1,37 +1,34 @@
 package com.lims.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import com.bstek.bdf2.core.business.IDept;
 import com.bstek.bdf2.core.business.IPosition;
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.model.DefaultPosition;
 import com.bstek.bdf2.core.model.Group;
 import com.bstek.bdf2.core.model.RoleMember;
-import com.bstek.bdf2.core.service.IDeptService;
 import com.bstek.bdf2.core.service.IRoleService;
 import com.lims.pojo.Dept;
 import com.lims.pojo.User;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
+@Service
+public class RoleUtil {
 
-public class RoleService {
-	
+	@Resource
 	private IRoleService roleService;
-	
-	@Resource(name=IDeptService.BEAN_ID)
-	private IDeptService deptService;
-	
+
 	@Resource
 	private UserService userService;
 	
 	/**
 	 * 根据角色ID获取该角色下的所有用户
-	 * @param roleName
+	 * @param roleId
 	 * @return
 	 */
 	public List<User> getUsers(String roleId){
