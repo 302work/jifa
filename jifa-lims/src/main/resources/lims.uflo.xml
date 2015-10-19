@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uflo-process name="lims">
+   <start g="30,35,56,71" name="申请检测单">
+      <sequence-flow to="审核检测单" g="239,93:-33,-22" name="to 审核检测单"/>
+   </start>
+   <task g="368,58,115,50" allow-specify-assignee="false" task-type="Normal" assignment-type="Handler" name="审核检测单">
+      <sequence-flow to="申请检测单" g="275,41:-74,-19" name="to 申请检测单"/>
+      <sequence-flow to="结果录入" g="159,161:-63,-19" name="to 结果录入"/>
+   </task>
+   <task g="30,214,115,50" allow-specify-assignee="false" task-type="Normal" assignment-type="ProcessPromoter" name="结果录入">
+      <sequence-flow to="审核检测单" g="234,181:-74,-19" name="to 审核检测单"/>
+      <sequence-flow to="结果审核" g="322,257:-63,-19" name="to 结果审核"/>
+   </task>
+   <task g="363,217,115,50" allow-specify-assignee="false" task-type="Normal" assignment-type="ProcessPromoter" name="结果审核">
+      <sequence-flow to="结果录入" g="331,211:-63,-19" name="to 结果录入"/>
+      <sequence-flow to="生成报告" g="328,329:-63,-19" name="to 生成报告"/>
+   </task>
+   <task g="23,390,115,50" allow-specify-assignee="false" task-type="Normal" assignment-type="ProcessPromoter" name="生成报告">
+      <sequence-flow to="结果审核" g="188,348:-63,-19" name="to 结果审核"/>
+      <sequence-flow to="审核报告" g="245,446:-63,-19" name="to 审核报告"/>
+   </task>
+   <task g="371,392,115,50" allow-specify-assignee="false" task-type="Normal" assignment-type="ProcessPromoter" name="审核报告">
+      <sequence-flow to="生成报告" g="341,409:-63,-19" name="to 生成报告"/>
+      <sequence-flow to="结束" g="-41,-19" name="to 结束"/>
+   </task>
+   <end g="48,551,32,62" terminate="true" name="结束"/>
+</uflo-process>
