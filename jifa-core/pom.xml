@@ -36,7 +36,7 @@
         <bdf2-import.version>2.0.7</bdf2-import.version>
         <bdf2-export.version>2.0.8-SNAPSHOT</bdf2-export.version>
         <bdf2-job-daemon.version>2.0.4</bdf2-job-daemon.version>
-        <bdf2-uflo.version>2.1.2-SNAPSHOT</bdf2-uflo.version>
+        <bdf2-uflo.version>2.1.4-SNAPSHOT</bdf2-uflo.version>
 
         <springframework.version>3.2.5.RELEASE</springframework.version>
 
