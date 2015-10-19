@@ -147,6 +147,7 @@ if(currData){
 			<Property name="height">480</Property>
 			<Property name="iconClass">fa fa-user</Property>
 			<Property name="width">480</Property>
+			<ClientEvent name="onClose" signature="self,arg,dsConsumer">dsConsumer.getData().cancel();</ClientEvent>
 			<Buttons>
 				<Button id="saveBtn">
 					<Property name="caption">提交</Property>
@@ -161,7 +162,8 @@ updateAction.execute(function(){
 				<Button>
 					<Property name="caption">关闭</Property>
 					<Property name="iconClass">fa fa-times</Property>
-					<ClientEvent name="onClick" signature="self,arg">view.id(&quot;consumerDialog&quot;).hide();</ClientEvent>
+					<ClientEvent name="onClick" signature="self,arg,dsConsumer">view.id(&quot;consumerDialog&quot;).hide();
+dsConsumer.getData().cancel();</ClientEvent>
 				</Button>
 			</Buttons>
 			<Children>

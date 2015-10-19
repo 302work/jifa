@@ -49,6 +49,9 @@ public class Order implements IPojo {
     private String sampleDesc;//样品描述
 
     @Column(nullable = false)
+    private Long standardId;//产品标准id
+
+    @Column(nullable = false)
     private String projectIds;//项目id，多个逗号隔开
 
     @Column(nullable = false)
@@ -227,5 +230,13 @@ public class Order implements IPojo {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Long getStandardId() {
+        return standardId;
+    }
+
+    public void setStandardId(Long standardId) {
+        this.standardId = standardId;
     }
 }

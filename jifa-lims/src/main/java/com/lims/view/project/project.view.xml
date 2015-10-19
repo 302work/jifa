@@ -177,6 +177,39 @@
 											<Editor/>
 										</DataColumn>
 									</DataGrid>
+									<Dialog id="methodStandardDialog">
+										<Property name="caption">选择方法标准</Property>
+										<Property name="height">600</Property>
+										<Property name="iconClass">fa fa-book</Property>
+										<Property name="width">800</Property>
+										<Buttons>
+											<Button id="saveMethodStandardBtn">
+												<Property name="caption">确定</Property>
+												<Property name="iconClass">fa fa-check</Property>
+											</Button>
+											<Button id="closeMethodStandardDialogBtn">
+												<Property name="caption">取消</Property>
+												<Property name="iconClass">fa fa-times</Property>
+											</Button>
+										</Buttons>
+										<Children>
+											<SubViewHolder id="standardView">
+												<Property name="subView">com.lims.view.standard.standard</Property>
+											</SubViewHolder>
+											<AjaxAction id="saveMethodStandardAction">
+												<Property name="executingMessage">正在添加方法标准...</Property>
+												<Property name="service">projectService#saveProjectMethodStandard</Property>
+												<Property name="successMessage">方法标准添加成功！</Property>
+											</AjaxAction>
+											<AjaxAction id="deleteMethodStandardAction">
+												<Property name="confirmMessage">确定要删除该项目和该方法标准的关联关系吗？</Property>
+												<Property name="executingMessage">正在删除...</Property>
+												<Property name="service">projectService#deleteProjectMethodStandard</Property>
+												<Property name="successMessage">删除成功</Property>
+											</AjaxAction>
+										</Children>
+										<Tools/>
+									</Dialog>
 								</Container>
 							</ControlTab>
 							<ControlTab>
@@ -187,7 +220,6 @@
 										<Property name="dataProvider">resultColumnService#query</Property>
 										<Property name="dataType">[dtResultColumn]</Property>
 										<Property name="pageSize">20</Property>
-										<Property name="parameter">${dsProject.getData(&quot;!CURRENT_PROJECT&quot;).get(&quot;id&quot;)}</Property>
 									</DataSet>
 									<ToolBar>
 										<DataPilot id="resultColumnDataPilot">

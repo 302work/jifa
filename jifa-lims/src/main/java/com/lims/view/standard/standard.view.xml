@@ -5,6 +5,10 @@
 	<Model>
 		<DataType name="dtStandards" parent="standardDataType">
 		</DataType>
+		<DataType name="dtMethodStandard" parent="methodStandardDataType">
+		</DataType>
+		<DataType name="dtStandardIndex" parent="standardIndexDataType">
+		</DataType>
 	</Model>
 	<View>
 		<Property name="packages">font-awesome</Property>
@@ -12,40 +16,50 @@
 			<Property name="dataProvider">standardService#queryStandards</Property>
 			<Property name="dataType">[dtStandards]</Property>
 			<Property name="pageSize">20</Property>
+			<ClientEvent name="onReady" signature="self,arg">var  dsStandards=view.id(&quot;dsStandards&quot;);
+var  sdata=dsStandards.getData(&quot;#&quot;);
+var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
+var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
+if(sdata){
+  dsMethodStandards.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
+  dsStandardIndexs.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
+}</ClientEvent>
 		</DataSet>
 		<DataSet id="dsMethodStandards">
-			<Property name="dataProvider">standardService#queryMethodStandards</Property>
+			<Property name="dataProvider">methodStandardService#queryMethodStandards</Property>
 			<Property name="dataType">[methodStandardDataType]</Property>
-			<ClientEvent name="beforeLoadData" signature="self,arg">var dsStandards = view.id(&quot;dsStandards&quot;);
-var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
-var currData = dsStandards.getData(&quot;#&quot;);
-if(currData){
-	dsMethodStandards.set(&quot;parameter&quot;,currData.id);
-}</ClientEvent>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<DataSet id="dsStandardIndexs">
+			<Property name="dataProvider">standardIndexService#queryStandardIndexs</Property>
+			<Property name="dataType">[dtStandardIndex]</Property>
+			<Property name="pageSize">20</Property>
 		</DataSet>
 		<SplitPanel>
 			<Property name="direction">top</Property>
-			<Property name="position">200</Property>
+			<Property name="position">250</Property>
 			<MainControl>
 				<Container>
 					<TabControl>
 						<Property name="currentTab">0</Property>
 						<ControlTab id="msCtrl">
 							<Property name="caption">方法标准管理</Property>
-							<Property name="name">方法标准管理</Property>
+							<Property name="iconClass">fa fa-th-large</Property>
+							<Property name="name">msCtrlName</Property>
 							<Container>
 								<ToolBar>
 									<DataPilot>
-										<Property name="dataPath">#.methodStandards</Property>
-										<Property name="dataSet">dsStandards</Property>
-										<Property name="itemCodes">pages,+,-,x</Property>
-										<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dsMethodStandards.data&quot;);
-var action = view.get(&quot;#msUpdateAction&quot;);
+										<Property name="dataSet">dsMethodStandards</Property>
+										<Property name="itemCodes">pages,+,-</Property>
+										<ClientEvent name="onSubControlAction" signature="self,arg">var action = view.get(&quot;#msUpdateAction&quot;);
 var dsStandards = view.id(&quot;dsStandards&quot;);
-var currData = dsStandards.getData(&quot;#&quot;);
-if(currData){
-  var standardId=currData.id;
+var sData = dsStandards.getData(&quot;#&quot;);
+if(sData){
+  var standardId=sData.get(&quot;id&quot;);
 }
+
+var datas=view.id(&quot;dsMethodStandards&quot;).get(&quot;data&quot;);
+
 switch(arg.code){
 	case &quot;+&quot;:{
 		var entity=datas.insert();
@@ -67,16 +81,19 @@ switch(arg.code){
 									<Separator/>
 									<ToolBarButton id="editMsBtn">
 										<Property name="caption">编辑</Property>
-										<ClientEvent name="onClick" signature="self,arg">var dsMethodStandards = view.id(&quot;dsMethodStandards&quot;);
-var currData = dsMethodStandards.getData(&quot;#&quot;);
+										<Property name="iconClass">fa fa-pencil</Property>
+										<ClientEvent name="onClick" signature="self,arg">var dsMethodStandards =view.id(&quot;dsMethodStandards&quot;);
+var currData=dsMethodStandards.getData(&quot;#&quot;);
 if(currData){
- 	view.id(&quot;standardUpdateAction&quot;).show();
+  view.id(&quot;methodStandardDialog&quot;).show();
 }</ClientEvent>
 									</ToolBarButton>
 								</ToolBar>
-								<DataGrid>
-									<Property name="dataPath">#.methodStandards</Property>
-									<Property name="dataSet">dsStandards</Property>
+								<DataGrid id="methodStandardDataGrid">
+									<Property name="dataSet">dsMethodStandards</Property>
+									<Property name="readOnly">true</Property>
+									<Property name="showFilterBar">true</Property>
+									<Property name="sortMode">serverSide</Property>
 									<DataColumn>
 										<Property name="caption">标准名称</Property>
 										<Property name="property">name</Property>
@@ -120,27 +137,40 @@ if(currData){
 								</DataGrid>
 								<Dialog id="methodStandardDialog">
 									<Property name="caption">方法标准维护</Property>
+									<Property name="height">350</Property>
+									<Property name="iconClass">fa fa-th-list</Property>
+									<Property name="width">480</Property>
 									<Buttons>
 										<Button id="saveMsBtn">
 											<Property name="caption">保存</Property>
+											<Property name="iconClass">fa fa-save</Property>
 											<ClientEvent name="onClick" signature="self,arg">var msUpdateAction=view.id(&quot;msUpdateAction&quot;);
 var methodStandardDialog=view.id(&quot;methodStandardDialog&quot;);
+var dsStandards=view.id(&quot;dsStandards&quot;);
+var standardId=dsStandards.getData(&quot;#&quot;).get(&quot;id&quot;);
+var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
 msUpdateAction.execute(function(){
   methodStandardDialog.hide();
+  dsMethodStandards.set(&quot;parameter&quot;,standardId).flushAsync();
 });</ClientEvent>
 										</Button>
 										<Button id="cancelMsBtn">
 											<Property name="caption">取消</Property>
+											<Property name="iconClass">fa fa-undo</Property>
 											<ClientEvent name="onClick" signature="self,arg">var methodStandardDialog=view.id(&quot;methodStandardDialog&quot;);
+var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
+var data=dsMethodStandards.get(&quot;data&quot;);
+data.cancel();
 methodStandardDialog.hide();</ClientEvent>
 										</Button>
 									</Buttons>
 									<Children>
-										<AutoForm>
+										<AutoForm id="msAutoForm">
 											<Property name="cols">＊</Property>
 											<Property name="dataSet">dsMethodStandards</Property>
-											<AutoFormElement>
-												<Property name="label">标准名词</Property>
+											<Property name="stretchWidth">true</Property>
+											<AutoFormElement id="name">
+												<Property name="label">标准名称</Property>
 												<Property name="property">name</Property>
 												<Editor/>
 											</AutoFormElement>
@@ -155,11 +185,6 @@ methodStandardDialog.hide();</ClientEvent>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
-												<Property name="label">备注</Property>
-												<Property name="property">remark</Property>
-												<Editor/>
-											</AutoFormElement>
-											<AutoFormElement>
 												<Property name="label">单位</Property>
 												<Property name="property">unit</Property>
 												<Editor/>
@@ -171,10 +196,11 @@ methodStandardDialog.hide();</ClientEvent>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
-												<Property name="label">所属产品标准</Property>
-												<Property name="property">standardId</Property>
-												<Property name="visible">false</Property>
-												<Editor/>
+												<Property name="label">备注</Property>
+												<Property name="property">remark</Property>
+												<Editor>
+													<TextArea/>
+												</Editor>
 											</AutoFormElement>
 										</AutoForm>
 									</Children>
@@ -190,9 +216,148 @@ methodStandardDialog.hide();</ClientEvent>
 								</UpdateAction>
 							</Container>
 						</ControlTab>
-						<ControlTab>
-							<Property name="caption">指标管理</Property>
-							<Property name="name">指标管理</Property>
+						<ControlTab id="siCtrl">
+							<Property name="caption">项目指标管理</Property>
+							<Property name="iconClass">fa fa-th-large</Property>
+							<Property name="name">siCtrlName</Property>
+							<Container>
+								<ToolBar>
+									<DataPilot id="siDataPilot">
+										<Property name="dataSet">dsStandardIndexs</Property>
+										<Property name="itemCodes">pages,+,-</Property>
+										<ClientEvent name="onSubControlAction" signature="self,arg">var action = view.get(&quot;#siUpdateAction&quot;);
+var dsStandards = view.id(&quot;dsStandards&quot;);
+var sData = dsStandards.getData(&quot;#&quot;);
+if(sData){
+  var standardId=sData.get(&quot;id&quot;);
+}
+
+var datas=view.id(&quot;dsStandardIndexs&quot;).get(&quot;data&quot;);
+
+switch(arg.code){
+	case &quot;+&quot;:{
+		var entity=datas.insert();
+    entity.set(&quot;standardId&quot;,standardId);
+		view.get(&quot;#standardIndexDialog&quot;).show();
+		arg.processDefault=false;
+		break;
+	}
+	case &quot;-&quot;:{
+		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
+			datas.remove();
+			action.execute();
+		});
+		arg.processDefault=false;
+		break;
+	}
+}</ClientEvent>
+									</DataPilot>
+									<Separator/>
+									<ToolBarButton id="editStandardIndexBtn">
+										<Property name="caption">编辑</Property>
+										<Property name="iconClass">fa fa-pencil</Property>
+										<ClientEvent name="onClick" signature="self,arg">var dsStandardIndexs =view.id(&quot;dsStandardIndexs&quot;);
+var currData=dsStandardIndexs.getData(&quot;#&quot;);
+if(currData){
+  view.id(&quot;standardIndexDialog&quot;).show();
+}</ClientEvent>
+									</ToolBarButton>
+								</ToolBar>
+								<DataGrid id="standardIndexDataGrid">
+									<Property name="dataSet">dsStandardIndexs</Property>
+									<Property name="readOnly">true</Property>
+									<Property name="showFilterBar">true</Property>
+									<Property name="sortMode">serverSide</Property>
+									<DataColumn>
+										<Property name="property">name</Property>
+										<Editor/>
+									</DataColumn>
+									<DataColumn>
+										<Property name="property">value</Property>
+										<Editor/>
+									</DataColumn>
+									<DataColumn>
+										<Property name="property">unit</Property>
+										<Editor/>
+									</DataColumn>
+									<DataColumn>
+										<Property name="property">remark</Property>
+										<Editor/>
+									</DataColumn>
+									<DataColumn>
+										<Property name="property">crUser</Property>
+										<Editor/>
+									</DataColumn>
+									<DataColumn>
+										<Property name="property">crTime</Property>
+										<Editor/>
+									</DataColumn>
+								</DataGrid>
+								<Dialog id="standardIndexDialog">
+									<Property name="caption">项目指标管理</Property>
+									<Property name="height">300</Property>
+									<Property name="iconClass">fa fa-th-list</Property>
+									<Property name="width">380</Property>
+									<Buttons>
+										<Button id="saveSiBtn">
+											<Property name="caption">保存</Property>
+											<Property name="iconClass">fa fa-save</Property>
+											<ClientEvent name="onClick" signature="self,arg">var siUpdateAction=view.id(&quot;siUpdateAction&quot;);
+var standardIndexDialog=view.id(&quot;standardIndexDialog&quot;);
+var dsStandards=view.id(&quot;dsStandards&quot;);
+var standardId=dsStandards.getData(&quot;#&quot;).get(&quot;id&quot;);
+var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
+siUpdateAction.execute(function(){
+  standardIndexDialog.hide();
+  dsStandardIndexs.set(&quot;parameter&quot;,standardId).flushAsync();
+});</ClientEvent>
+										</Button>
+										<Button id="cancelSiBtn">
+											<Property name="caption">取消</Property>
+											<Property name="iconClass">fa fa-undo</Property>
+											<ClientEvent name="onClick" signature="self,arg">var standardIndexDialog=view.id(&quot;standardIndexDialog&quot;);
+var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
+var data=dsStandardIndexs.get(&quot;data&quot;);
+data.cancel();
+standardIndexDialog.hide();</ClientEvent>
+										</Button>
+									</Buttons>
+									<Children>
+										<AutoForm id="siAutoForm">
+											<Property name="cols">*</Property>
+											<Property name="dataSet">dsStandardIndexs</Property>
+											<Property name="stretchWidth">true</Property>
+											<AutoFormElement>
+												<Property name="property">name</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement>
+												<Property name="property">value</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement>
+												<Property name="property">unit</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement>
+												<Property name="property">remark</Property>
+												<Editor>
+													<TextArea/>
+												</Editor>
+											</AutoFormElement>
+										</AutoForm>
+									</Children>
+									<Tools/>
+								</Dialog>
+								<UpdateAction id="siUpdateAction">
+									<Property name="dataResolver">standardIndexService#saveMethodStandards</Property>
+									<Property name="executingMessage">正在保存...</Property>
+									<Property name="successMessage">保存成功</Property>
+									<UpdateItem>
+										<Property name="dataSet">dsStandardIndexs</Property>
+									</UpdateItem>
+								</UpdateAction>
+							</Container>
 						</ControlTab>
 					</TabControl>
 				</Container>
@@ -233,14 +398,21 @@ if(currData){
 }</ClientEvent>
 						</ToolBarButton>
 					</ToolBar>
-					<DataGrid>
+					<DataGrid id="standardDaraGrid">
 						<Property name="dataSet">dsStandards</Property>
 						<Property name="readOnly">true</Property>
 						<Property name="selectionMode">singleRow</Property>
 						<Property name="showFilterBar">true</Property>
 						<Property name="sortMode">serverSide</Property>
-						<RowSelectorColumn/>
-						<RowNumColumn/>
+						<ClientEvent name="onDataRowClick" signature="self,arg">var  dsStandards=view.id(&quot;dsStandards&quot;);
+var  sdata=dsStandards.getData(&quot;#&quot;);
+var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
+var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
+if(sdata){
+  dsMethodStandards.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
+  dsStandardIndexs.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
+}
+</ClientEvent>
 						<DataColumn>
 							<Property name="property">id</Property>
 							<Property name="visible">false</Property>
@@ -285,21 +457,27 @@ if(currData){
 					</DataGrid>
 					<Dialog id="standardDialog">
 						<Property name="caption">产品标准维护</Property>
-						<Property name="height">480</Property>
+						<Property name="height">300</Property>
 						<Property name="iconClass">fa fa-th-list</Property>
 						<Property name="width">480</Property>
 						<Buttons>
 							<Button id="saveStandardBtn">
 								<Property name="caption">保存</Property>
+								<Property name="iconClass">fa fa-floppy-o</Property>
 								<ClientEvent name="onClick" signature="self,arg">var standardUpdateAction=view.id(&quot;standardUpdateAction&quot;);
 var standardDialog=view.id(&quot;standardDialog&quot;);
+var dsStandards=view.id(&quot;dsStandards&quot;);
 standardUpdateAction.execute(function(){
   standardDialog.hide();
+  dsStandards.flushAsync();
 });</ClientEvent>
 							</Button>
 							<Button id="closeStanardardBtn">
 								<Property name="caption">取消</Property>
+								<Property name="iconClass">fa fa-undo</Property>
 								<ClientEvent name="onClick" signature="self,arg">var standardDialog=view.id(&quot;standardDialog&quot;);
+var datas = view.get(&quot;#dsStandards.data&quot;);
+datas.cancel();
 standardDialog.hide();</ClientEvent>
 							</Button>
 						</Buttons>
@@ -325,7 +503,9 @@ standardDialog.hide();</ClientEvent>
 								<AutoFormElement>
 									<Property name="label">备注</Property>
 									<Property name="property">remark</Property>
-									<Editor/>
+									<Editor>
+										<TextArea/>
+									</Editor>
 								</AutoFormElement>
 							</AutoForm>
 						</Children>

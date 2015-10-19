@@ -2,17 +2,19 @@ package com.lims.pojo;
 
 import com.dosola.core.dao.interfaces.IPojo;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * 检测标准的指标值
+ *
  * @author june
- * 2015年09月19日 16:58
+ *         2015年09月19日 16:58
  */
+
+@SuppressWarnings("serial")
+@Entity
+@Table(name = StandardIndex.TABLENAME)
 public class StandardIndex implements IPojo {
 
     public static final String TABLENAME = "lims_standard_index";
@@ -21,28 +23,28 @@ public class StandardIndex implements IPojo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(length=100,nullable = false)
+    @Column(length = 100, nullable = false)
     private String name;//指标名称
 
     @Column(nullable = false)
     private Long standardId;//所属产品标准id
 
-    @Column(length=50,nullable = false)
+    @Column(length = 50, nullable = false)
     private String unit;//单位
 
-    @Column(length=100,nullable = false)
+    @Column(length = 100, nullable = false)
     private String value;//指标数值，>4，<4，>=4，<=4，=4，>1 & <4
 
     @Column
     private Integer isDeleted;//逻辑删除标识，1为已删除
 
-    @Column(length=200)
+    @Column(length = 200)
     private String remark;//备注
 
     @Column(nullable = false)
     private Date crTime;//创建时间
 
-    @Column(nullable = false,length=60)
+    @Column(nullable = false, length = 60)
     private String crUser;//创建人
 
     public Date getCrTime() {
