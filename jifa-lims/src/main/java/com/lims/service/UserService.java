@@ -1,5 +1,20 @@
 package com.lims.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.bdf2.core.security.UserShaPasswordEncoder;
@@ -11,14 +26,6 @@ import com.dorado.common.SqlKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.DeptUser;
 import com.lims.pojo.User;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.RandomUtils;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 /**
  * 用户管理
@@ -80,6 +87,27 @@ public class UserService implements IUserService{
         }
         return null;
     }
+    /**
+     * 获取某个职位的有效用户
+     * @param positionId
+     * @return
+     */
+    public Collection<IUser> loadUsersByPositionId(String positionId) {
+    	if(StringUtils.isEmpty(positionId)){
+            return null;
+        }
+    	String sql = "SELECT x.* FROM "
+    			+ "BDF2_USER_POSITION UP "
+    			+ "LEFT JOIN "+User.TABLENAME+" x "
+    			+ "ON UP.USERNAME_=x.USERNAME "
+    			+ "WHERE x.isDeleted=0 and x.enabled=1 and UP.POSITION_ID_=:positionId";
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("positionId",positionId);
+        List<User> list = dao.queryBySql(sql, params, User.class);
+        List<IUser> returnList = new ArrayList<IUser>();
+        returnList.addAll(list);
+        return returnList;
+	}
 
     @Override
     public void changePassword(String username, String newPassword) {
