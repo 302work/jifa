@@ -441,4 +441,109 @@
 			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
+	<DataType name="orderDataType">
+		<Property name="creationType">com.lims.pojo.Order</Property>
+		<PropertyDef name="area">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="auditUserId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="client">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="clientFax">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="clientPhone">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="clientZip">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="consumerId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="deliveryDate">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="fibreComponent">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="finishDate">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="methodStandardIds">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="orderNo">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="payer">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="payerFax">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="payerPhone">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="payerZip">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="projectIds">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="reportLanguage">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="reportSendWay">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="sampleCount">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="sampleDesc">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="sampleHandleType">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="sampleName">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="signDate">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="standardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="testResult">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="testType">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="timeLimit">
+			<Property name="dataType">int</Property>
+		</PropertyDef>
+		<PropertyDef name="weight">
+			<Property name="dataType">float</Property>
+		</PropertyDef>
+	</DataType>
 </Model>
