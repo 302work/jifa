@@ -25,10 +25,7 @@ public class Record implements IPojo {
     private Long orderId;
 
     @Column(nullable = false)
-    private Long projectId;//项目id
-
-    @Column(nullable = false)
-    private Long standardId;//产品标准id
+    private Long projectMethodStandardId;//项目方法标准id
 
     @Column(length = 50,nullable = false)
     private String sampleNo;//样品编号，条形码
@@ -45,11 +42,11 @@ public class Record implements IPojo {
     @Column(length=200)
     private String testSamplePic;//测试样品图片
 
-    @Column
-    private Long testUserId;//检验人
+    @Column(length=50)
+    private String testUserName;//检验人
 
-    @Column
-    private Long auditUserId;//审核人
+    @Column(length=50)
+    private String auditUserName;//审核人
 
     @Column
     private Date testDate;//检验日期
@@ -69,12 +66,12 @@ public class Record implements IPojo {
     @Column(nullable = false,length=60)
     private String crUser;//创建人
 
-    public Long getAuditUserId() {
-        return auditUserId;
+    public String getAuditUserName() {
+        return auditUserName;
     }
 
-    public void setAuditUserId(Long auditUserId) {
-        this.auditUserId = auditUserId;
+    public void setAuditUserName(String auditUserName) {
+        this.auditUserName = auditUserName;
     }
 
     public Date getCrTime() {
@@ -149,12 +146,12 @@ public class Record implements IPojo {
         this.testDate = testDate;
     }
 
-    public Long getTestUserId() {
-        return testUserId;
+    public String getTestUserName() {
+        return testUserName;
     }
 
-    public void setTestUserId(Long testUserId) {
-        this.testUserId = testUserId;
+    public void setTestUserName(String testUserName) {
+        this.testUserName = testUserName;
     }
 
     public Integer getIsDeleted() {
@@ -189,19 +186,11 @@ public class Record implements IPojo {
         this.resultColumnIds = resultColumnIds;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public Long getProjectMethodStandardId() {
+        return projectMethodStandardId;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Long getStandardId() {
-        return standardId;
-    }
-
-    public void setStandardId(Long standardId) {
-        this.standardId = standardId;
+    public void setProjectMethodStandardId(Long projectMethodStandardId) {
+        this.projectMethodStandardId = projectMethodStandardId;
     }
 }

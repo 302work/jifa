@@ -31,9 +31,6 @@ public class Order implements IPojo {
     @Column(nullable = false)
     private Long consumerId;//客户id
 
-    @Transient
-    private String consumerName;//客户名称
-
     @Column(length = 50, nullable = false)
     private String client;//委托人，申请人
 
@@ -85,18 +82,8 @@ public class Order implements IPojo {
     @Column(nullable = false)
     private Long standardId;//产品标准id
 
-    @Transient
-    private String standardName;//产品标准名称
-
-    @Transient
-    private String standardNo;//产品标准号
-
-
     @Column(nullable = false)
-    private String projectIds;//项目id，多个逗号隔开
-
-    @Column(nullable = false)
-    private String methodStandardIds;//检测方法id，多个逗号隔开
+    private String projectMethodStandardIds;//项目的方法标准，多个逗号隔开
 
     @Column
     private Integer timeLimit;//测试时间，要求多少天完成检测。5-常规：5个工作日，3-加急：3个工作日，2-特快：2个工作日 0-当天
@@ -116,8 +103,8 @@ public class Order implements IPojo {
     @Column
     private Date signDate;//签发日期
 
-    @Column
-    private Long auditUserId;//批准人
+    @Column(length=50)
+    private String auditUserName;//批准人
 
     @Column
     private Integer isDeleted;//逻辑删除标识，1为已删除
@@ -141,12 +128,12 @@ public class Order implements IPojo {
         this.area = area;
     }
 
-    public Long getAuditUserId() {
-        return auditUserId;
+    public String getAuditUserName() {
+        return auditUserName;
     }
 
-    public void setAuditUserId(Long auditUserId) {
-        this.auditUserId = auditUserId;
+    public void setAuditUserName(String auditUserName) {
+        this.auditUserName = auditUserName;
     }
 
     public String getClient() {
@@ -189,28 +176,12 @@ public class Order implements IPojo {
         this.id = id;
     }
 
-    public String getMethodStandardIds() {
-        return methodStandardIds;
-    }
-
-    public void setMethodStandardIds(String methodStandardIds) {
-        this.methodStandardIds = methodStandardIds;
-    }
-
     public String getOrderNo() {
         return orderNo;
     }
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
-    }
-
-    public String getProjectIds() {
-        return projectIds;
-    }
-
-    public void setProjectIds(String projectIds) {
-        this.projectIds = projectIds;
     }
 
     public Integer getSampleCount() {
@@ -381,30 +352,6 @@ public class Order implements IPojo {
         this.reportLanguage = reportLanguage;
     }
 
-    public String getConsumerName() {
-        return consumerName;
-    }
-
-    public void setConsumerName(String consumerName) {
-        this.consumerName = consumerName;
-    }
-
-    public String getStandardName() {
-        return standardName;
-    }
-
-    public void setStandardName(String standardName) {
-        this.standardName = standardName;
-    }
-
-    public String getStandardNo() {
-        return standardNo;
-    }
-
-    public void setStandardNo(String standardNo) {
-        this.standardNo = standardNo;
-    }
-
     public Integer getReportSendWay() {
         return reportSendWay;
     }
@@ -419,6 +366,22 @@ public class Order implements IPojo {
 
     public void setSampleHandleType(Integer sampleHandleType) {
         this.sampleHandleType = sampleHandleType;
+    }
+
+    public String getTestType() {
+        return testType;
+    }
+
+    public void setTestType(String testType) {
+        this.testType = testType;
+    }
+
+    public String getProjectMethodStandardIds() {
+        return projectMethodStandardIds;
+    }
+
+    public void setProjectMethodStandardIds(String projectMethodStandardIds) {
+        this.projectMethodStandardIds = projectMethodStandardIds;
     }
 }
 

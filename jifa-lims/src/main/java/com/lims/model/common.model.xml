@@ -47,6 +47,13 @@
 		<PropertyDef name="hasChild">
 			<Property name="dataType">Boolean</Property>
 		</PropertyDef>
+		<PropertyDef name="methodStandardName">
+			<Property name="dataType">String</Property>
+			<Property name="label">方法标准名称</Property>
+		</PropertyDef>
+		<PropertyDef name="methodStandardNo">
+			<Property name="label">方法标准号</Property>
+		</PropertyDef>
 	</DataType>
 	<DataType name="deviceDataType">
 		<Property name="creationType">com.lims.pojo.Device</Property>
@@ -447,9 +454,6 @@
 			<Property name="dataType">String</Property>
 			<Property name="label">出口国（地区）</Property>
 		</PropertyDef>
-		<PropertyDef name="auditUserId">
-			<Property name="dataType">Long</Property>
-		</PropertyDef>
 		<PropertyDef name="client">
 			<Property name="dataType">String</Property>
 			<Property name="label">申请人</Property>
@@ -661,11 +665,93 @@
 		</PropertyDef>
 		<PropertyDef name="standardName">
 			<Property name="dataType">String</Property>
-			<Property name="label">标准名称</Property>
+			<Property name="label">产品标准名称</Property>
 		</PropertyDef>
 		<PropertyDef name="standardNo">
 			<Property name="dataType">String</Property>
-			<Property name="label">标准号</Property>
+			<Property name="label">产品标准号</Property>
+		</PropertyDef>
+		<PropertyDef name="auditUserName">
+			<Property name="dataType">String</Property>
+			<Property name="label">批准人</Property>
+		</PropertyDef>
+		<PropertyDef name="consumerAddress">
+			<Property name="dataType">String</Property>
+			<Property name="label">地址</Property>
+		</PropertyDef>
+		<PropertyDef name="testType">
+			<Property name="dataType">String</Property>
+			<Property name="label">检测性质</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="recordDataType">
+		<Property name="creationType">com.lims.pojo.Record</Property>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="deviceIds">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="orderId">
+			<Property name="dataType">Long</Property>
+			<Property name="label">订单ID</Property>
+		</PropertyDef>
+		<PropertyDef name="projectMethodStandardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="resultColumnIds">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="sampleNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">样品编号</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="samplePic">
+			<Property name="dataType">String</Property>
+			<Property name="label">样品图片</Property>
+		</PropertyDef>
+		<PropertyDef name="testCondition">
+			<Property name="dataType">String</Property>
+			<Property name="label">检测条件</Property>
+		</PropertyDef>
+		<PropertyDef name="testDate">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="testSamplePic">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="methodStandardName">
+			<Property name="dataType">String</Property>
+			<Property name="label">方法标准名称</Property>
+		</PropertyDef>
+		<PropertyDef name="methodStandardNo">
+			<Property name="label">方法标准号</Property>
+		</PropertyDef>
+		<PropertyDef name="projectName">
+			<Property name="dataType">String</Property>
+			<Property name="label">检测项目</Property>
+		</PropertyDef>
+		<PropertyDef name="testUserName">
+			<Property name="dataType">String</Property>
+			<Property name="label">检测人</Property>
+		</PropertyDef>
+		<PropertyDef name="auditUserName">
+			<Property name="dataType">String</Property>
+			<Property name="label">审核人</Property>
 		</PropertyDef>
 	</DataType>
 </Model>
