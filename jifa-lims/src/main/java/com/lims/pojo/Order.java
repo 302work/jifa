@@ -31,6 +31,9 @@ public class Order implements IPojo {
     @Column(nullable = false)
     private Long consumerId;//客户id
 
+    @Transient
+    private String consumerName;//客户名称
+
     @Column(length = 50, nullable = false)
     private String client;//委托人，申请人
 
@@ -77,10 +80,17 @@ public class Order implements IPojo {
     private String fibreComponent;//纤维成分
 
     @Column
-    private float weight;//克重
+    private Double weight;//克重
 
     @Column(nullable = false)
     private Long standardId;//产品标准id
+
+    @Transient
+    private String standardName;//产品标准名称
+
+    @Transient
+    private String standardNo;//产品标准号
+
 
     @Column(nullable = false)
     private String projectIds;//项目id，多个逗号隔开
@@ -89,13 +99,13 @@ public class Order implements IPojo {
     private String methodStandardIds;//检测方法id，多个逗号隔开
 
     @Column
-    private int timeLimit;//测试时间，要求多少天完成检测。5-常规：5个工作日，3-加急：3个工作日，2-特快：2个工作日 0-当天
+    private Integer timeLimit;//测试时间，要求多少天完成检测。5-常规：5个工作日，3-加急：3个工作日，2-特快：2个工作日 0-当天
 
     @Column
-    private String sampleHandleType;//剩余样品处理方式 ，self-“自取”、remain-“不退”、mail-“寄回”
+    private Integer sampleHandleType;//剩余样品处理方式 ，1-“自取”、2-“不退”、3-“寄回”
 
     @Column(nullable = false)
-    private String reportSendWay;//报告发送方式，“self”-自取 “mail”-邮寄
+    private Integer reportSendWay;//报告发送方式，1-自取 2-邮寄
 
     @Column
     private String reportLanguage;//报告语言，“ch”-中文，“en”-英语，多种语言逗号隔开
@@ -235,14 +245,6 @@ public class Order implements IPojo {
         this.testResult = testResult;
     }
 
-    public String getTestType() {
-        return testType;
-    }
-
-    public void setTestType(String testType) {
-        this.testType = testType;
-    }
-
     public Date getCrTime() {
         return crTime;
     }
@@ -281,10 +283,6 @@ public class Order implements IPojo {
 
     public void setStandardId(Long standardId) {
         this.standardId = standardId;
-    }
-
-    public static String getTABLENAME() {
-        return TABLENAME;
     }
 
     public String getClientPhone() {
@@ -359,36 +357,20 @@ public class Order implements IPojo {
         this.fibreComponent = fibreComponent;
     }
 
-    public float getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
-    public int getTimeLimit() {
+    public Integer getTimeLimit() {
         return timeLimit;
     }
 
-    public void setTimeLimit(int timeLimit) {
+    public void setTimeLimit(Integer timeLimit) {
         this.timeLimit = timeLimit;
-    }
-
-    public String getSampleHandleType() {
-        return sampleHandleType;
-    }
-
-    public void setSampleHandleType(String sampleHandleType) {
-        this.sampleHandleType = sampleHandleType;
-    }
-
-    public String getReportSendWay() {
-        return reportSendWay;
-    }
-
-    public void setReportSendWay(String reportSendWay) {
-        this.reportSendWay = reportSendWay;
     }
 
     public String getReportLanguage() {
@@ -398,4 +380,45 @@ public class Order implements IPojo {
     public void setReportLanguage(String reportLanguage) {
         this.reportLanguage = reportLanguage;
     }
+
+    public String getConsumerName() {
+        return consumerName;
+    }
+
+    public void setConsumerName(String consumerName) {
+        this.consumerName = consumerName;
+    }
+
+    public String getStandardName() {
+        return standardName;
+    }
+
+    public void setStandardName(String standardName) {
+        this.standardName = standardName;
+    }
+
+    public String getStandardNo() {
+        return standardNo;
+    }
+
+    public void setStandardNo(String standardNo) {
+        this.standardNo = standardNo;
+    }
+
+    public Integer getReportSendWay() {
+        return reportSendWay;
+    }
+
+    public void setReportSendWay(Integer reportSendWay) {
+        this.reportSendWay = reportSendWay;
+    }
+
+    public Integer getSampleHandleType() {
+        return sampleHandleType;
+    }
+
+    public void setSampleHandleType(Integer sampleHandleType) {
+        this.sampleHandleType = sampleHandleType;
+    }
 }
+

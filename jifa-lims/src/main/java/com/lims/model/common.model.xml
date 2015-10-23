@@ -445,42 +445,59 @@
 		<Property name="creationType">com.lims.pojo.Order</Property>
 		<PropertyDef name="area">
 			<Property name="dataType">String</Property>
+			<Property name="label">出口国（地区）</Property>
 		</PropertyDef>
 		<PropertyDef name="auditUserId">
 			<Property name="dataType">Long</Property>
 		</PropertyDef>
 		<PropertyDef name="client">
 			<Property name="dataType">String</Property>
+			<Property name="label">申请人</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="clientFax">
 			<Property name="dataType">String</Property>
+			<Property name="label">申请人传真</Property>
 		</PropertyDef>
 		<PropertyDef name="clientPhone">
 			<Property name="dataType">String</Property>
+			<Property name="label">申请人电话</Property>
 		</PropertyDef>
 		<PropertyDef name="clientZip">
 			<Property name="dataType">String</Property>
+			<Property name="label">申请人邮编</Property>
 		</PropertyDef>
 		<PropertyDef name="consumerId">
 			<Property name="dataType">Long</Property>
 		</PropertyDef>
 		<PropertyDef name="crTime">
 			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">创建时间</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="crUser">
 			<Property name="dataType">String</Property>
+			<Property name="label">创建人</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="deliveryDate">
 			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">送样时间</Property>
 		</PropertyDef>
 		<PropertyDef name="fibreComponent">
 			<Property name="dataType">String</Property>
+			<Property name="label">纤维成分</Property>
 		</PropertyDef>
 		<PropertyDef name="finishDate">
 			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d H:i:s</Property>
+			<Property name="label">完成时间</Property>
 		</PropertyDef>
 		<PropertyDef name="id">
 			<Property name="dataType">Long</Property>
+			<Property name="label">订单ID</Property>
 		</PropertyDef>
 		<PropertyDef name="isDeleted">
 			<Property name="dataType">Integer</Property>
@@ -490,60 +507,165 @@
 		</PropertyDef>
 		<PropertyDef name="orderNo">
 			<Property name="dataType">String</Property>
+			<Property name="label">订单编号</Property>
 		</PropertyDef>
 		<PropertyDef name="payer">
 			<Property name="dataType">String</Property>
+			<Property name="label">付款人</Property>
 		</PropertyDef>
 		<PropertyDef name="payerFax">
 			<Property name="dataType">String</Property>
+			<Property name="label">付款人传真</Property>
 		</PropertyDef>
 		<PropertyDef name="payerPhone">
 			<Property name="dataType">String</Property>
+			<Property name="label">付款人电话</Property>
 		</PropertyDef>
 		<PropertyDef name="payerZip">
 			<Property name="dataType">String</Property>
+			<Property name="label">付款人邮编</Property>
 		</PropertyDef>
 		<PropertyDef name="projectIds">
 			<Property name="dataType">String</Property>
 		</PropertyDef>
 		<PropertyDef name="remark">
 			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
 		</PropertyDef>
 		<PropertyDef name="reportLanguage">
 			<Property name="dataType">String</Property>
+			<Property name="label">报告语言</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">ch</Property>
+							<Property name="value">中文</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">en</Property>
+							<Property name="value">英文</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">ch,en</Property>
+							<Property name="value">中英文</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">en,ch</Property>
+							<Property name="value">中英文</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
 		</PropertyDef>
 		<PropertyDef name="reportSendWay">
-			<Property name="dataType">String</Property>
+			<Property name="dataType">Integer</Property>
+			<Property name="label">报告发送方式</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">自取</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">邮寄</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="sampleCount">
 			<Property name="dataType">Integer</Property>
+			<Property name="label">样品数量</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="sampleDesc">
 			<Property name="dataType">String</Property>
+			<Property name="label">样品描述</Property>
 		</PropertyDef>
 		<PropertyDef name="sampleHandleType">
-			<Property name="dataType">String</Property>
+			<Property name="dataType">Integer</Property>
+			<Property name="label">剩余样品处理方式</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">1</Property>
+							<Property name="value">自取</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">不退</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">3</Property>
+							<Property name="value">寄回</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
 		</PropertyDef>
 		<PropertyDef name="sampleName">
 			<Property name="dataType">String</Property>
+			<Property name="label">样品名称</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="signDate">
 			<Property name="dataType">Date</Property>
+			<Property name="displayFormat">Y-m-d</Property>
+			<Property name="label">签发日期</Property>
 		</PropertyDef>
 		<PropertyDef name="standardId">
 			<Property name="dataType">Long</Property>
 		</PropertyDef>
 		<PropertyDef name="testResult">
 			<Property name="dataType">String</Property>
-		</PropertyDef>
-		<PropertyDef name="testType">
-			<Property name="dataType">String</Property>
+			<Property name="label">结论</Property>
 		</PropertyDef>
 		<PropertyDef name="timeLimit">
 			<Property name="dataType">int</Property>
+			<Property name="label">要求完成时间</Property>
+			<Property name="mapping">
+				<Property name="mapValues">
+					<Collection>
+						<Entity>
+							<Property name="key">5</Property>
+							<Property name="value">常规</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">3</Property>
+							<Property name="value">加急</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">2</Property>
+							<Property name="value">特快</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">0</Property>
+							<Property name="value">当天</Property>
+						</Entity>
+					</Collection>
+				</Property>
+			</Property>
 		</PropertyDef>
 		<PropertyDef name="weight">
-			<Property name="dataType">float</Property>
+			<Property name="dataType">Double</Property>
+			<Property name="label">克重</Property>
+		</PropertyDef>
+		<PropertyDef name="consumerName">
+			<Property name="dataType">String</Property>
+			<Property name="label">客户名称</Property>
+		</PropertyDef>
+		<PropertyDef name="standardName">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准名称</Property>
+		</PropertyDef>
+		<PropertyDef name="standardNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">标准号</Property>
 		</PropertyDef>
 	</DataType>
 </Model>

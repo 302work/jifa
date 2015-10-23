@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtOrder" parent="orderDataType">
+		</DataType>
+	</Model>
+	<View>
+		<Property name="packages">font-awesome</Property>
+		<DataSet id="dsOrder">
+			<Property name="dataProvider">orderService#queryOrder</Property>
+			<Property name="dataType">[dtOrder]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<ToolBar>
+			<DataPilot>
+				<Property name="dataSet">dsOrder</Property>
+				<Property name="itemCodes">pages,pageSize</Property>
+			</DataPilot>
+			<Separator/>
+			<ToolBarButton id="orderDetailBtn">
+				<Property name="caption">查看详情</Property>
+				<Property name="iconClass">fa fa-search</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton>
+				<Property name="action">orderExportAction</Property>
+				<Property name="caption">导出</Property>
+				<Property name="iconClass">fa fa-file-excel-o</Property>
+			</ToolBarButton>
+		</ToolBar>
+		<Export2ReportAction id="orderExportAction">
+			<Property name="confirmMessage">是否导出所有订单（最多一万条）</Property>
+			<Property name="executingMessage">正在导出...</Property>
+			<Property name="fileName">order</Property>
+			<Property name="maxSize">10000</Property>
+			<Property name="showTitle">true</Property>
+			<Property name="successMessage">导出成功</Property>
+			<Property name="template">orderDataGrid</Property>
+			<Property name="titleName">检测订单</Property>
+		</Export2ReportAction>
+		<DataGrid id="orderDataGrid">
+			<Property name="dataSet">dsOrder</Property>
+			<Property name="filterMode">serverSide</Property>
+			<Property name="readOnly">true</Property>
+			<Property name="sortMode">serverSide</Property>
+			<DataColumn>
+				<Property name="name">id</Property>
+				<Property name="property">id</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">orderNo</Property>
+				<Property name="property">orderNo</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">consumerName</Property>
+				<Property name="property">consumerName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">sampleName</Property>
+				<Property name="property">sampleName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">sampleCount</Property>
+				<Property name="property">sampleCount</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">timeLimit</Property>
+				<Property name="property">timeLimit</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">standardName</Property>
+				<Property name="property">standardName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="name">standardNo</Property>
+				<Property name="property">standardNo</Property>
+				<Editor/>
+			</DataColumn>
+		</DataGrid>
+		<Dialog id="orderDetailDialog">
+			<Property name="caption">订单详情</Property>
+			<Property name="height">480</Property>
+			<Property name="iconClass">fa fa-tasks</Property>
+			<Property name="width">700</Property>
+			<Buttons>
+				<Button id="closeOrderDetailBtn">
+					<Property name="caption">关闭</Property>
+					<Property name="iconClass">fa fa-times</Property>
+				</Button>
+			</Buttons>
+			<Children>
+				<AutoForm id="orderDetailAutoForm">
+					<Property name="dataSet">dsOrder</Property>
+					<Property name="readOnly">true</Property>
+					<AutoFormElement>
+						<Property name="label">出口国（地区）</Property>
+						<Property name="property">area</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="property">auditUserId</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">申请人</Property>
+						<Property name="property">client</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">申请人传真</Property>
+						<Property name="property">clientFax</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">申请人电话</Property>
+						<Property name="property">clientPhone</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">申请人邮编</Property>
+						<Property name="property">clientZip</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="property">consumerId</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">创建时间</Property>
+						<Property name="property">crTime</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">创建人</Property>
+						<Property name="property">crUser</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">送样时间</Property>
+						<Property name="property">deliveryDate</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">纤维成分</Property>
+						<Property name="property">fibreComponent</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">完成时间</Property>
+						<Property name="property">finishDate</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">订单ID</Property>
+						<Property name="property">id</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="property">isDeleted</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="property">methodStandardIds</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">订单编号</Property>
+						<Property name="property">orderNo</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">付款人</Property>
+						<Property name="property">payer</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">付款人传真</Property>
+						<Property name="property">payerFax</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">付款人电话</Property>
+						<Property name="property">payerPhone</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">付款人邮编</Property>
+						<Property name="property">payerZip</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="property">projectIds</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">备注</Property>
+						<Property name="property">remark</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">报告语言</Property>
+						<Property name="property">reportLanguage</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">报告发送方式</Property>
+						<Property name="property">reportSendWay</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">样品数量</Property>
+						<Property name="property">sampleCount</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">样品描述</Property>
+						<Property name="property">sampleDesc</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">剩余样品处理方式</Property>
+						<Property name="property">sampleHandleType</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">样品名称</Property>
+						<Property name="property">sampleName</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">签发日期</Property>
+						<Property name="property">signDate</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="property">standardId</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">结论</Property>
+						<Property name="property">testResult</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">要求完成时间</Property>
+						<Property name="property">timeLimit</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">克重</Property>
+						<Property name="property">weight</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">客户名称</Property>
+						<Property name="property">consumerName</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">标准名称</Property>
+						<Property name="property">standardName</Property>
+						<Editor/>
+					</AutoFormElement>
+					<AutoFormElement>
+						<Property name="label">标准号</Property>
+						<Property name="property">standardNo</Property>
+						<Editor/>
+					</AutoFormElement>
+				</AutoForm>
+			</Children>
+			<Tools/>
+		</Dialog>
+	</View>
+</ViewConfig>
