@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig listener="spring:resultService#onInit">
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtResult">
+		</DataType>
+	</Model>
+	<View>
+		<DataGrid id="resultDataGrid">
+			<Property name="dataSet">dsResult</Property>
+			<Property name="readOnly">true</Property>
+		</DataGrid>
+		<DataSet id="dsResult">
+			<Property name="dataProvider">resultService#queryResult</Property>
+			<Property name="dataType">[dtResult]</Property>
+			<Property name="parameter">${param.recordId}</Property>
+		</DataSet>
+	</View>
+</ViewConfig>

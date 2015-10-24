@@ -753,5 +753,36 @@
 			<Property name="dataType">String</Property>
 			<Property name="label">审核人</Property>
 		</PropertyDef>
+		<PropertyDef name="deviceNames">
+			<Property name="dataType">String</Property>
+			<Property name="label">仪器</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="resultDataType">
+		<Property name="creationType">com.lims.pojo.Result</Property>
+		<PropertyDef name="crTime">
+			<Property name="dataType">Date</Property>
+		</PropertyDef>
+		<PropertyDef name="crUser">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="index">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="isDeleted">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+		<PropertyDef name="recordId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">Integer</Property>
+		</PropertyDef>
 	</DataType>
 </Model>

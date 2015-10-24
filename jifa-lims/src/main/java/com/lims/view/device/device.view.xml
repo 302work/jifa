@@ -18,7 +18,7 @@
 				<Property name="dataSet">dsDevice</Property>
 				<Property name="itemCodes">pages,+,-</Property>
 				<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dsDevice.data&quot;);
-var action = view.get(&quot;#updateAction&quot;);
+var actionUpdate = view.get(&quot;#updateAction&quot;);
 switch(arg.code){
 	case &quot;+&quot;:{
 		datas.insert();

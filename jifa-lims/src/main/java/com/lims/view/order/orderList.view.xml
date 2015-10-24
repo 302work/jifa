@@ -88,6 +88,7 @@
 								</ToolBar>
 								<DataGrid id="orderRecordDataGrid">
 									<Property name="dataSet">dsOrderRecord</Property>
+									<Property name="readOnly">true</Property>
 									<DataColumn>
 										<Property name="property">orderId</Property>
 										<Editor/>
@@ -113,6 +114,11 @@
 										<Editor/>
 									</DataColumn>
 									<DataColumn>
+										<Property name="name">deviceNames</Property>
+										<Property name="property">deviceNames</Property>
+										<Editor/>
+									</DataColumn>
+									<DataColumn>
 										<Property name="caption">检测人</Property>
 										<Property name="property">testUserName</Property>
 										<Editor/>
@@ -123,6 +129,71 @@
 										<Editor/>
 									</DataColumn>
 								</DataGrid>
+								<Dialog id="resultDialog">
+									<Property name="caption">检测结果</Property>
+									<Property name="height">600</Property>
+									<Property name="iconClass">fa fa-database</Property>
+									<Property name="width">800</Property>
+									<Buttons>
+										<Button id="closeResultDialogBtn">
+											<Property name="caption">关闭</Property>
+											<Property name="iconClass">fa fa-times</Property>
+										</Button>
+									</Buttons>
+									<Children>
+										<AutoForm id="recordAutoForm">
+											<Property name="dataSet">dsOrderRecord</Property>
+											<Property name="readOnly">true</Property>
+											<AutoFormElement>
+												<Property name="label">样品编号</Property>
+												<Property name="labelWidth">90</Property>
+												<Property name="property">sampleNo</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement>
+												<Property name="label">检测项目</Property>
+												<Property name="labelWidth">90</Property>
+												<Property name="property">projectName</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement>
+												<Property name="label">方法标准名称</Property>
+												<Property name="labelWidth">90</Property>
+												<Property name="property">methodStandardName</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement>
+												<Property name="label">仪器</Property>
+												<Property name="labelWidth">90</Property>
+												<Property name="property">deviceNames</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement layoutConstraint="colSpan:2;">
+												<Property name="label">备注</Property>
+												<Property name="labelWidth">90</Property>
+												<Property name="property">remark</Property>
+												<Editor/>
+											</AutoFormElement>
+											<AutoFormElement layoutConstraint="colSpan:2;">
+												<Property name="editorType">TextArea</Property>
+												<Property name="label">检测条件</Property>
+												<Property name="property">testCondition</Property>
+												<Editor/>
+											</AutoFormElement>
+										</AutoForm>
+										<GroupBox>
+											<Property name="caption">检测记录</Property>
+											<Property name="collapseable">false</Property>
+											<Property name="collapsed">true</Property>
+											<Buttons/>
+											<Children/>
+										</GroupBox>
+										<IFrame id="resultIFrame">
+											<Property name="path">com.lims.view.result.resultList.d</Property>
+										</IFrame>
+									</Children>
+									<Tools/>
+								</Dialog>
 							</Container>
 						</ControlTab>
 					</TabControl>

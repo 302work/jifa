@@ -126,7 +126,8 @@ public class OrderService {
         String sql = " select r.*," +
                 " m.name as methodStandardName," + //方法标准名称
                 " m.standardNo as methodStandardNo, " + //方法标准号
-                " p.name as projectName " + //项目名称
+                " p.name as projectName, " + //项目名称
+                " group_concat(d.`name`) as deviceNames "+//设备名称
                 " from "+Record.TABLENAME+" as r " +
                 " join "+Order.TABLENAME+" as o " +
                 " on o.id=r.orderId " +
@@ -136,6 +137,8 @@ public class OrderService {
                 " on pm.projectId=p.id " +
                 " join "+MethodStandard.TABLENAME+" as m " +
                 " on pm.methodStandardId=m.id " +
+                " left join "+Device.TABLENAME+" as d " +//关联设备
+                " on LOCATE(d.id,r.deviceIds)>0 "+
                 " where r.orderId=:orderId and r.isDeleted<>1 ";
 
         //替换参数
@@ -143,6 +146,7 @@ public class OrderService {
         replaceMap.put("methodStandardName","m.name");
         replaceMap.put("methodStandardNo","m.standardNo");
         replaceMap.put("projectName","p.name");
+        replaceMap.put("deviceNames","d.name");
         SqlKit.replaceProperty(criteria,replaceMap);
         //构建查询条件
         ParseResult result = SqlKit.parseCriteria(criteria, true, "r", true);
@@ -156,6 +160,7 @@ public class OrderService {
             sql += result.getAssemblySql();
             params.putAll(result.getValueMap());
         }
+        sql += " group by r.id ";//分组
         if(StringUtils.isEmpty(orderSql)){
             orderSql = " ORDER BY r.crTime desc";
         }

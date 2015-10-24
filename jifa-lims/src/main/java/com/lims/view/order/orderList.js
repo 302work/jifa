@@ -30,6 +30,36 @@
     }
 };
 
+//记录的检测结果
+// @Bind #recordResultBtn.onClick
+!function(self,arg,resultDialog,dsOrderRecord,resultIFrame) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        var recordId = currRecord.get("id");
+        var path = resultIFrame.get("path");
+        var index = path.indexOf("?");
+        if(index!=-1){
+            path = path.substring(0,index);
+        }
+        path += "?recordId="+recordId;
+        resultIFrame.set("path",path);
+        resultDialog.show();
+    }
+};
 
+//加载检测结果之前，设置recordId
+// @Bind #dsResult.beforeLoadData
+!function(self,arg,dsOrderRecord) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        self.set("parameter",currRecord.get("id"));
+    }
+};
+
+//关闭检测结果弹窗
+// @Bind #closeResultDialogBtn.onClick
+!function(self,arg,resultDialog) {
+    resultDialog.hide();
+};
 
 
