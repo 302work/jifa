@@ -141,40 +141,52 @@
 										</Button>
 									</Buttons>
 									<Children>
+										<GroupBox>
+											<Property name="caption">基本信息</Property>
+											<Property name="collapseable">false</Property>
+											<Property name="collapsed">true</Property>
+											<Buttons/>
+											<Children/>
+										</GroupBox>
 										<AutoForm id="recordAutoForm">
 											<Property name="dataSet">dsOrderRecord</Property>
-											<Property name="readOnly">true</Property>
 											<AutoFormElement>
+												<Property name="editable">false</Property>
 												<Property name="label">样品编号</Property>
 												<Property name="labelWidth">90</Property>
 												<Property name="property">sampleNo</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
+												<Property name="editable">false</Property>
 												<Property name="label">检测项目</Property>
 												<Property name="labelWidth">90</Property>
 												<Property name="property">projectName</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
+												<Property name="editable">false</Property>
 												<Property name="label">方法标准名称</Property>
 												<Property name="labelWidth">90</Property>
 												<Property name="property">methodStandardName</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
+												<Property name="editable">false</Property>
 												<Property name="label">仪器</Property>
 												<Property name="labelWidth">90</Property>
 												<Property name="property">deviceNames</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement layoutConstraint="colSpan:2;">
+												<Property name="editable">false</Property>
 												<Property name="label">备注</Property>
 												<Property name="labelWidth">90</Property>
 												<Property name="property">remark</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement layoutConstraint="colSpan:2;">
+												<Property name="editable">false</Property>
 												<Property name="editorType">TextArea</Property>
 												<Property name="label">检测条件</Property>
 												<Property name="property">testCondition</Property>
@@ -189,8 +201,26 @@
 											<Children/>
 										</GroupBox>
 										<IFrame id="resultIFrame">
+											<Property name="height">200</Property>
 											<Property name="path">com.lims.view.result.resultList.d</Property>
 										</IFrame>
+										<GroupBox>
+											<Property name="caption">样品图片</Property>
+											<Property name="collapseable">false</Property>
+											<Property name="collapsed">true</Property>
+											<Buttons/>
+											<Children/>
+										</GroupBox>
+										<Grid>
+											<DataColumn>
+												<Property name="caption">原样</Property>
+												<Editor/>
+											</DataColumn>
+											<DataColumn>
+												<Property name="caption">测试样</Property>
+												<Editor/>
+											</DataColumn>
+										</Grid>
 									</Children>
 									<Tools/>
 								</Dialog>

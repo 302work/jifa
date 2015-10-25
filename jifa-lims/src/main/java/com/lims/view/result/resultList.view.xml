@@ -8,8 +8,10 @@
 	</Model>
 	<View>
 		<DataGrid id="resultDataGrid">
+			<Property name="autoCreateColumns">false</Property>
 			<Property name="dataSet">dsResult</Property>
 			<Property name="readOnly">true</Property>
+			<Property name="showFooter">true</Property>
 		</DataGrid>
 		<DataSet id="dsResult">
 			<Property name="dataProvider">resultService#queryResult</Property>
