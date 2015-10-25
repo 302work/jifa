@@ -554,10 +554,6 @@
 							<Property name="key">ch,en</Property>
 							<Property name="value">中英文</Property>
 						</Entity>
-						<Entity>
-							<Property name="key">en,ch</Property>
-							<Property name="value">中英文</Property>
-						</Entity>
 					</Collection>
 				</Property>
 			</Property>
@@ -783,6 +779,52 @@
 		</PropertyDef>
 		<PropertyDef name="status">
 			<Property name="dataType">Integer</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="testConditionDataType">
+		<Property name="creationType">com.lims.pojo.TestCondition</Property>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="projectId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="value">
+			<Property name="dataType">String</Property>
+			<Property name="label">默认值</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+	</DataType>
+	<DataType name="recordTestConditionDataType">
+		<Property name="creationType">com.lims.pojo.RecordTestCondition</Property>
+		<PropertyDef name="id">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="name">
+			<Property name="dataType">String</Property>
+			<Property name="label">名称</Property>
+			<Property name="required">true</Property>
+		</PropertyDef>
+		<PropertyDef name="recordId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="remark">
+			<Property name="dataType">String</Property>
+			<Property name="label">备注</Property>
+		</PropertyDef>
+		<PropertyDef name="value">
+			<Property name="dataType">String</Property>
+			<Property name="label">值</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
 </Model>
