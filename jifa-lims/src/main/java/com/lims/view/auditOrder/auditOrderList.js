@@ -1,6 +1,8 @@
 //查看详情
 // @Bind #orderDetailBtn.onClick
-!function(self,arg,orderDetailDialog) {
+!function(self,arg,orderDetailDialog,orderDetailAutoForm,saveOrderBtn) {
+    orderDetailAutoForm.set("readOnly",true);
+    saveOrderBtn.set("visible",false);
     orderDetailDialog.show();
 };
 
@@ -59,13 +61,21 @@
     }
 };
 
+//加载检测结果之前，设置recordId
+// @Bind #dsResult.beforeLoadData
+!function(self,arg,dsOrderRecord) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        self.set("parameter",currRecord.get("id"));
+    }
+};
+
 //关闭检测结果弹窗
 // @Bind #closeResultDialogBtn.onClick
 !function(self,arg,resultDialog) {
     resultDialog.hide();
 };
 
-//原样图片
 // @Bind #picDataGrid.#samplePic.onRenderCell
 !function(arg) {
     var samplePic = arg.data.samplePic;
@@ -79,7 +89,6 @@
     }
 }
 
-//测试样图片
 // @Bind #picDataGrid.#testSamplePic.onRenderCell
 !function(arg) {
     var testSamplePic = arg.data.testSamplePic;
@@ -93,11 +102,13 @@
     }
 }
 
-//加载检测条件之前，设置recordId
-// @Bind #dsRecordTestCondition.beforeLoadData
-!function(self,arg,dsOrderRecord) {
-    var currRecord = dsOrderRecord.getData("#");
-    if(currRecord){
-        self.set("parameter",currRecord.get("id"));
-    }
+
+//编辑
+// @Bind #editOrderBtn.onClick
+!function(self,arg,orderDetailDialog,orderDetailAutoForm,saveOrderBtn) {
+    orderDetailAutoForm.set("readOnly",false);
+    //设置某些字段不可编辑
+    view.get("^readOnly").set("readOnly",true);
+    saveOrderBtn.set("visible",true);
+    orderDetailDialog.show();
 };

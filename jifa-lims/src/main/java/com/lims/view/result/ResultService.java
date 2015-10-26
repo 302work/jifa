@@ -58,7 +58,7 @@ public class ResultService {
         //创建result的属性
         //第几次检测
         PropertyDef indexPropertyDef = new BasePropertyDef("index");
-        indexPropertyDef.setLabel("序号");
+        indexPropertyDef.setLabel("次数");
         indexPropertyDef.setDataType(viewCofig.getDataType("Integer"));
         dtResult.addPropertyDef(indexPropertyDef);
 
@@ -101,7 +101,7 @@ public class ResultService {
                 //平均值
                 String average = getColumnAverage(recordId,resultColumnId);
                 dataColumn.addClientEventListener("onRenderFooterCell",
-                        new DefaultClientEvent("arg.dom.innerText = "+average+""));
+                        new DefaultClientEvent("arg.dom.innerText = '"+average+"'"));
                 resultDataGrid.addColumn(dataColumn);
             }
         }
@@ -153,7 +153,11 @@ public class ResultService {
         params = new HashMap<String,Object>();
         params.put("resultIds", resultIdList);
         params.put("resultColumnId", resultColumnId);
-        return dao.queryBySql(sql,params).get(0).get("avgValue").toString();
+        Object obj = dao.queryBySql(sql,params).get(0).get("avgValue");
+        if(obj==null){
+            return "";
+        }
+        return obj.toString();
     }
 
 

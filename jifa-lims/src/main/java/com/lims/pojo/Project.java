@@ -34,7 +34,7 @@ public class Project implements IPojo {
     private Long parentId;//父id
 
     @Column(length=1000)
-    private String testCondition;//测试条件
+    private String testCondition;//测试条件，该字段已无用，留着备用
 
     @Column
     private Integer isDeleted;//逻辑删除标识，1为已删除

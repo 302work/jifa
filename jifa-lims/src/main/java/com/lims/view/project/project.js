@@ -53,7 +53,7 @@ function refreshActions() {
 
 //单击项目
 //@Bind #dataTreeProject.onDataRowClick
-!function(dsProject,dsMethodStandard,dsResultColumn) {
+!function(dsProject,dsMethodStandard,dsResultColumn,dsTestCondition) {
 	var currEntity = dsProject.getData("!CURRENT_PROJECT");
 	var id = currEntity.get("id");
 	if(id){
@@ -62,6 +62,7 @@ function refreshActions() {
 		//dsProject.flushAsync();
 		//currEntity.reset("child");
 		dsResultColumn.flushAsync();
+		dsTestCondition.flushAsync();
 	}
 	refreshActions();
 };
@@ -275,3 +276,16 @@ function refreshActions() {
 };
 
 
+//加载检测条件之前，设置projectId
+// @Bind #dsTestCondition.beforeLoadData
+!function(self,arg,dsProject) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+	self.set("parameter",projectId);
+};
+
+//保存检测条件之前，设置projectId
+// @Bind #saveTestConditionUpdateAction.beforeExecute
+!function(self,arg,dsProject) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+	self.set("parameter",projectId);
+};

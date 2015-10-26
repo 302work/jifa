@@ -29,7 +29,7 @@ public class OrderService {
     private IMasterDao dao;
 
     @DataProvider
-    public void queryOrder(Page<Map<String,Object>> page,Criteria criteria,Map<String,Object> parameter){
+    public void queryOrder(Page<Map<String,Object>> page,Criteria criteria,Long businessId){
         String sql =
                 " select o.*," +
                 " c.name as consumerName," + //客户名称
@@ -42,6 +42,8 @@ public class OrderService {
                 " join "+ Standard.TABLENAME+" as s "+
                 " on o.standardId=s.id " +
                 " where o.isDeleted<>1 ";
+
+
         //替换客户名称参数
         Map<String,String> replaceMap = new HashMap<String,String>();
         replaceMap.put("consumerName","c.name");
@@ -56,6 +58,11 @@ public class OrderService {
         String orderSql = SqlKit.buildOrderSql(criteria, "o");
 
         Map<String,Object> params = new HashMap<String, Object>();
+        //审核订单时
+        if(businessId!=null && businessId>0){
+            sql += " and o.id=:businessId";
+            params.put("businessId",businessId);
+        }
         if(result!=null){
             sql += " AND ";
             sql += result.getAssemblySql();

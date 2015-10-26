@@ -31,7 +31,7 @@ public class Record implements IPojo {
     private String sampleNo;//样品编号，条形码
 
     @Column(length=1000)
-    private String testCondition;//测试条件
+    private String testCondition;//测试条件,该字段已无用，留着备用
 
     @Column(length=200)
     private String deviceIds;//仪器设备，多个逗号隔开
