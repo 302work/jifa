@@ -149,8 +149,11 @@
 											<Children>
 												<AutoForm id="recordAutoForm">
 													<Property name="dataSet">dsOrderRecord</Property>
+													<Property name="labelAlign">right</Property>
+													<Property name="labelSeparator">:</Property>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">样品编号</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">sampleNo</Property>
@@ -158,6 +161,7 @@
 													</AutoFormElement>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">检测项目</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">projectName</Property>
@@ -165,6 +169,7 @@
 													</AutoFormElement>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">方法标准名称</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">methodStandardName</Property>
@@ -172,6 +177,7 @@
 													</AutoFormElement>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">仪器</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">deviceNames</Property>
@@ -179,6 +185,7 @@
 													</AutoFormElement>
 													<AutoFormElement layoutConstraint="colSpan:2;">
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">备注</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">remark</Property>
@@ -262,23 +269,35 @@
 										<AutoForm>
 											<Property name="cols">*,*,*</Property>
 											<Property name="dataSet">dsOrderRecord</Property>
+											<Property name="labelAlign">right</Property>
+											<Property name="labelSeparator">:</Property>
+											<Property name="labelSpacing">1</Property>
 											<AutoFormElement>
 												<Property name="editable">false</Property>
+												<Property name="editorType">Label</Property>
 												<Property name="label">检测人</Property>
+												<Property name="labelSpacing">1</Property>
 												<Property name="property">testUserName</Property>
-												<Editor/>
+												<Editor>
+													<Image>
+														<Property name="height">50</Property>
+														<Property name="property">samplePic</Property>
+														<Property name="width">50</Property>
+													</Image>
+												</Editor>
 											</AutoFormElement>
 											<AutoFormElement>
 												<Property name="editable">false</Property>
+												<Property name="editorType">Label</Property>
 												<Property name="label">审核人</Property>
 												<Property name="property">auditUserName</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
 												<Property name="editable">false</Property>
+												<Property name="editorType">Label</Property>
 												<Property name="label">日期</Property>
 												<Property name="property">testDate</Property>
-												<Property name="readOnly">true</Property>
 												<Editor/>
 											</AutoFormElement>
 										</AutoForm>
@@ -395,11 +414,13 @@
 								<AutoFormElement>
 									<Property name="label">客户名称</Property>
 									<Property name="property">consumerName</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="name">consumerAddress</Property>
 									<Property name="property">consumerAddress</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
@@ -462,6 +483,7 @@
 								<AutoFormElement>
 									<Property name="label">样品数量</Property>
 									<Property name="property">sampleCount</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
@@ -475,11 +497,13 @@
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
+									<Property name="editable">false</Property>
 									<Property name="label">剩余样品处理方式</Property>
 									<Property name="property">sampleHandleType</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
+									<Property name="editable">false</Property>
 									<Property name="label">要求完成时间</Property>
 									<Property name="property">timeLimit</Property>
 									<Editor/>
@@ -494,11 +518,13 @@
 								<AutoFormElement>
 									<Property name="label">订单ID</Property>
 									<Property name="property">id</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="label">订单编号</Property>
 									<Property name="property">orderNo</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
@@ -514,21 +540,25 @@
 								<AutoFormElement>
 									<Property name="label">送样时间</Property>
 									<Property name="property">deliveryDate</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="label">完成时间</Property>
 									<Property name="property">finishDate</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="label">签发日期</Property>
 									<Property name="property">signDate</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="name">auditUserName</Property>
 									<Property name="property">auditUserName</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
@@ -539,19 +569,23 @@
 								<AutoFormElement>
 									<Property name="label">标准名称</Property>
 									<Property name="property">standardName</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="label">标准号</Property>
 									<Property name="property">standardNo</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
+									<Property name="editable">false</Property>
 									<Property name="label">报告语言</Property>
 									<Property name="property">reportLanguage</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
+									<Property name="editable">false</Property>
 									<Property name="label">报告发送方式</Property>
 									<Property name="property">reportSendWay</Property>
 									<Editor/>
@@ -559,11 +593,13 @@
 								<AutoFormElement>
 									<Property name="label">创建人</Property>
 									<Property name="property">crUser</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
 									<Property name="label">创建时间</Property>
 									<Property name="property">crTime</Property>
+									<Property name="tags">readOnly</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>

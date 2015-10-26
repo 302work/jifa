@@ -112,3 +112,21 @@
     saveOrderBtn.set("visible",true);
     orderDetailDialog.show();
 };
+
+//加载检测条件之前，设置recordId
+// @Bind #dsRecordTestCondition.beforeLoadData
+!function(self,arg,dsOrderRecord) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        self.set("parameter",currRecord.get("id"));
+    }
+};
+
+//监听样品编号输入框的按键事件
+// @Bind #sampleNoInput.onKeyDown
+!function(self,arg,inputTestDataDialog) {
+    //如果是回车
+    if(arg.keyCode==13){
+        inputTestDataDialog.show();
+    }
+};
