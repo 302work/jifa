@@ -631,7 +631,7 @@
 		</PropertyDef>
 		<PropertyDef name="timeLimit">
 			<Property name="dataType">int</Property>
-			<Property name="label">要求完成时间</Property>
+			<Property name="label">测试时间</Property>
 			<Property name="mapping">
 				<Property name="mapValues">
 					<Collection>
