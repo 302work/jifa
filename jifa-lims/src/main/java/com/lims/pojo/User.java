@@ -55,6 +55,9 @@ public class User extends AbstractUser implements IPojo {
     @Column(length=60)
     private String ename;
 
+    @Column
+    private String userNamePic;//电子签名
+
     @Column(nullable = false)
     private Date crTime;//创建时间
 
@@ -254,5 +257,12 @@ public class User extends AbstractUser implements IPojo {
 	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-    
+
+    public String getUserNamePic() {
+        return userNamePic;
+    }
+
+    public void setUserNamePic(String userNamePic) {
+        this.userNamePic = userNamePic;
+    }
 }

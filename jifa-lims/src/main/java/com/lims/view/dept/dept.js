@@ -187,3 +187,19 @@ function refreshActions() {
 };
 
 
+//电子签名图片
+// @Bind #userDataGrid.#userNamePic.onRenderCell
+!function(arg) {
+	var userNamePic = arg.data.get("userNamePic");
+	$(arg.dom).empty();
+	if(userNamePic){
+		$(arg.dom).empty().xCreate({
+			tagName: "IMG",
+			src: userNamePic,
+			width:50
+		});
+	}
+
+	$(arg.dom).append("<button class='upPic' userId='"+arg.data.get("id")+"'>上传</button>");
+}
+

@@ -167,7 +167,9 @@ public class OrderService {
                 " m.name as methodStandardName," + //方法标准名称
                 " m.standardNo as methodStandardNo, " + //方法标准号
                 " p.name as projectName, " + //项目名称
-                " group_concat(d.`name`) as deviceNames "+//设备名称
+                " group_concat(d.`name`) as deviceNames, "+//设备名称
+                " u1.userNamePic as auditUserNamePic, " + //审核人电子签名
+                " u2.userNamePic as testUserNamePic " + //检测人电子签名
                 " from "+Record.TABLENAME+" as r " +
                 " join "+Order.TABLENAME+" as o " +
                 " on o.id=r.orderId " +
@@ -175,6 +177,10 @@ public class OrderService {
                 " on pm.id=r.projectMethodStandardId " +
                 " join "+Project.TABLENAME+" as p " +
                 " on pm.projectId=p.id " +
+                " join "+User.TABLENAME+" as u1 " +
+                " on u1.username=r.auditUserName " +//审核人电子签名
+                " join "+User.TABLENAME+" as u2 " +
+                " on u2.username=r.testUserName " +//检测人电子签名
                 " join "+MethodStandard.TABLENAME+" as m " +
                 " on pm.methodStandardId=m.id " +
                 " left join "+Device.TABLENAME+" as d " +//关联设备

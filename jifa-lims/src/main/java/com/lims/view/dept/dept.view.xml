@@ -142,6 +142,11 @@
 								<Property name="property">cname</Property>
 							</DataColumn>
 							<DataColumn>
+								<Property name="name">userNamePic</Property>
+								<Property name="property">userNamePic</Property>
+								<Editor/>
+							</DataColumn>
+							<DataColumn>
 								<Property name="name">enabled</Property>
 								<Property name="property">enabled</Property>
 							</DataColumn>
