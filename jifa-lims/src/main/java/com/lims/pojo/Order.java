@@ -86,7 +86,7 @@ public class Order implements IPojo {
     private String projectMethodStandardIds;//项目的方法标准，多个逗号隔开
 
     @Column
-    private Integer timeLimit;//测试时间，要求多少天完成检测。5-常规：5个工作日，3-加急：3个工作日，2-特快：2个工作日 0-当天
+    private Integer timeLimit;//测试时间，要求多少天完成检测。5-常规：5个工作日，3-加急：3个工作日，2-特快：2个工作日 1-当天
 
     @Column
     private Integer sampleHandleType;//剩余样品处理方式 ，1-“自取”、2-“不退”、3-“寄回”

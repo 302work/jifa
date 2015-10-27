@@ -1,7 +1,11 @@
 package com.lims.view.order;
 
+import com.bstek.bdf2.core.business.IUser;
+import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.data.entity.EntityState;
+import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
 import com.dorado.common.ParseResult;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +82,35 @@ public class OrderService {
 
     @DataResolver
     public void saveOrder(Collection<Order> orders){
+        for (Order  order: orders) {
+            EntityState state = EntityUtils.getState(order);
+            IUser user = ContextHolder.getLoginUser();
+            String userName = user.getUsername();
+            if (EntityState.NEW.equals(state)) {
+                order.setCrTime(new Date());
+                order.setCrUser(userName);
+                order.setOrderNo(generatorOrderNo("QDTTC"));
+                order.setIsDeleted(0);
+                dao.saveOrUpdate(order);
+                System.out.println("已保存");
+            } else if (EntityState.MODIFIED.equals(state)) {
+                dao.saveOrUpdate(order);
+            } else if (EntityState.DELETED.equals(state)) {
+                //删除，逻辑删除
+                order.setIsDeleted(1);
+                dao.saveOrUpdate(order);
 
+            }
+        }
+    }
+
+    /**
+     * 生成订单号
+     * @param prefix 订单号开头的部分,如prefix为“QDTTC”，则订单号为“QDTTC*******”
+     * @return
+     */
+    private String generatorOrderNo(String prefix){
+        return prefix+System.currentTimeMillis();
     }
 
     //查询订单的检测项目

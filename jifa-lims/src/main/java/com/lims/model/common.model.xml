@@ -361,7 +361,7 @@
 		</PropertyDef>
 		<PropertyDef name="name">
 			<Property name="dataType">String</Property>
-			<Property name="label">标准名称</Property>
+			<Property name="label">方法标准名称</Property>
 			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="price">
@@ -378,7 +378,7 @@
 		</PropertyDef>
 		<PropertyDef name="standardNo">
 			<Property name="dataType">String</Property>
-			<Property name="label">标准号</Property>
+			<Property name="label">方法标准号</Property>
 			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="status">
@@ -466,6 +466,7 @@
 		<PropertyDef name="clientPhone">
 			<Property name="dataType">String</Property>
 			<Property name="label">申请人电话</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="clientZip">
 			<Property name="dataType">String</Property>
@@ -473,17 +474,16 @@
 		</PropertyDef>
 		<PropertyDef name="consumerId">
 			<Property name="dataType">Long</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="crTime">
 			<Property name="dataType">Date</Property>
 			<Property name="displayFormat">Y-m-d H:i:s</Property>
 			<Property name="label">创建时间</Property>
-			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="crUser">
 			<Property name="dataType">String</Property>
 			<Property name="label">创建人</Property>
-			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="deliveryDate">
 			<Property name="dataType">Date</Property>
@@ -506,7 +506,7 @@
 		<PropertyDef name="isDeleted">
 			<Property name="dataType">Integer</Property>
 		</PropertyDef>
-		<PropertyDef name="methodStandardIds">
+		<PropertyDef name="projectMethodStandardIds">
 			<Property name="dataType">String</Property>
 		</PropertyDef>
 		<PropertyDef name="orderNo">
@@ -552,6 +552,10 @@
 						</Entity>
 						<Entity>
 							<Property name="key">ch,en</Property>
+							<Property name="value">中英文</Property>
+						</Entity>
+						<Entity>
+							<Property name="key">en,ch</Property>
 							<Property name="value">中英文</Property>
 						</Entity>
 					</Collection>
@@ -607,6 +611,7 @@
 					</Collection>
 				</Property>
 			</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="sampleName">
 			<Property name="dataType">String</Property>
@@ -650,6 +655,7 @@
 					</Collection>
 				</Property>
 			</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="weight">
 			<Property name="dataType">Double</Property>
@@ -779,52 +785,6 @@
 		</PropertyDef>
 		<PropertyDef name="status">
 			<Property name="dataType">Integer</Property>
-		</PropertyDef>
-	</DataType>
-	<DataType name="testConditionDataType">
-		<Property name="creationType">com.lims.pojo.TestCondition</Property>
-		<PropertyDef name="id">
-			<Property name="dataType">Long</Property>
-		</PropertyDef>
-		<PropertyDef name="name">
-			<Property name="dataType">String</Property>
-			<Property name="label">名称</Property>
-			<Property name="required">true</Property>
-		</PropertyDef>
-		<PropertyDef name="projectId">
-			<Property name="dataType">Long</Property>
-		</PropertyDef>
-		<PropertyDef name="value">
-			<Property name="dataType">String</Property>
-			<Property name="label">默认值</Property>
-			<Property name="required">true</Property>
-		</PropertyDef>
-		<PropertyDef name="remark">
-			<Property name="dataType">String</Property>
-			<Property name="label">备注</Property>
-		</PropertyDef>
-	</DataType>
-	<DataType name="recordTestConditionDataType">
-		<Property name="creationType">com.lims.pojo.RecordTestCondition</Property>
-		<PropertyDef name="id">
-			<Property name="dataType">Long</Property>
-		</PropertyDef>
-		<PropertyDef name="name">
-			<Property name="dataType">String</Property>
-			<Property name="label">名称</Property>
-			<Property name="required">true</Property>
-		</PropertyDef>
-		<PropertyDef name="recordId">
-			<Property name="dataType">Long</Property>
-		</PropertyDef>
-		<PropertyDef name="remark">
-			<Property name="dataType">String</Property>
-			<Property name="label">备注</Property>
-		</PropertyDef>
-		<PropertyDef name="value">
-			<Property name="dataType">String</Property>
-			<Property name="label">值</Property>
-			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
 </Model>

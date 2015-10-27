@@ -24,8 +24,9 @@ import java.util.Map;
 
 /**
  * 客户维护
+ *
  * @author june
- * 2015年09月22日 23:33
+ *         2015年09月22日 23:33
  */
 @Service
 public class ConsumerService {
@@ -34,42 +35,48 @@ public class ConsumerService {
     private IMasterDao dao;
 
     @DataProvider
-    public void queryConsumer(Page<Consumer> page, Criteria criteria) {
+    public void queryConsumer(Page<Consumer> page, Criteria criteria, String name) {
         StringBuilder sb = new StringBuilder();
-        sb.append( " From "+ Consumer.class.getName() +" where isDeleted<>1 ");
+        sb.append(" From " + Consumer.class.getName() + " where isDeleted<>1 ");
         ParseResult result = SqlKit.parseCriteria(criteria, true, null, false);
-        String orderSql = SqlKit.buildOrderHql(criteria,null);
-        Map<String,Object> params = new HashMap<String, Object>();
-        if(result!=null){
+        String orderSql = SqlKit.buildOrderHql(criteria, null);
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (result != null) {
             sb.append(" AND ");
             sb.append(result.getAssemblySql());
             params = result.getValueMap();
         }
-        if(StringUtils.isEmpty(orderSql)){
+
+        if (name != null) {
+            sb.append(" AND name like :name");
+            params.put("name",name);
+        }
+
+        if (StringUtils.isEmpty(orderSql)) {
             sb.append(" ORDER BY crTime desc");
         }
         sb.append(orderSql);
 
-        dao.pagingQuery(page,sb.toString(),params);
+        dao.pagingQuery(page, sb.toString(), params);
     }
 
 
     @DataResolver
-    public void saveConsumer(Collection<Consumer> consumers){
+    public void saveConsumer(Collection<Consumer> consumers) {
         for (Consumer consumer : consumers) {
             EntityState state = EntityUtils.getState(consumer);
             IUser user2 = ContextHolder.getLoginUser();
             String userName = user2.getUsername();
-            if(EntityState.NEW.equals(state)){
+            if (EntityState.NEW.equals(state)) {
                 consumer.setCrTime(new Date());
                 consumer.setCrUser(userName);
                 //默认启用
                 consumer.setStatus(1);
                 consumer.setIsDeleted(0);
                 dao.saveOrUpdate(consumer);
-            }else if(EntityState.MODIFIED.equals(state)){
+            } else if (EntityState.MODIFIED.equals(state)) {
                 dao.saveOrUpdate(consumer);
-            }else if (EntityState.DELETED.equals(state)) {
+            } else if (EntityState.DELETED.equals(state)) {
                 //删除，逻辑删除
                 consumer.setIsDeleted(1);
                 dao.saveOrUpdate(consumer);
@@ -78,14 +85,14 @@ public class ConsumerService {
     }
 
     @Expose
-    public void changeStatus(long consumerId,int type){
-        if(type!=1 && type!=2){
+    public void changeStatus(long consumerId, int type) {
+        if (type != 1 && type != 2) {
             return;
         }
-        String sql = "update "+Consumer.TABLENAME+" set status=:status where id=:consumerId";
-        Map<String,Object> params = new HashMap<String, Object>();
-        params.put("consumerId",consumerId);
-        params.put("status",type);
-        dao.executeSQL(sql,params);
+        String sql = "update " + Consumer.TABLENAME + " set status=:status where id=:consumerId";
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("consumerId", consumerId);
+        params.put("status", type);
+        dao.executeSQL(sql, params);
     }
 }
