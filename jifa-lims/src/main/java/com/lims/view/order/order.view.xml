@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtOrder" parent="orderDataType">
+		</DataType>
+		<DataType name="dtConsumer" parent="consumerDataType">
+		</DataType>
+		<DataType name="dtProject" parent="projectDataType">
+			<PropertyDef name="projectMethodStandardId">
+				<Property name="label">ProjectMethodStandardId</Property>
+			</PropertyDef>
+			<PropertyDef name="methodStandardName">
+				<Property name="label">方法标准名称</Property>
+			</PropertyDef>
+			<PropertyDef name="methodStandardNo">
+				<Property name="label">方法标准号</Property>
+			</PropertyDef>
+		</DataType>
+		<DataType name="dtMethodStandard" parent="methodStandardDataType">
+			<PropertyDef name="productStandardNo">
+				<Property name="label">产品标准号</Property>
+			</PropertyDef>
+			<PropertyDef name="productStandardName">
+				<Property name="label">产品标准名称</Property>
+			</PropertyDef>
+			<PropertyDef name="projectMethodStandardId">
+				<Property name="label">projectMethodStandardId</Property>
+				<Property name="visible">false</Property>
+			</PropertyDef>
+		</DataType>
+		<DataType name="dtStandard" parent="standardDataType">
+		</DataType>
+	</Model>
+	<View id="orderView">
+		<DataSet id="dsOrders">
+			<Property name="dataProvider">orderService#queryOrder</Property>
+			<Property name="dataType">[dtOrder]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<DataSet id="dsConsumers">
+			<Property name="dataProvider">consumerService#queryConsumer</Property>
+			<Property name="dataType">[dtConsumer]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<DataSet id="dsProjects">
+			<Property name="dataProvider">projectService#queryProjectsByProjectMethodStandardIds</Property>
+			<Property name="dataType">[dtProject]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<DataSet id="dsStandards">
+			<Property name="dataProvider">standardService#queryStandards</Property>
+			<Property name="dataType">[dtStandard]</Property>
+			<Property name="pageSize">20</Property>
+		</DataSet>
+		<DataSetDropDown id="consumerDropDown">
+			<Property name="assignmentMap">consumerId=id,consumerAddress=address</Property>
+			<Property name="autoOpen">true</Property>
+			<Property name="dataSet">dsConsumers</Property>
+			<Property name="displayProperty">name</Property>
+			<Property name="dynaFilter">true</Property>
+			<Property name="filterOnTyping">true</Property>
+			<Property name="property">name</Property>
+		</DataSetDropDown>
+		<DataSetDropDown id="standardDataSetDropDown">
+			<Property name="assignmentMap">standardId=id</Property>
+			<Property name="dataSet">dsStandards</Property>
+			<Property name="displayProperty">name</Property>
+			<Property name="editable">false</Property>
+			<Property name="property">name</Property>
+		</DataSetDropDown>
+		<AutoForm id="orderAutoForm">
+			<Property name="cols">*,*,*,*</Property>
+			<Property name="dataSet">dsOrders</Property>
+			<AutoFormElement layoutConstraint="colSpan:2;">
+				<Property name="label">委托单位</Property>
+				<Property name="name">consumerName</Property>
+				<Property name="property">consumerName</Property>
+				<Property name="trigger">consumerDropDown</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement layoutConstraint="colSpan:2;">
+				<Property name="editable">false</Property>
+				<Property name="label">地址</Property>
+				<Property name="property">consumerAddress</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">申请人</Property>
+				<Property name="property">client</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">申请人电话</Property>
+				<Property name="property">clientPhone</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">申请人传真</Property>
+				<Property name="property">clientFax</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">申请人邮编</Property>
+				<Property name="property">clientZip</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">付款人</Property>
+				<Property name="property">payer</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">付款人电话</Property>
+				<Property name="property">payerPhone</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">付款人传真</Property>
+				<Property name="property">payerFax</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">付款人邮编</Property>
+				<Property name="property">payerZip</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">样品名称</Property>
+				<Property name="property">sampleName</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">样品数量</Property>
+				<Property name="property">sampleCount</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">纤维成分</Property>
+				<Property name="property">fibreComponent</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">克重</Property>
+				<Property name="property">weight</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement layoutConstraint="colSpan:4;">
+				<Property name="editorType">TextArea</Property>
+				<Property name="label">样品描述</Property>
+				<Property name="property">sampleDesc</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="editable">false</Property>
+				<Property name="label">测试时间</Property>
+				<Property name="property">timeLimit</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="editable">false</Property>
+				<Property name="label">剩余样品处理方式</Property>
+				<Property name="property">sampleHandleType</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="editable">false</Property>
+				<Property name="label">报告发送方式</Property>
+				<Property name="property">reportSendWay</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="editable">false</Property>
+				<Property name="label">报告语言</Property>
+				<Property name="property">reportLanguage</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement layoutConstraint="colSpan:4;">
+				<Property name="editorType">TextArea</Property>
+				<Property name="label">客户要求</Property>
+				<Property name="property">remark</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">检测性质</Property>
+				<Property name="property">testType</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="label">申请时间</Property>
+				<Property name="property">deliveryDate</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="editable">false</Property>
+				<Property name="label">产品标准</Property>
+				<Property name="property">standardName</Property>
+				<Property name="trigger">standardDataSetDropDown</Property>
+				<Editor/>
+			</AutoFormElement>
+		</AutoForm>
+		<ToolBar id="toolbar">
+			<ToolBarButton id="selectProjectBtn">
+				<Property name="caption">选择项目</Property>
+			</ToolBarButton>
+			<ToolBarButton id="submitOrderBtn">
+				<Property name="caption">提交申请单</Property>
+			</ToolBarButton>
+		</ToolBar>
+		<DataGrid id="projectMethodStandardDataGrid">
+			<Property name="dataSet">dsProjects</Property>
+			<DataColumn>
+				<Property name="caption">项目名称</Property>
+				<Property name="property">name</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">项目别名</Property>
+				<Property name="property">shortName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">检测条件</Property>
+				<Property name="property">testCondition</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">方法标准名称</Property>
+				<Property name="property">methodStandardName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">方法标准号</Property>
+				<Property name="property">methodStandardNo</Property>
+				<Editor/>
+			</DataColumn>
+		</DataGrid>
+		<Dialog id="projectMethodStandardDialog">
+			<Property name="caption">选择项目及方法标准</Property>
+			<Property name="height">500</Property>
+			<Property name="width">750</Property>
+			<Buttons>
+				<Button id="confirmBtn">
+					<Property name="caption">确定</Property>
+				</Button>
+				<Button id="cancelBtn">
+					<Property name="caption">取消</Property>
+				</Button>
+			</Buttons>
+			<Children>
+				<Container>
+					<SubViewHolder>
+						<Property name="subView">com.lims.view.project.project</Property>
+					</SubViewHolder>
+				</Container>
+			</Children>
+			<Tools/>
+		</Dialog>
+		<UpdateAction id="saveOrdersUpdateAction">
+			<Property name="caption">保存订单UpdateAction</Property>
+			<Property name="dataResolver">orderService#saveOrder</Property>
+			<Property name="executingMessage">正在提交申请单...</Property>
+			<Property name="successMessage">提交成功！</Property>
+			<UpdateItem>
+				<Property name="dataSet">dsOrders</Property>
+			</UpdateItem>
+		</UpdateAction>
+	</View>
+</ViewConfig>
