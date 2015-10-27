@@ -136,7 +136,7 @@ public class ProjectService {
 
         //三表关联查询
         StringBuilder sb = new StringBuilder();
-        sb.append(" select mt.*,s.name as productStandardName,s.standardId as productStandardId,s.standardNo as productStandardNo,pmt.id as projectMethodStandardId ");
+        sb.append(" select mt.*,s.name as productStandardName,s.id as productStandardId,s.standardNo as productStandardNo,pmt.id as projectMethodStandardId ");
         sb.append(" from " + ProjectMethodStandard.TABLENAME + " as pmt ");
         sb.append(" join " + MethodStandard.TABLENAME + " as mt ");
         sb.append(" on pmt.methodStandardId=mt.id ");
