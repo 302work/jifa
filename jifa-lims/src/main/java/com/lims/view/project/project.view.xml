@@ -59,7 +59,7 @@
 			<Property name="caption">保存项目</Property>
 			<Property name="dataResolver">projectService#saveProjects</Property>
 			<Property name="executingMessage">系统正在保存</Property>
-			<Property name="hotkegity">ctrl+s</Property>
+			<Property name="hotkey">ctrl+s</Property>
 			<Property name="iconClass">fa fa-floppy-o</Property>
 			<Property name="successMessage">数据保存成功</Property>
 			<Property name="tags">onDirty</Property>
