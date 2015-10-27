@@ -9,6 +9,8 @@
 		</DataType>
 		<DataType name="dtRecord" parent="recordDataType">
 		</DataType>
+		<DataType name="dtRecordTestCondition" parent="recordTestConditionDataType">
+		</DataType>
 	</Model>
 	<View>
 		<Property name="packages">font-awesome</Property>
@@ -85,6 +87,21 @@
 										<Property name="caption">检测结果</Property>
 										<Property name="iconClass">fa fa-search</Property>
 									</ToolBarButton>
+									<Separator/>
+									<ToolBarButton id="inputTestData">
+										<Property name="caption">录入检测数据</Property>
+										<Property name="iconClass">fa fa-flask</Property>
+									</ToolBarButton>
+									<Separator/>
+									<FormElement id="sampleNoInput">
+										<Property name="showHint">false</Property>
+										<Property name="showLabel">false</Property>
+										<Editor>
+											<TextEditor>
+												<Property name="blankText">扫码输入样品编号</Property>
+											</TextEditor>
+										</Editor>
+									</FormElement>
 								</ToolBar>
 								<DataGrid id="orderRecordDataGrid">
 									<Property name="dataSet">dsOrderRecord</Property>
@@ -147,8 +164,11 @@
 											<Children>
 												<AutoForm id="recordAutoForm">
 													<Property name="dataSet">dsOrderRecord</Property>
+													<Property name="labelAlign">right</Property>
+													<Property name="labelSeparator">:</Property>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">样品编号</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">sampleNo</Property>
@@ -156,6 +176,7 @@
 													</AutoFormElement>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">检测项目</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">projectName</Property>
@@ -163,6 +184,7 @@
 													</AutoFormElement>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">方法标准名称</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">methodStandardName</Property>
@@ -170,6 +192,7 @@
 													</AutoFormElement>
 													<AutoFormElement>
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">仪器</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">deviceNames</Property>
@@ -177,19 +200,45 @@
 													</AutoFormElement>
 													<AutoFormElement layoutConstraint="colSpan:2;">
 														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
 														<Property name="label">备注</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">remark</Property>
 														<Editor/>
 													</AutoFormElement>
-													<AutoFormElement layoutConstraint="colSpan:2;">
-														<Property name="editable">false</Property>
-														<Property name="editorType">TextArea</Property>
-														<Property name="label">检测条件</Property>
-														<Property name="property">testCondition</Property>
-														<Editor/>
-													</AutoFormElement>
 												</AutoForm>
+											</Children>
+										</GroupBox>
+										<GroupBox>
+											<Property name="caption">检测条件</Property>
+											<Property name="height">320</Property>
+											<Buttons/>
+											<Children>
+												<DataSet id="dsRecordTestCondition">
+													<Property name="dataProvider">testConditionService#queryTestCondition</Property>
+													<Property name="dataType">[dtRecordTestCondition]</Property>
+												</DataSet>
+												<DataGrid id="recordTestConditionDataGrid">
+													<Property name="dataSet">dsRecordTestCondition</Property>
+													<Property name="readOnly">true</Property>
+													<DataColumn>
+														<Property name="caption">名称</Property>
+														<Property name="property">name</Property>
+														<Property name="width">150</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">值</Property>
+														<Property name="property">value</Property>
+														<Property name="width">150</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">备注</Property>
+														<Property name="property">remark</Property>
+														<Editor/>
+													</DataColumn>
+												</DataGrid>
 											</Children>
 										</GroupBox>
 										<GroupBox>
@@ -235,26 +284,49 @@
 										<AutoForm>
 											<Property name="cols">*,*,*</Property>
 											<Property name="dataSet">dsOrderRecord</Property>
+											<Property name="labelAlign">right</Property>
+											<Property name="labelSeparator">:</Property>
+											<Property name="labelSpacing">1</Property>
 											<AutoFormElement>
 												<Property name="editable">false</Property>
+												<Property name="editorType">Label</Property>
 												<Property name="label">检测人</Property>
+												<Property name="labelSpacing">1</Property>
 												<Property name="property">testUserName</Property>
-												<Editor/>
+												<Editor>
+													<Image>
+														<Property name="height">50</Property>
+														<Property name="property">samplePic</Property>
+														<Property name="width">50</Property>
+													</Image>
+												</Editor>
 											</AutoFormElement>
 											<AutoFormElement>
 												<Property name="editable">false</Property>
+												<Property name="editorType">Label</Property>
 												<Property name="label">审核人</Property>
 												<Property name="property">auditUserName</Property>
 												<Editor/>
 											</AutoFormElement>
 											<AutoFormElement>
 												<Property name="editable">false</Property>
+												<Property name="editorType">Label</Property>
 												<Property name="label">日期</Property>
 												<Property name="property">testDate</Property>
-												<Property name="readOnly">true</Property>
 												<Editor/>
 											</AutoFormElement>
 										</AutoForm>
+									</Children>
+									<Tools/>
+								</Dialog>
+								<Dialog id="inputTestDataDialog">
+									<Property name="caption">录入检测数据</Property>
+									<Property name="height">600</Property>
+									<Property name="iconClass">fa fa-flask</Property>
+									<Property name="width">800</Property>
+									<Buttons/>
+									<Children>
+										<AutoForm/>
 									</Children>
 									<Tools/>
 								</Dialog>
