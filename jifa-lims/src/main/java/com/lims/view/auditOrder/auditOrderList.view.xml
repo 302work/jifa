@@ -88,7 +88,7 @@
 										<Property name="iconClass">fa fa-search</Property>
 									</ToolBarButton>
 									<Separator/>
-									<ToolBarButton id="inputTestData">
+									<ToolBarButton id="inputTestDataBtn">
 										<Property name="caption">录入检测数据</Property>
 										<Property name="iconClass">fa fa-flask</Property>
 									</ToolBarButton>

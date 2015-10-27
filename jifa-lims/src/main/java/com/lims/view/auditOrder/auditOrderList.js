@@ -127,6 +127,15 @@
 !function(self,arg,inputTestDataDialog) {
     //如果是回车
     if(arg.keyCode==13){
-        inputTestDataDialog.show();
+        var sampleNoInput = $("#d_sampleNoInput input").val();
+        if(sampleNoInput){
+            inputTestDataDialog.show();
+        }
     }
 };
+
+//检测数据录入
+// @Bind #inputTestDataBtn.onClick
+!function(self,arg,inputTestDataDialog) {
+    inputTestDataDialog.show();
+}
