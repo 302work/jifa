@@ -196,10 +196,9 @@ function refreshActions() {
 		$(arg.dom).empty().xCreate({
 			tagName: "IMG",
 			src: userNamePic,
-			width:50
+			//width:100,
+			height:25
 		});
 	}
-
-	$(arg.dom).append("<button class='upPic' userId='"+arg.data.get("id")+"'>上传</button>");
 }
 

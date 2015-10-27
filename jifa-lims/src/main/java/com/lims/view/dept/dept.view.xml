@@ -116,6 +116,11 @@
 								<Property name="itemCodes">pages,pageSize,+,-,x</Property>
 							</DataPilot>
 							<Separator/>
+							<ToolBarButton id="uploadUserNamePicBtn">
+								<Property name="caption">上传电子签名</Property>
+								<Property name="iconClass">fa fa-upload</Property>
+							</ToolBarButton>
+							<Separator/>
 							<ToolBarButton>
 								<Property name="action">export2ReportAction1</Property>
 								<Property name="caption">导出</Property>
@@ -144,6 +149,7 @@
 							<DataColumn>
 								<Property name="name">userNamePic</Property>
 								<Property name="property">userNamePic</Property>
+								<Property name="readOnly">true</Property>
 								<Editor/>
 							</DataColumn>
 							<DataColumn>
