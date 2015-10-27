@@ -11,6 +11,9 @@
 			</Reference>
 		</DataType>
 		<DataType name="dtMethodStandard" parent="methodStandardDataType">
+			<PropertyDef name="productStandardId">
+				<Property name="label">产品标准ID</Property>
+			</PropertyDef>
 			<PropertyDef name="productStandardNo">
 				<Property name="label">产品标准号</Property>
 			</PropertyDef>

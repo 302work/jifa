@@ -16,14 +16,6 @@
 			<Property name="dataProvider">standardService#queryStandards</Property>
 			<Property name="dataType">[dtStandards]</Property>
 			<Property name="pageSize">20</Property>
-			<ClientEvent name="onReady" signature="self,arg">var  dsStandards=view.id(&quot;dsStandards&quot;);
-var  sdata=dsStandards.getData(&quot;#&quot;);
-var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
-var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
-if(sdata){
-  dsMethodStandards.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
-  dsStandardIndexs.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
-}</ClientEvent>
 		</DataSet>
 		<DataSet id="dsMethodStandards">
 			<Property name="dataProvider">methodStandardService#queryMethodStandards</Property>
@@ -48,45 +40,14 @@ if(sdata){
 							<Property name="name">msCtrlName</Property>
 							<Container>
 								<ToolBar>
-									<DataPilot>
+									<DataPilot id="methodStandardsDataPilot">
 										<Property name="dataSet">dsMethodStandards</Property>
 										<Property name="itemCodes">pages,+,-</Property>
-										<ClientEvent name="onSubControlAction" signature="self,arg">var action = view.get(&quot;#msUpdateAction&quot;);
-var dsStandards = view.id(&quot;dsStandards&quot;);
-var sData = dsStandards.getData(&quot;#&quot;);
-if(sData){
-  var standardId=sData.get(&quot;id&quot;);
-}
-
-var datas=view.id(&quot;dsMethodStandards&quot;).get(&quot;data&quot;);
-
-switch(arg.code){
-	case &quot;+&quot;:{
-		var entity=datas.insert();
-    entity.set(&quot;standardId&quot;,standardId);
-		view.get(&quot;#methodStandardDialog&quot;).show();
-		arg.processDefault=false;
-		break;
-	}
-	case &quot;-&quot;:{
-		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
-			datas.remove();
-			action.execute();
-		});
-		arg.processDefault=false;
-		break;
-	}
-}</ClientEvent>
 									</DataPilot>
 									<Separator/>
 									<ToolBarButton id="editMsBtn">
 										<Property name="caption">编辑</Property>
 										<Property name="iconClass">fa fa-pencil</Property>
-										<ClientEvent name="onClick" signature="self,arg">var dsMethodStandards =view.id(&quot;dsMethodStandards&quot;);
-var currData=dsMethodStandards.getData(&quot;#&quot;);
-if(currData){
-  view.id(&quot;methodStandardDialog&quot;).show();
-}</ClientEvent>
 									</ToolBarButton>
 								</ToolBar>
 								<DataGrid id="methodStandardDataGrid">
@@ -144,24 +105,10 @@ if(currData){
 										<Button id="saveMsBtn">
 											<Property name="caption">保存</Property>
 											<Property name="iconClass">fa fa-save</Property>
-											<ClientEvent name="onClick" signature="self,arg">var msUpdateAction=view.id(&quot;msUpdateAction&quot;);
-var methodStandardDialog=view.id(&quot;methodStandardDialog&quot;);
-var dsStandards=view.id(&quot;dsStandards&quot;);
-var standardId=dsStandards.getData(&quot;#&quot;).get(&quot;id&quot;);
-var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
-msUpdateAction.execute(function(){
-  methodStandardDialog.hide();
-  dsMethodStandards.set(&quot;parameter&quot;,standardId).flushAsync();
-});</ClientEvent>
 										</Button>
 										<Button id="cancelMsBtn">
 											<Property name="caption">取消</Property>
 											<Property name="iconClass">fa fa-undo</Property>
-											<ClientEvent name="onClick" signature="self,arg">var methodStandardDialog=view.id(&quot;methodStandardDialog&quot;);
-var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
-var data=dsMethodStandards.get(&quot;data&quot;);
-data.cancel();
-methodStandardDialog.hide();</ClientEvent>
 										</Button>
 									</Buttons>
 									<Children>
@@ -225,42 +172,11 @@ methodStandardDialog.hide();</ClientEvent>
 									<DataPilot id="siDataPilot">
 										<Property name="dataSet">dsStandardIndexs</Property>
 										<Property name="itemCodes">pages,+,-</Property>
-										<ClientEvent name="onSubControlAction" signature="self,arg">var action = view.get(&quot;#siUpdateAction&quot;);
-var dsStandards = view.id(&quot;dsStandards&quot;);
-var sData = dsStandards.getData(&quot;#&quot;);
-if(sData){
-  var standardId=sData.get(&quot;id&quot;);
-}
-
-var datas=view.id(&quot;dsStandardIndexs&quot;).get(&quot;data&quot;);
-
-switch(arg.code){
-	case &quot;+&quot;:{
-		var entity=datas.insert();
-    entity.set(&quot;standardId&quot;,standardId);
-		view.get(&quot;#standardIndexDialog&quot;).show();
-		arg.processDefault=false;
-		break;
-	}
-	case &quot;-&quot;:{
-		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
-			datas.remove();
-			action.execute();
-		});
-		arg.processDefault=false;
-		break;
-	}
-}</ClientEvent>
 									</DataPilot>
 									<Separator/>
 									<ToolBarButton id="editStandardIndexBtn">
 										<Property name="caption">编辑</Property>
 										<Property name="iconClass">fa fa-pencil</Property>
-										<ClientEvent name="onClick" signature="self,arg">var dsStandardIndexs =view.id(&quot;dsStandardIndexs&quot;);
-var currData=dsStandardIndexs.getData(&quot;#&quot;);
-if(currData){
-  view.id(&quot;standardIndexDialog&quot;).show();
-}</ClientEvent>
 									</ToolBarButton>
 								</ToolBar>
 								<DataGrid id="standardIndexDataGrid">
@@ -302,24 +218,10 @@ if(currData){
 										<Button id="saveSiBtn">
 											<Property name="caption">保存</Property>
 											<Property name="iconClass">fa fa-save</Property>
-											<ClientEvent name="onClick" signature="self,arg">var siUpdateAction=view.id(&quot;siUpdateAction&quot;);
-var standardIndexDialog=view.id(&quot;standardIndexDialog&quot;);
-var dsStandards=view.id(&quot;dsStandards&quot;);
-var standardId=dsStandards.getData(&quot;#&quot;).get(&quot;id&quot;);
-var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
-siUpdateAction.execute(function(){
-  standardIndexDialog.hide();
-  dsStandardIndexs.set(&quot;parameter&quot;,standardId).flushAsync();
-});</ClientEvent>
 										</Button>
 										<Button id="cancelSiBtn">
 											<Property name="caption">取消</Property>
 											<Property name="iconClass">fa fa-undo</Property>
-											<ClientEvent name="onClick" signature="self,arg">var standardIndexDialog=view.id(&quot;standardIndexDialog&quot;);
-var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
-var data=dsStandardIndexs.get(&quot;data&quot;);
-data.cancel();
-standardIndexDialog.hide();</ClientEvent>
 										</Button>
 									</Buttons>
 									<Children>
@@ -365,37 +267,14 @@ standardIndexDialog.hide();</ClientEvent>
 			<SideControl>
 				<Container>
 					<ToolBar>
-						<DataPilot>
+						<DataPilot id="standardDataPilot">
 							<Property name="dataSet">dsStandards</Property>
 							<Property name="itemCodes">pages,+,-</Property>
-							<ClientEvent name="onSubControlAction" signature="self,arg">var datas = view.get(&quot;#dsStandards.data&quot;);
-var action = view.get(&quot;#standardUpdateAction&quot;);
-switch(arg.code){
-	case &quot;+&quot;:{
-		datas.insert();
-		view.get(&quot;#standardDialog&quot;).show();
-		arg.processDefault=false;
-		break;
-	}
-	case &quot;-&quot;:{
-		dorado.MessageBox.confirm(&quot;您真的想删除当前数据吗?&quot;,function(){
-			datas.remove();
-			action.execute();
-		});
-		arg.processDefault=false;
-		break;
-	}
-}</ClientEvent>
 						</DataPilot>
 						<Separator/>
 						<ToolBarButton id="btEdit">
 							<Property name="caption">编辑</Property>
 							<Property name="iconClass">fa fa-pencil</Property>
-							<ClientEvent name="onClick" signature="self,arg">var dsStandards = view.id(&quot;dsStandards&quot;);
-var currData = dsStandards.getData(&quot;#&quot;);
-if(currData){
- 	view.id(&quot;standardDialog&quot;).show();
-}</ClientEvent>
 						</ToolBarButton>
 					</ToolBar>
 					<DataGrid id="standardDaraGrid">
@@ -404,15 +283,6 @@ if(currData){
 						<Property name="selectionMode">singleRow</Property>
 						<Property name="showFilterBar">true</Property>
 						<Property name="sortMode">serverSide</Property>
-						<ClientEvent name="onDataRowClick" signature="self,arg">var  dsStandards=view.id(&quot;dsStandards&quot;);
-var  sdata=dsStandards.getData(&quot;#&quot;);
-var dsMethodStandards=view.id(&quot;dsMethodStandards&quot;);
-var dsStandardIndexs=view.id(&quot;dsStandardIndexs&quot;);
-if(sdata){
-  dsMethodStandards.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
-  dsStandardIndexs.set(&quot;parameter&quot;,sdata.get(&quot;id&quot;)).flushAsync();
-}
-</ClientEvent>
 						<DataColumn>
 							<Property name="property">id</Property>
 							<Property name="visible">false</Property>
@@ -464,21 +334,10 @@ if(sdata){
 							<Button id="saveStandardBtn">
 								<Property name="caption">保存</Property>
 								<Property name="iconClass">fa fa-floppy-o</Property>
-								<ClientEvent name="onClick" signature="self,arg">var standardUpdateAction=view.id(&quot;standardUpdateAction&quot;);
-var standardDialog=view.id(&quot;standardDialog&quot;);
-var dsStandards=view.id(&quot;dsStandards&quot;);
-standardUpdateAction.execute(function(){
-  standardDialog.hide();
-  dsStandards.flushAsync();
-});</ClientEvent>
 							</Button>
 							<Button id="closeStanardardBtn">
 								<Property name="caption">取消</Property>
 								<Property name="iconClass">fa fa-undo</Property>
-								<ClientEvent name="onClick" signature="self,arg">var standardDialog=view.id(&quot;standardDialog&quot;);
-var datas = view.get(&quot;#dsStandards.data&quot;);
-datas.cancel();
-standardDialog.hide();</ClientEvent>
 							</Button>
 						</Buttons>
 						<Children>
