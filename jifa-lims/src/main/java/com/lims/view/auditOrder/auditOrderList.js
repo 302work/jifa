@@ -113,9 +113,20 @@
         var sampleNoInput = $("#d_sampleNoInput input").val();
         if(sampleNoInput){
             //根据样品编号查找recordId
-            var recordId = 9;
-            setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition);
-            inputTestDataDialog.show();
+            var recordId;
+            var entityList = dsOrderRecord.getData();
+            entityList.each(function(entity){
+                if(entity.get("sampleNo")==sampleNoInput){
+                    recordId = entity.get("id");
+                    return false;
+                }
+            });
+            if(recordId){
+                setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition);
+                inputTestDataDialog.show();
+            }else{
+                dorado.MessageBox.alert("样品编号不存在");
+            }
         }
     }
 };
