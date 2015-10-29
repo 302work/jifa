@@ -11,21 +11,10 @@
 			</Reference>
 		</DataType>
 		<DataType name="dtMethodStandard" parent="methodStandardDataType">
-			<PropertyDef name="productStandardId">
-				<Property name="label">产品标准ID</Property>
-			</PropertyDef>
-			<PropertyDef name="productStandardNo">
-				<Property name="label">产品标准号</Property>
-			</PropertyDef>
-			<PropertyDef name="productStandardName">
-				<Property name="label">产品标准名称</Property>
-			</PropertyDef>
-			<PropertyDef name="projectMethodStandardId">
-				<Property name="label">projectMethodStandardId</Property>
-				<Property name="visible">false</Property>
-			</PropertyDef>
 		</DataType>
 		<DataType name="dtResultColumn" parent="resultColumnDataType">
+		</DataType>
+		<DataType name="dtTestCondition" parent="testConditionDataType">
 		</DataType>
 	</Model>
 	<View>
@@ -120,14 +109,7 @@
 								<Property name="property">shortName</Property>
 								<Editor/>
 							</AutoFormElement>
-							<AutoFormElement>
-								<Property name="editorType">TextArea</Property>
-								<Property name="name">testCondition</Property>
-								<Property name="property">testCondition</Property>
-								<Editor/>
-							</AutoFormElement>
-							<AutoFormElement>
-								<Property name="editorType">TextArea</Property>
+							<AutoFormElement layoutConstraint="colSpan:3;">
 								<Property name="name">remark</Property>
 								<Property name="property">remark</Property>
 								<Editor/>
@@ -247,7 +229,7 @@
 									<ToolBar>
 										<DataPilot id="resultColumnDataPilot">
 											<Property name="dataSet">dsResultColumn</Property>
-											<Property name="itemCodes">pages,pageSize,+,-,x</Property>
+											<Property name="itemCodes">pages,+,-,x</Property>
 										</DataPilot>
 										<Separator/>
 										<ToolBarButton>
@@ -278,6 +260,57 @@
 										<Property name="successMessage">保存成功</Property>
 										<UpdateItem>
 											<Property name="dataSet">dsResultColumn</Property>
+										</UpdateItem>
+									</UpdateAction>
+								</Container>
+							</ControlTab>
+							<ControlTab>
+								<Property name="caption">检测条件</Property>
+								<Property name="iconClass">fa fa-flask</Property>
+								<Container>
+									<DataSet id="dsTestCondition">
+										<Property name="dataProvider">testConditionService#query</Property>
+										<Property name="dataType">[dtTestCondition]</Property>
+										<Property name="pageSize">20</Property>
+									</DataSet>
+									<ToolBar>
+										<DataPilot>
+											<Property name="dataSet">dsTestCondition</Property>
+											<Property name="itemCodes">pages,+,-,x</Property>
+										</DataPilot>
+										<Separator/>
+										<ToolBarButton>
+											<Property name="action">saveTestConditionUpdateAction</Property>
+											<Property name="caption">保存</Property>
+											<Property name="iconClass">fa fa-check</Property>
+										</ToolBarButton>
+									</ToolBar>
+									<DataGrid>
+										<Property name="dataSet">dsTestCondition</Property>
+										<IndicatorColumn/>
+										<DataColumn>
+											<Property name="name">name</Property>
+											<Property name="property">name</Property>
+											<Editor/>
+										</DataColumn>
+										<DataColumn>
+											<Property name="caption">默认值</Property>
+											<Property name="name">value</Property>
+											<Property name="property">value</Property>
+											<Editor/>
+										</DataColumn>
+										<DataColumn>
+											<Property name="name">remark</Property>
+											<Property name="property">remark</Property>
+											<Editor/>
+										</DataColumn>
+									</DataGrid>
+									<UpdateAction id="saveTestConditionUpdateAction">
+										<Property name="dataResolver">testConditionService#save</Property>
+										<Property name="executingMessage">正在保存...</Property>
+										<Property name="successMessage">保存成功...</Property>
+										<UpdateItem>
+											<Property name="dataSet">dsTestCondition</Property>
 										</UpdateItem>
 									</UpdateAction>
 								</Container>

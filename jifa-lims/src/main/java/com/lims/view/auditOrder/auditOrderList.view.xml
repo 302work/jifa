@@ -77,6 +77,10 @@
 									<Property name="dataType">[dtRecord]</Property>
 									<Property name="pageSize">20</Property>
 								</DataSet>
+								<DataSet id="dsRecordTestCondition">
+									<Property name="dataProvider">testConditionService#queryTestCondition</Property>
+									<Property name="dataType">[dtRecordTestCondition]</Property>
+								</DataSet>
 								<ToolBar>
 									<DataPilot>
 										<Property name="dataSet">dsOrderRecord</Property>
@@ -214,10 +218,6 @@
 											<Property name="height">320</Property>
 											<Buttons/>
 											<Children>
-												<DataSet id="dsRecordTestCondition">
-													<Property name="dataProvider">testConditionService#queryTestCondition</Property>
-													<Property name="dataType">[dtRecordTestCondition]</Property>
-												</DataSet>
 												<DataGrid id="recordTestConditionDataGrid">
 													<Property name="dataSet">dsRecordTestCondition</Property>
 													<Property name="readOnly">true</Property>
@@ -330,9 +330,77 @@
 									<Property name="height">600</Property>
 									<Property name="iconClass">fa fa-flask</Property>
 									<Property name="width">800</Property>
-									<Buttons/>
+									<Buttons>
+										<Button id="closeInputTestDataDialogBtn">
+											<Property name="caption">关闭</Property>
+											<Property name="iconClass">fa fa-times</Property>
+										</Button>
+									</Buttons>
 									<Children>
-										<AutoForm/>
+										<TabControl>
+											<ControlTab>
+												<Property name="caption">检测条件</Property>
+												<Property name="iconClass">fa fa-tint</Property>
+												<Container>
+													<ToolBar>
+														<DataPilot>
+															<Property name="dataSet">dsRecordTestCondition</Property>
+															<Property name="itemCodes">pages,+,-,x</Property>
+														</DataPilot>
+														<Separator/>
+														<ToolBarButton id="saveTestConditionBtn">
+															<Property name="action">saveTestConditionUpdateAction</Property>
+															<Property name="caption">保存</Property>
+															<Property name="iconClass">fa fa-check-square</Property>
+														</ToolBarButton>
+													</ToolBar>
+													<DataGrid id="inputRecordTestConditionDataGrid">
+														<Property name="dataSet">dsRecordTestCondition</Property>
+														<IndicatorColumn/>
+														<DataColumn>
+															<Property name="caption">名称</Property>
+															<Property name="property">name</Property>
+															<Property name="width">150</Property>
+															<Editor/>
+														</DataColumn>
+														<DataColumn>
+															<Property name="caption">值</Property>
+															<Property name="property">value</Property>
+															<Property name="width">150</Property>
+															<Editor/>
+														</DataColumn>
+														<DataColumn>
+															<Property name="caption">备注</Property>
+															<Property name="property">remark</Property>
+															<Editor/>
+														</DataColumn>
+													</DataGrid>
+													<UpdateAction id="saveTestConditionUpdateAction">
+														<Property name="dataResolver">auditOrderService#saveRecordTestCondition</Property>
+														<Property name="executingMessage">正在保存...</Property>
+														<Property name="successMessage">保存成功！</Property>
+														<UpdateItem>
+															<Property name="dataSet">dsRecordTestCondition</Property>
+														</UpdateItem>
+													</UpdateAction>
+												</Container>
+											</ControlTab>
+											<ControlTab>
+												<Property name="caption">检测记录</Property>
+												<Property name="iconClass">fa fa-bars</Property>
+												<Container>
+													<IFrame id="addResultIFrame">
+														<Property name="height">300</Property>
+														<Property name="path">com.lims.view.result.addResult.d</Property>
+													</IFrame>
+												</Container>
+											</ControlTab>
+											<ControlTab>
+												<Property name="caption">样品图片</Property>
+												<Property name="iconClass">fa fa-camera-retro</Property>
+												<Container/>
+											</ControlTab>
+										</TabControl>
 									</Children>
 									<Tools/>
 								</Dialog>

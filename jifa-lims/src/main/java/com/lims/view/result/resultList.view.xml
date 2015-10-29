@@ -7,6 +7,7 @@
 		</DataType>
 	</Model>
 	<View>
+		<Property name="packages">font-awesome</Property>
 		<DataGrid id="resultDataGrid">
 			<Property name="autoCreateColumns">false</Property>
 			<Property name="dataSet">dsResult</Property>

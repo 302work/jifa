@@ -410,6 +410,19 @@
 			<Property name="dataType">String</Property>
 			<Property name="label">单位</Property>
 		</PropertyDef>
+		<PropertyDef name="productStandardId">
+			<Property name="label">产品标准ID</Property>
+		</PropertyDef>
+		<PropertyDef name="productStandardNo">
+			<Property name="label">产品标准号</Property>
+		</PropertyDef>
+		<PropertyDef name="productStandardName">
+			<Property name="label">产品标准名称</Property>
+		</PropertyDef>
+		<PropertyDef name="projectMethodStandardId">
+			<Property name="label">projectMethodStandardId</Property>
+			<Property name="visible">false</Property>
+		</PropertyDef>
 	</DataType>
 	<DataType name="standardIndexDataType">
 		<Property name="creationType">com.lims.pojo.StandardIndex</Property>
@@ -794,6 +807,7 @@
 		</PropertyDef>
 		<PropertyDef name="status">
 			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">1</Property>
 		</PropertyDef>
 	</DataType>
 	<DataType name="testConditionDataType">

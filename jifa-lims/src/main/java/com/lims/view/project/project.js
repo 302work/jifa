@@ -289,3 +289,9 @@ function refreshActions() {
 	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
 	self.set("parameter",projectId);
 };
+
+//保存项目成功
+// @Bind #actionSaveAll.onSuccess
+!function(self,arg,dsProject) {
+	dsProject.flushAsync();
+}

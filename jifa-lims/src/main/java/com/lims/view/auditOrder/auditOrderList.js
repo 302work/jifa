@@ -34,7 +34,7 @@
 
 //记录的检测结果
 // @Bind #recordResultBtn.onClick
-!function(self,arg,resultDialog,dsOrderRecord,resultIFrame,picDataGrid) {
+!function(self,arg,resultDialog,dsOrderRecord,resultIFrame,picDataGrid,dsRecordTestCondition) {
     var currRecord = dsOrderRecord.getData("#");
     if(currRecord){
         //
@@ -57,16 +57,8 @@
             testSamplePic:testSamplePic
         }];
         picDataGrid.set("items",data);
+        dsRecordTestCondition.set("parameter",recordId).flushAsync();
         resultDialog.show();
-    }
-};
-
-//加载检测结果之前，设置recordId
-// @Bind #dsResult.beforeLoadData
-!function(self,arg,dsOrderRecord) {
-    var currRecord = dsOrderRecord.getData("#");
-    if(currRecord){
-        self.set("parameter",currRecord.get("id"));
     }
 };
 
@@ -113,22 +105,16 @@
     orderDetailDialog.show();
 };
 
-//加载检测条件之前，设置recordId
-// @Bind #dsRecordTestCondition.beforeLoadData
-!function(self,arg,dsOrderRecord) {
-    var currRecord = dsOrderRecord.getData("#");
-    if(currRecord){
-        self.set("parameter",currRecord.get("id"));
-    }
-};
-
 //监听样品编号输入框的按键事件
 // @Bind #sampleNoInput.onKeyDown
-!function(self,arg,inputTestDataDialog) {
+!function(self,arg,inputTestDataDialog,dsRecordTestCondition,dsOrderRecord,addResultIFrame) {
     //如果是回车
     if(arg.keyCode==13){
         var sampleNoInput = $("#d_sampleNoInput input").val();
         if(sampleNoInput){
+            //根据样品编号查找recordId
+            var recordId = 9;
+            setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition);
             inputTestDataDialog.show();
         }
     }
@@ -136,6 +122,45 @@
 
 //检测数据录入
 // @Bind #inputTestDataBtn.onClick
-!function(self,arg,inputTestDataDialog) {
-    inputTestDataDialog.show();
+!function(self,arg,dsOrderRecord,addResultIFrame,inputTestDataDialog,dsRecordTestCondition) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord) {
+        var recordId = currRecord.get("id");
+        setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition);
+        inputTestDataDialog.show();
+    }
+
 }
+
+//设置iframe的recordId
+function setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition){
+    var path = addResultIFrame.get("path");
+    var index = path.indexOf("?");
+    if (index != -1) {
+        path = path.substring(0, index);
+    }
+    path += "?recordId=" + recordId;
+    addResultIFrame.set("path", path);
+    dsRecordTestCondition.set("parameter",recordId).flushAsync();
+}
+//关闭检测数据录入弹窗
+// @Bind #closeInputTestDataDialogBtn.onClick
+!function(self,arg,inputTestDataDialog) {
+    inputTestDataDialog.hide();
+}
+
+//保存检测条件之前，设置recordId
+// @Bind #saveTestConditionUpdateAction.beforeExecute
+!function(self,arg,dsOrderRecord) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        self.set("parameter",currRecord.get("id"));
+    }
+}
+
+//保存成功刷新检测条件
+// @Bind #saveTestConditionUpdateAction.onSuccess
+!function(self,arg,dsRecordTestCondition) {
+    dsRecordTestCondition.flushAsync();
+}
+

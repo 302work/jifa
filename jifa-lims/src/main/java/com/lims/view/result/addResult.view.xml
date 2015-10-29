@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig listener="spring:resultService#onInit">
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtResult">
+		</DataType>
+	</Model>
+	<View>
+		<Property name="packages">font-awesome</Property>
+		<ToolBar>
+			<DataPilot>
+				<Property name="dataSet">dsResult</Property>
+				<Property name="itemCodes">pages,+,x</Property>
+			</DataPilot>
+			<Separator/>
+			<ToolBarButton id="saveResultBtn">
+				<Property name="action">saveResultUpdateAction</Property>
+				<Property name="caption">保存</Property>
+				<Property name="iconClass">fa fa-check</Property>
+			</ToolBarButton>
+		</ToolBar>
+		<DataGrid id="resultDataGrid">
+			<Property name="autoCreateColumns">false</Property>
+			<Property name="dataSet">dsResult</Property>
+			<Property name="showFooter">true</Property>
+			<IndicatorColumn/>
+		</DataGrid>
+		<DataSet id="dsResult">
+			<Property name="dataProvider">resultService#queryResult</Property>
+			<Property name="dataType">[dtResult]</Property>
+			<Property name="parameter">${param.recordId}</Property>
+		</DataSet>
+		<UpdateAction id="saveResultUpdateAction">
+			<Property name="dataResolver">resultService#saveResult</Property>
+			<Property name="executingMessage">正在保存</Property>
+			<Property name="hotkey">ctrl+s</Property>
+			<Property name="parameter">${param.recordId}</Property>
+			<Property name="successMessage">保存成功</Property>
+			<UpdateItem>
+				<Property name="dataSet">dsResult</Property>
+			</UpdateItem>
+		</UpdateAction>
+	</View>
+</ViewConfig>

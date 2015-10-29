@@ -32,11 +32,14 @@
 
 //记录的检测结果
 // @Bind #recordResultBtn.onClick
-!function(self,arg,resultDialog,dsOrderRecord,resultIFrame,picDataGrid) {
+!function(self,arg,resultDialog,dsOrderRecord,resultIFrame,picDataGrid,dsRecordTestCondition) {
     var currRecord = dsOrderRecord.getData("#");
     if(currRecord){
         //
         var recordId = currRecord.get("id");
+        //刷新检测条件
+        dsRecordTestCondition.set("parameter",recordId).flushAsync();
+
         var path = resultIFrame.get("path");
         var index = path.indexOf("?");
         if(index!=-1){
@@ -93,11 +96,3 @@
     }
 }
 
-//加载检测条件之前，设置recordId
-// @Bind #dsRecordTestCondition.beforeLoadData
-!function(self,arg,dsOrderRecord) {
-    var currRecord = dsOrderRecord.getData("#");
-    if(currRecord){
-        self.set("parameter",currRecord.get("id"));
-    }
-};

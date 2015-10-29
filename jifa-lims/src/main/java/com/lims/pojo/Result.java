@@ -24,10 +24,10 @@ public class Result implements IPojo {
     @Column(nullable = false)
     private Long recordId;//所属检测数据
 
-    @Column(nullable = false)
+    @Column(name="`index`",nullable = false)
     private Integer index;//第几次检测
 
-    @Column(nullable = false)
+    @Column(name="`status`",nullable = false)
     private Integer status;//状态，1正常，2为作废
 
     @Column
