@@ -29,14 +29,14 @@
         <dorado.version>7.5.0</dorado.version>
         <dorado-cloudo.version>0.0.1-SNAPSHOT</dorado-cloudo.version>
         <dorado-ueditor.version>1.0.5</dorado-ueditor.version>
-        <dorado-uploader.version>1.0.4</dorado-uploader.version>
+        <dorado-uploader.version>1.0.19</dorado-uploader.version>
         <dorado-raphael.version>1.0.3</dorado-raphael.version>
 		<dorado-map.version>1.2.0-BETA</dorado-map.version>
-        <bdf2-core.version>2.0.8-SNAPSHOT</bdf2-core.version>
+        <bdf2-core.version>2.0.7</bdf2-core.version>
         <bdf2-import.version>2.0.7</bdf2-import.version>
-        <bdf2-export.version>2.0.8-SNAPSHOT</bdf2-export.version>
+        <bdf2-export.version>2.0.7</bdf2-export.version>
         <bdf2-job-daemon.version>2.0.4</bdf2-job-daemon.version>
-        <bdf2-uflo.version>2.1.4-SNAPSHOT</bdf2-uflo.version>
+        <bdf2-uflo.version>2.1.3</bdf2-uflo.version>
 
         <springframework.version>3.2.5.RELEASE</springframework.version>
 
@@ -158,6 +158,7 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${redis.version}</version>
+            <!--<scope>provided</scope>-->
         </dependency>
         <!-- redis jar end -->
 
@@ -334,31 +335,32 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${springframework.version}</version>
+            <scope>test</scope>
         </dependency>
         <!-- End spring test -->
 
-        <dependency>
-            <groupId>com.bstek.dorado</groupId>
-            <artifactId>dorado-cloudo</artifactId>
-            <version>${dorado-cloudo.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>dorado-core</artifactId>
-                    <groupId>com.bstek.dorado</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.bstek.dorado</groupId>-->
+            <!--<artifactId>dorado-cloudo</artifactId>-->
+            <!--<version>${dorado-cloudo.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>dorado-core</artifactId>-->
+                    <!--<groupId>com.bstek.dorado</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
-        <dependency>
-		  <groupId>com.bstek.dorado</groupId>
-		  <artifactId>dorado-raphael</artifactId>
-		  <version>${dorado-raphael.version}</version>
-		</dependency>
-		<dependency>
-		  <groupId>com.bstek.dorado</groupId>
-		  <artifactId>dorado-map</artifactId>
-		  <version>${dorado-map.version}</version>
-		</dependency>
+        <!--<dependency>-->
+		  <!--<groupId>com.bstek.dorado</groupId>-->
+		  <!--<artifactId>dorado-raphael</artifactId>-->
+		  <!--<version>${dorado-raphael.version}</version>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+		  <!--<groupId>com.bstek.dorado</groupId>-->
+		  <!--<artifactId>dorado-map</artifactId>-->
+		  <!--<version>${dorado-map.version}</version>-->
+		<!--</dependency>-->
     </dependencies>
     
     <build>

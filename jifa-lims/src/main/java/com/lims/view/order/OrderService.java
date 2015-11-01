@@ -8,6 +8,8 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.uflo.client.service.ProcessClient;
+import com.bstek.uflo.service.StartProcessInfo;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
@@ -32,6 +34,9 @@ public class OrderService {
 
     @Resource
     private IMasterDao dao;
+
+    @Resource(name=ProcessClient.BEAN_ID)
+    private ProcessClient processClient;
 
     @DataProvider
     public void queryOrder(Page<Map<String,Object>> page,Criteria criteria,Long businessId){
@@ -91,8 +96,25 @@ public class OrderService {
                 order.setCrUser(userName);
                 order.setOrderNo(generatorOrderNo("QDTTC"));
                 order.setIsDeleted(0);
-                dao.saveOrUpdate(order);
-                System.out.println("已保存");
+                order = dao.saveOrUpdate(order).get(0);
+                //进入流程
+                //提交工作流
+                StartProcessInfo info = new StartProcessInfo();
+                //流程发起人
+                info.setPromoter(user.getUsername());
+                //订单ID
+                info.setBusinessId(order.getId().toString());
+                //是否完成了开始节点，我们设置为true,表示自动提交到下一个节点
+                info.setCompleteStartTask(true);
+                //选择下一个节点采用哪个分支
+                //		info.setSequenceFlowName("");
+                //增加标记，每个实例中可以获取到
+                //		info.setTag("");
+                //传入变量到流程中，流程中可以通过EL表达式获取
+                Map<String,Object> variables = new HashMap<String, Object>();
+                variables.put("msg", "【正审】");
+                info.setVariables(variables);
+                processClient.startProcessByName("普通审批流程", info);
             } else if (EntityState.MODIFIED.equals(state)) {
                 dao.saveOrUpdate(order);
             } else if (EntityState.DELETED.equals(state)) {

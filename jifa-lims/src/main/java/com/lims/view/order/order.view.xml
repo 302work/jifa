@@ -32,6 +32,7 @@
 		</DataType>
 	</Model>
 	<View id="orderView">
+		<Property name="packages">font-awesome</Property>
 		<DataSet id="dsOrders">
 			<Property name="dataProvider">orderService#queryOrder</Property>
 			<Property name="dataType">[dtOrder]</Property>

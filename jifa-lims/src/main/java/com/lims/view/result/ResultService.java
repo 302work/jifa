@@ -130,6 +130,7 @@ public class ResultService {
         statusColumn.setProperty("status");
         statusColumn.setWidth("50");
         statusColumn.setAlign(Align.center);
+        statusColumn.setEditable(false);
         resultDataGrid.addColumn(statusColumn);
 
         DataColumn remarkColumn = new DataColumn();

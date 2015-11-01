@@ -211,7 +211,6 @@
 		<PropertyDef name="userNamePic">
 			<Property name="dataType">String</Property>
 			<Property name="label">电子签名</Property>
-			<Property name="required">true</Property>
 		</PropertyDef>
 	</DataType>
 	<DataType name="consumerDataType">
