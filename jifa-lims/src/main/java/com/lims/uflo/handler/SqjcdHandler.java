@@ -1,8 +1,7 @@
 package com.lims.uflo.handler;
 
-import org.springframework.stereotype.Service;
-
 import com.lims.uflo.handler.base.AbstractHandler;
+import org.springframework.stereotype.Service;
 
 
 /**
@@ -12,7 +11,7 @@ import com.lims.uflo.handler.base.AbstractHandler;
  *
  */
 @Service
-public class SsjcHandler extends AbstractHandler{
+public class SqjcdHandler extends AbstractHandler{
 
 	@Override
 	protected String getRoleId() {

@@ -86,7 +86,7 @@
      <tx:advice id="masterTxAdvice" transaction-manager="masterTransactionManager">
         <tx:attributes>
             <tx:method name="add*" read-only="false" propagation="REQUIRED" />
-            <tx:method name="save*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="save*" read-only="false" propagation="NOT_SUPPORTED" />
             <tx:method name="insert*" read-only="false" propagation="REQUIRED" />
             <tx:method name="update*" read-only="false" propagation="REQUIRED" />
             <tx:method name="remove*" read-only="false" propagation="REQUIRED" />

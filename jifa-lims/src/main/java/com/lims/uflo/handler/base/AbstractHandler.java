@@ -8,11 +8,11 @@ import com.bstek.uflo.model.ProcessInstance;
 import com.bstek.uflo.process.handler.AssignmentHandler;
 import com.bstek.uflo.process.node.TaskNode;
 import com.dosola.core.common.StringUtil;
+import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.Order;
 import com.lims.pojo.User;
 import com.lims.service.RoleUtil;
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -27,7 +27,10 @@ import java.util.List;
  * 
  */
 public abstract class AbstractHandler implements AssignmentHandler{
-	
+
+	@Resource
+	private IMasterDao dao;
+
 	@Resource
 	private RoleUtil roleUtil;
 	
@@ -35,11 +38,13 @@ public abstract class AbstractHandler implements AssignmentHandler{
 	
 	@Override
 	public Collection<String> handle(TaskNode taskNode, ProcessInstance processInstance,Context context) {
-		
-		Session session = context.getSession();
 		//获取订单
-		Order order = (Order) session.get(Order.class, Integer.valueOf(processInstance.getBusinessId()));
+		Order order = dao.getObjectById(Order.class,Long.valueOf(processInstance.getBusinessId()));
+		if(order==null){
+			throw new RuntimeException("没有找到order,orderId:"+processInstance.getBusinessId());
+		}
 		String roleId = getRoleId();
+
 		if(StringUtil.isEmpty(roleId)){
 			logger.error("获取下节点处理人员出错了，没有查找到角色ID");
 			throw new RuntimeException("获取下节点处理人员出错了，没有查找到角色ID");
