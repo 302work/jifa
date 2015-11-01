@@ -574,6 +574,7 @@
 					</Collection>
 				</Property>
 			</Property>
+			<Property name="required">true</Property>
 		</PropertyDef>
 		<PropertyDef name="reportSendWay">
 			<Property name="dataType">Integer</Property>

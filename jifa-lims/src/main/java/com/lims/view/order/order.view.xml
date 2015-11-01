@@ -212,11 +212,6 @@
 				<Editor/>
 			</DataColumn>
 			<DataColumn>
-				<Property name="caption">检测条件</Property>
-				<Property name="property">testCondition</Property>
-				<Editor/>
-			</DataColumn>
-			<DataColumn>
 				<Property name="caption">方法标准名称</Property>
 				<Property name="property">methodStandardName</Property>
 				<Editor/>

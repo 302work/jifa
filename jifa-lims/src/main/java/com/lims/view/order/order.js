@@ -22,13 +22,13 @@
     var methodStandard=dsMethodStandard.getData("#");
     if(methodStandard){
         var selectedProjectMethodStandardId=methodStandard.get("projectMethodStandardId");
+        var standardId=methodStandard.get("productStandardId");
     }else{
         dorado.MessageBox.alert("请选择项目以及其对应的方法标准！");
     }
     var data=dsOrders.getData("#");
     if(data){
         var projectMethodStandardIds=data.get("projectMethodStandardIds");
-
         if(!projectMethodStandardIds || projectMethodStandardIds==""){
             projectMethodStandardIds=selectedProjectMethodStandardId;
         }else{
@@ -37,10 +37,10 @@
                 projectMethodStandardIds=projectMethodStandardIds+","+selectedProjectMethodStandardId;
             }
         }
+        data.set("standardId",standardId);
         data.set("projectMethodStandardIds",projectMethodStandardIds);
         dsProjects.set("parameter",projectMethodStandardIds).flushAsync();
     }
-    //TODO 获取项目和方法标准，将projectMethodStandardIds赋值给Order
     projectMethodStandardDialog.hide();
 };
 
