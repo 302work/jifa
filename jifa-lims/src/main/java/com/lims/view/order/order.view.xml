@@ -243,9 +243,9 @@
 			</Buttons>
 			<Children>
 				<Container>
-					<SubViewHolder>
-						<Property name="subView">com.lims.view.project.project</Property>
-					</SubViewHolder>
+					<IFrame id="projectMethodStandardIFrame">
+						<Property name="path">com.lims.view.project.project.d</Property>
+					</IFrame>
 				</Container>
 			</Children>
 			<Tools/>

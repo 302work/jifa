@@ -112,7 +112,7 @@ public class ProjectService {
         String orderSql = SqlKit.buildOrderSql(criteria, "p");
 
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("projectMethodStandardIds", projectMethodStandardIds);
+        params.put("projectMethodStandardIds", Arrays.asList(projectMethodStandardIds.split(",")));
 
         if (result != null) {
             sb.append(" AND ");
