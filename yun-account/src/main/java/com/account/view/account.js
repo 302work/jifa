@@ -1,41 +1,78 @@
-//打印插件
-(function ($) {
-    var printAreaCount = 0;
-    $.fn.printArea = function () {
-        var ele = $(this);
-        var idPrefix = "printArea_";
-        removePrintArea(idPrefix + printAreaCount);
-        printAreaCount++;
-        var iframeId = idPrefix + printAreaCount;
-        var iframeStyle = 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;';
-        iframe = document.createElement('IFRAME');
-        $(iframe).attr({
-            style: iframeStyle,
-            id: iframeId
-        });
-        document.body.appendChild(iframe);
-        var doc = iframe.contentWindow.document;
-        $(document).find("link").filter(function () {
-            return $(this).attr("rel").toLowerCase() == "stylesheet";
-        }).each(
-                function () {
-                    doc.write('<link type="text/css" rel="stylesheet" href="'
-                            + $(this).attr("href") + '" >');
-                });
-        doc.write('<div class="' + $(ele).attr("class") + '">' + $(ele).html()
-                + '</div>');
-        doc.close();
-        var frameWindow = iframe.contentWindow;
-        frameWindow.close();
-        frameWindow.focus();
-        frameWindow.print();
-    };
-    var removePrintArea = function (id) {
-        $("iframe#" + id).remove();
-    };
+// -----------------------------------------------------------------------
+// Eros Fratini - eros@recoding.it
+// jqprint 0.3
+//
+// - 19/06/2009 - some new implementations, added Opera support
+// - 11/05/2009 - first sketch
+//
+// Printing plug-in for jQuery, evolution of jPrintArea: http://plugins.jquery.com/project/jPrintArea
+// requires jQuery 1.3.x
+//
+// Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+//------------------------------------------------------------------------
+
+(function($) {
+	var opt;
+
+	$.fn.jqprint = function (options) {
+		opt = $.extend({}, $.fn.jqprint.defaults, options);
+
+		var $element = (this instanceof jQuery) ? this : $(this);
+
+		if (opt.operaSupport && $.browser.opera)
+		{
+			var tab = window.open("","jqPrint-preview");
+			tab.document.open();
+
+			var doc = tab.document;
+		}
+		else
+		{
+			var $iframe = $("<iframe  />");
+
+			if (!opt.debug) { $iframe.css({ position: "absolute", width: "0px", height: "0px", left: "-600px", top: "-600px" }); }
+
+			$iframe.appendTo("body");
+			var doc = $iframe[0].contentWindow.document;
+		}
+
+		if (opt.importCSS)
+		{
+			if ($("link[media=print]").length > 0)
+			{
+				$("link[media=print]").each( function() {
+					doc.write("<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' media='print' />");
+				});
+			}
+			else
+			{
+				$("link").each( function() {
+					doc.write("<link type='text/css' rel='stylesheet' href='" + $(this).attr("href") + "' />");
+				});
+			}
+		}
+
+		if (opt.printContainer) { doc.write($element.outer()); }
+		else { $element.each( function() { doc.write($(this).html()); }); }
+
+		doc.close();
+
+		(opt.operaSupport && $.browser.opera ? tab : $iframe[0].contentWindow).focus();
+		setTimeout( function() { (opt.operaSupport && $.browser.opera ? tab : $iframe[0].contentWindow).print(); if (tab) { tab.close(); } }, 1000);
+	}
+
+	$.fn.jqprint.defaults = {
+		debug: false,
+		importCSS: true,
+		printContainer: true,
+		operaSupport: true
+	};
+
+	// Thanks to 9__, found at http://users.livejournal.com/9__/380664.html
+	jQuery.fn.outer = function() {
+		return $($('<div></div>').html(this.clone())).html();
+	}
 })(jQuery);
-
-
 
 var dirtyEntityNum = 0;
 window.zhichu = 0;
@@ -256,12 +293,7 @@ function refreshActions() {
 //打印
 // @Bind #printBtn.onClick
 !function(self, arg) {
-	var $gd = $("#d_recordDataGrid");
-	if($gd.length=0){
-		console.log("没有啊没有啊");
-	}else{
-		$gd.printArea();
-	}
+	$("#d_recordDataGrid").jqprint();
 };
 
 //日期选择不能选择将来时间
