@@ -699,6 +699,10 @@
 			<Property name="dataType">String</Property>
 			<Property name="label">检测性质</Property>
 		</PropertyDef>
+		<PropertyDef name="status">
+			<Property name="dataType">String</Property>
+			<Property name="label">状态</Property>
+		</PropertyDef>
 	</DataType>
 	<DataType name="recordDataType">
 		<Property name="creationType">com.lims.pojo.Record</Property>

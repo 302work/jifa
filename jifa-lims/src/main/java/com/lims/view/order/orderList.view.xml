@@ -385,6 +385,11 @@
 							<Editor/>
 						</DataColumn>
 						<DataColumn>
+							<Property name="name">status</Property>
+							<Property name="property">status</Property>
+							<Editor/>
+						</DataColumn>
+						<DataColumn>
 							<Property name="name">standardName</Property>
 							<Property name="property">standardName</Property>
 							<Editor/>

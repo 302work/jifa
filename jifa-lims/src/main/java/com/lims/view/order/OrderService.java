@@ -96,6 +96,7 @@ public class OrderService {
                 order.setCrUser(userName);
                 order.setOrderNo(generatorOrderNo("QDTTC"));
                 order.setIsDeleted(0);
+                order.setStatus("审核检测单");
                 order = dao.saveOrUpdate(order).get(0);
                 //进入流程
                 //提交工作流
@@ -121,7 +122,6 @@ public class OrderService {
                 //删除，逻辑删除
                 order.setIsDeleted(1);
                 dao.saveOrUpdate(order);
-
             }
         }
     }
@@ -199,9 +199,9 @@ public class OrderService {
                 " on pm.id=r.projectMethodStandardId " +
                 " join "+Project.TABLENAME+" as p " +
                 " on pm.projectId=p.id " +
-                " join "+User.TABLENAME+" as u1 " +
+                " left join "+User.TABLENAME+" as u1 " +
                 " on u1.username=r.auditUserName " +//审核人电子签名
-                " join "+User.TABLENAME+" as u2 " +
+                " left join "+User.TABLENAME+" as u2 " +
                 " on u2.username=r.testUserName " +//检测人电子签名
                 " join "+MethodStandard.TABLENAME+" as m " +
                 " on pm.methodStandardId=m.id " +

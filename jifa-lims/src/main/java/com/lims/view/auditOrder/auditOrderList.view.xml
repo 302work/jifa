@@ -432,6 +432,11 @@
 							<Property name="caption">编辑</Property>
 							<Property name="iconClass">fa fa-pencil</Property>
 						</ToolBarButton>
+						<Separator/>
+						<ToolBarButton id="auditOrderBtn">
+							<Property name="caption">审核</Property>
+							<Property name="iconClass">fa fa-compass</Property>
+						</ToolBarButton>
 					</ToolBar>
 					<Export2ReportAction id="orderExportAction">
 						<Property name="confirmMessage">是否导出所有订单（最多一万条）</Property>
@@ -476,6 +481,11 @@
 						<DataColumn>
 							<Property name="name">timeLimit</Property>
 							<Property name="property">timeLimit</Property>
+							<Editor/>
+						</DataColumn>
+						<DataColumn>
+							<Property name="name">status</Property>
+							<Property name="property">status</Property>
 							<Editor/>
 						</DataColumn>
 						<DataColumn>
@@ -722,6 +732,46 @@
 									<Property name="dataSet">dsOrder</Property>
 								</UpdateItem>
 							</UpdateAction>
+						</Children>
+						<Tools/>
+					</Dialog>
+					<Dialog id="auditOrderDialog">
+						<Property name="caption">审核订单</Property>
+						<Property name="height">250</Property>
+						<Property name="iconClass">fa fa-compass</Property>
+						<Property name="width">480</Property>
+						<Buttons>
+							<Button id="auditOrderPassBtn">
+								<Property name="caption">审核通过</Property>
+								<Property name="iconClass">fa fa-check</Property>
+							</Button>
+							<Button id="auditOrderUnPassBtn">
+								<Property name="caption">不通过</Property>
+								<Property name="iconClass">fa fa-share</Property>
+							</Button>
+							<Button id="closeAuditOrderDialog">
+								<Property name="caption">取消</Property>
+								<Property name="iconClass">fa fa-times</Property>
+							</Button>
+						</Buttons>
+						<Children>
+							<AutoForm id="auditOrderAutoForm">
+								<Property name="cols">*</Property>
+								<Property name="createPrivateDataSet">true</Property>
+								<AutoFormElement>
+									<Property name="editorType">TextArea</Property>
+									<Property name="label">备注</Property>
+									<Property name="name">remark</Property>
+									<Property name="property">remark</Property>
+									<Editor/>
+								</AutoFormElement>
+							</AutoForm>
+							<AjaxAction id="auditOrderAjaxAction">
+								<Property name="confirmMessage">确定要审核该订单吗</Property>
+								<Property name="executingMessage">正在审核...</Property>
+								<Property name="service">auditOrderService#auditOrder</Property>
+								<Property name="successMessage">审核成功！</Property>
+							</AjaxAction>
 						</Children>
 						<Tools/>
 					</Dialog>

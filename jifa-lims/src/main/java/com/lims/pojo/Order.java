@@ -55,7 +55,7 @@ public class Order implements IPojo {
     @Column
     private String payerZip;//付款人邮编
 
-    @Column(nullable = false)
+    @Column
     private Date deliveryDate;//送样时间
 
     @Column
@@ -109,6 +109,8 @@ public class Order implements IPojo {
     @Column
     private Integer isDeleted;//逻辑删除标识，1为已删除
 
+    @Column
+    private String status;//状态
 
     @Column(length = 500)
     private String remark;//备注
@@ -382,6 +384,14 @@ public class Order implements IPojo {
 
     public void setProjectMethodStandardIds(String projectMethodStandardIds) {
         this.projectMethodStandardIds = projectMethodStandardIds;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

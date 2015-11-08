@@ -1,11 +1,10 @@
 package com.lims.uflo.handler;
 
+import com.lims.uflo.handler.base.AbstractHandler;
 import org.springframework.stereotype.Service;
 
-import com.lims.uflo.handler.base.AbstractHandler;
-
 /**
- * 生成报告
+ * 审核报告
  * @author june
  * @date 2015-10-19 下午11:23:34
  *
@@ -15,7 +14,7 @@ public class ShbgHandler extends AbstractHandler{
 
 	@Override
 	protected String getRoleId() {
-		return "ca2b374d-e4b7-4ac9-8669-83cc318a250b";
+		return "83a0a644-44ed-4920-a27a-99556ea56121";
 	}
 
 }

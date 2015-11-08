@@ -6,6 +6,67 @@
     orderDetailDialog.show();
 };
 
+//编辑订单
+// @Bind #editOrderBtn.onClick
+!function(self,arg,orderDetailDialog,orderDetailAutoForm,saveOrderBtn) {
+    orderDetailAutoForm.set("readOnly",false);
+    //设置某些字段不可编辑
+    view.get("^readOnly").set("readOnly",true);
+    saveOrderBtn.set("visible",true);
+    orderDetailDialog.show();
+};
+
+//审核订单
+// @Bind #auditOrderBtn.onClick
+!function(self,arg,auditOrderDialog) {
+    auditOrderDialog.show();
+};
+
+//审核通过订单
+// @Bind #auditOrderPassBtn.onClick
+!function(self,arg,auditOrderDialog,auditOrderAjaxAction,auditOrderAutoForm) {
+    audit(1,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm);
+};
+
+//审核不通过订单
+// @Bind #auditOrderUnPassBtn.onClick
+!function(self,arg,auditOrderDialog,auditOrderAjaxAction,auditOrderAutoForm) {
+    audit(2,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm);
+};
+
+//审核订单
+function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
+    //当前任务号
+    var taskId = "${request.getParameter('taskId')}";
+    //备注
+    var remark = auditOrderAutoForm.get("entity").get("remark");
+    if(!remark || remark==""){
+        remark = "无";
+    }
+    auditOrderAjaxAction.set("parameter",
+        {
+            status:status,
+            taskIds:taskId,
+            remark:remark
+        }
+    ).execute(function(){
+        auditOrderDialog.hide();
+    });
+}
+//取消
+// @Bind #closeAuditOrderDialog.onClick
+!function(self,arg,auditOrderDialog) {
+    auditOrderDialog.hide();
+};
+
+//保存订单按钮
+// @Bind #saveOrderBtn.onClick
+!function(self,arg,orderDetailDialog,saveOrderUpdateAction) {
+    saveOrderUpdateAction.execute(function(){
+        orderDetailDialog.hide();
+    });
+};
+
 //关闭
 // @Bind #closeOrderDetailBtn.onClick
 !function(self,arg,orderDetailDialog) {
@@ -79,7 +140,7 @@
             width:350
         });
     }
-}
+};
 
 // @Bind #picDataGrid.#testSamplePic.onRenderCell
 !function(arg) {
@@ -92,17 +153,6 @@
             width:350
         });
     }
-}
-
-
-//编辑
-// @Bind #editOrderBtn.onClick
-!function(self,arg,orderDetailDialog,orderDetailAutoForm,saveOrderBtn) {
-    orderDetailAutoForm.set("readOnly",false);
-    //设置某些字段不可编辑
-    view.get("^readOnly").set("readOnly",true);
-    saveOrderBtn.set("visible",true);
-    orderDetailDialog.show();
 };
 
 //监听样品编号输入框的按键事件
@@ -174,4 +224,5 @@ function setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition)
 !function(self,arg,dsRecordTestCondition) {
     dsRecordTestCondition.flushAsync();
 }
+
 
