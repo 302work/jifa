@@ -228,6 +228,8 @@ public class ResultService {
             EntityState state = EntityUtils.getState(map);
             if (EntityState.NEW.equals(state)) {
                 addResult(map,recordId);
+                //更新record表的testUserName
+                updateRecordTestUserName(recordId);
             } else if (EntityState.MODIFIED.equals(state)) {
                 if(Long.valueOf(map.get("recordId").toString()).longValue()!=recordId.longValue()){
                     throw new RuntimeException("recordId不匹配");
@@ -237,6 +239,20 @@ public class ResultService {
                 //不能删除
             }
         }
+    }
+
+    /**
+     * 更新record表的testUserName
+     * @param recordId
+     */
+    private void updateRecordTestUserName(Long recordId) {
+        String sql = "  update "+Record.TABLENAME+" " +
+                "  set testUserName=:testUserName " +
+                "   where id=:recordId and isDeleted<>1";
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("recordId",recordId);
+        params.put("testUserName",ContextHolder.getLoginUser().getUsername());
+        dao.executeSQL(sql,params);
     }
 
     /**

@@ -92,7 +92,10 @@ public class AuditOrderService {
             if(taskName.equals("审核检测单") && status==1){
                 createRecords(order);
             }
-
+            //如果是结果审核,则更新record的auditUserName字段
+            if(taskName.equals("结果审核") && status==1){
+                updateRecordsAuditUserName(order);
+            }
             //开始任务
             taskService.start(taskId);
             //完成任务
@@ -107,6 +110,20 @@ public class AuditOrderService {
             dao.saveOrUpdate(order);
 
         }
+    }
+
+    /**
+     * 结果审核时,更新record的auditUserName
+     * @param order
+     */
+    private void updateRecordsAuditUserName(Order order) {
+        String sql = "  update "+Record.TABLENAME+" " +
+                     "  set auditUserName=:auditUserName " +
+                    "   where orderId=:orderId and isDeleted<>1";
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("orderId",order.getId());
+        params.put("auditUserName",ContextHolder.getLoginUser().getUsername());
+        dao.executeSQL(sql,params);
     }
 
     /**
