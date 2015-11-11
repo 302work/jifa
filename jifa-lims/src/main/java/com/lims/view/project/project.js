@@ -53,7 +53,7 @@ function refreshActions() {
 
 //单击项目
 //@Bind #dataTreeProject.onDataRowClick
-!function(dsProject,dsMethodStandard,dsResultColumn,dsTestCondition) {
+!function(dsProject,dsMethodStandard,dsResultColumn,dsTestCondition,dsProjectRole) {
 	var currEntity = dsProject.getData("!CURRENT_PROJECT");
 	var id = currEntity.get("id");
 	if(id){
@@ -63,6 +63,7 @@ function refreshActions() {
 		//currEntity.reset("child");
 		dsResultColumn.flushAsync();
 		dsTestCondition.flushAsync();
+		dsProjectRole.flushAsync();
 	}
 	refreshActions();
 };
@@ -295,3 +296,53 @@ function refreshActions() {
 !function(self,arg,dsProject) {
 	dsProject.flushAsync();
 }
+
+//加载检测小组之前，设置projectId
+// @Bind #dsProjectRole.beforeLoadData
+!function(self,arg,dsProject) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+	self.set("parameter",projectId);
+};
+
+//删除角色
+// @Bind #delProjectRoleBtn.onClick
+!function(self,arg,dsProject,dsProjectRole,delProjectRoleAjaxAction) {
+	var currProjectRole = dsProjectRole.getData("#");
+	if(currProjectRole){
+		delProjectRoleAjaxAction.
+		set("parameter",{projectRoleId:currProjectRole.get("projectRoleId")}).execute(function(){
+			dsProjectRole.flushAsync();
+		});
+	}
+
+};
+
+//关闭选择角色弹窗
+// @Bind #closeProjectRoleDialogBtn.onClick
+!function(self,arg,addProjectRoleDialog) {
+	addProjectRoleDialog.hide();
+};
+
+//打开选择角色弹窗
+// @Bind #addProjectRoleBtn.onClick
+!function(self,arg,addProjectRoleDialog) {
+	addProjectRoleDialog.show();
+};
+
+//保存角色
+// @Bind #saveProjectRoleBtn.onClick
+!function(self,arg,addProjectRoleDialog,saveProjectRoleAjaxAction,dsProject,dsProjectRole,roleSubView) {
+	var projectId = dsProject.getData("!CURRENT_PROJECT").get("id");
+	//从subView中获取选中的角色id
+	var roleView = roleSubView.get("subView");
+	var currRole = roleView.id("dataSetRole").getData("#");
+	if(currRole){
+		var roleId = currRole.get("id");
+		saveProjectRoleAjaxAction.
+		set("parameter",{roleId:roleId,projectId:projectId}).execute(function(){
+			dsProjectRole.flushAsync();
+			addProjectRoleDialog.hide();
+		});
+	}
+
+};

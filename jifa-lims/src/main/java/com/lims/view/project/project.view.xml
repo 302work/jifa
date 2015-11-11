@@ -16,6 +16,17 @@
 		</DataType>
 		<DataType name="dtTestCondition" parent="testConditionDataType">
 		</DataType>
+		<DataType name="dtProjectRole">
+			<PropertyDef name="roleName">
+				<Property name="dataType">String</Property>
+				<Property name="label">角色名</Property>
+				<Property name="required">true</Property>
+			</PropertyDef>
+			<PropertyDef name="projectRoleId">
+				<Property name="dataType">Long</Property>
+				<Property name="required">true</Property>
+			</PropertyDef>
+		</DataType>
 	</Model>
 	<View>
 		<Property name="packages">font-awesome</Property>
@@ -313,6 +324,74 @@
 											<Property name="dataSet">dsTestCondition</Property>
 										</UpdateItem>
 									</UpdateAction>
+								</Container>
+							</ControlTab>
+							<ControlTab>
+								<Property name="caption">检测小组</Property>
+								<Property name="iconClass">fa fa-users</Property>
+								<Container>
+									<DataSet id="dsProjectRole">
+										<Property name="dataProvider">projectRoleService#query</Property>
+										<Property name="dataType">[dtProjectRole]</Property>
+										<Property name="pageSize">20</Property>
+									</DataSet>
+									<ToolBar>
+										<DataPilot>
+											<Property name="dataSet">dsProjectRole</Property>
+											<Property name="itemCodes">pages</Property>
+										</DataPilot>
+										<ToolBarButton id="addProjectRoleBtn">
+											<Property name="caption">添加</Property>
+											<Property name="iconClass">fa fa-plus</Property>
+										</ToolBarButton>
+										<Separator/>
+										<ToolBarButton id="delProjectRoleBtn">
+											<Property name="caption">删除</Property>
+											<Property name="iconClass">fa fa-minus</Property>
+										</ToolBarButton>
+									</ToolBar>
+									<DataGrid>
+										<Property name="dataSet">dsProjectRole</Property>
+										<Property name="readOnly">true</Property>
+										<DataColumn>
+											<Property name="caption">角色名</Property>
+											<Property name="property">roleName</Property>
+											<Editor/>
+										</DataColumn>
+									</DataGrid>
+									<Dialog id="addProjectRoleDialog">
+										<Property name="caption">选择角色</Property>
+										<Property name="height">350</Property>
+										<Property name="iconClass">fa fa-user</Property>
+										<Property name="width">600</Property>
+										<Buttons>
+											<Button id="saveProjectRoleBtn">
+												<Property name="caption">确定</Property>
+												<Property name="iconClass">fa fa-check</Property>
+											</Button>
+											<Button id="closeProjectRoleDialogBtn">
+												<Property name="caption">取消</Property>
+												<Property name="iconClass">fa fa-times</Property>
+											</Button>
+										</Buttons>
+										<Children>
+											<SubViewHolder id="roleSubView">
+												<Property name="subView">bdf2.core.view.role.RoleMaintain</Property>
+											</SubViewHolder>
+										</Children>
+										<Tools/>
+									</Dialog>
+									<AjaxAction id="delProjectRoleAjaxAction">
+										<Property name="confirmMessage">是否删除该角色</Property>
+										<Property name="executingMessage">正在删除</Property>
+										<Property name="service">projectRoleService#deleteProjectRole</Property>
+										<Property name="successMessage">删除成功</Property>
+									</AjaxAction>
+									<AjaxAction id="saveProjectRoleAjaxAction">
+										<Property name="executingMessage">正在保存</Property>
+										<Property name="service">projectRoleService#saveProjectRole</Property>
+										<Property name="successMessage">保存成功</Property>
+									</AjaxAction>
 								</Container>
 							</ControlTab>
 						</TabControl>
