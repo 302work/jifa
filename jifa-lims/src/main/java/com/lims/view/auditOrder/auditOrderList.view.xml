@@ -284,7 +284,6 @@
 										</GroupBox>
 										<GroupBox>
 											<Property name="caption">样品图片</Property>
-											<Property name="height">320</Property>
 											<Buttons/>
 											<Children>
 												<Grid id="picDataGrid">
