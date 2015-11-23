@@ -54,17 +54,28 @@ public abstract class AbstractHandler implements AssignmentHandler{
 		if(users==null || users.size()==0){
 			throw new RuntimeException("下节点没有处理人员");
 		}
-		//当前项目的用户
-		List<User> projectUsers = getUsers(order.getProjectMethodStandardIds());
 		List<String> userNameList = new ArrayList<String>();
-		if(projectUsers==null || projectUsers.size()==0){
-			return userNameList;
-		}
-		for(User user : projectUsers){
-			if(users.contains(user)){
+		//如果是到结果录入这步,需要指定项目的检测人员角色
+		if(roleId.equals("8a86373e-ab1f-4d0b-a3c6-fea37c01f70e")){
+			//当前项目的用户
+			List<User> projectUsers = getUsers(order.getProjectMethodStandardIds());
+			if(projectUsers==null || projectUsers.size()==0){
+				throw new RuntimeException("下节点没有处理人员");
+			}
+			for(User user : projectUsers){
+				if(users.contains(user)){
+					logger.info("当前节点的角色的用户："+user.getUsername());
+					userNameList.add(user.getUsername());
+				}
+			}
+		}else{
+			for(User user : users){
 				logger.info("当前节点的角色的用户："+user.getUsername());
 				userNameList.add(user.getUsername());
 			}
+		}
+		if(userNameList.size()==0){
+			throw new RuntimeException("下节点没有处理人员");
 		}
 		return userNameList;
 	}
