@@ -509,7 +509,42 @@
 											<ControlTab>
 												<Property name="caption">样品图片</Property>
 												<Property name="iconClass">fa fa-camera-retro</Property>
-												<Container/>
+												<Container>
+													<ToolBar>
+														<ToolBarButton id="uploadPicBtn">
+															<Property name="caption">上传原样图片</Property>
+															<Property name="iconClass">fa fa-camera-retro</Property>
+														</ToolBarButton>
+														<Separator/>
+														<ToolBarButton id="uploadTestPicBtn">
+															<Property name="caption">上传测试样图片</Property>
+															<Property name="iconClass">fa fa-tachometer</Property>
+														</ToolBarButton>
+													</ToolBar>
+													<Grid id="samplePicDataGrid">
+														<Property name="allowNoCurrent">true</Property>
+														<Property name="height">320</Property>
+														<Property name="highlightCurrentRow">false</Property>
+														<Property name="highlightHoverRow">false</Property>
+														<Property name="highlightSelectedRow">false</Property>
+														<Property name="readOnly">true</Property>
+														<Property name="rowHeight">300</Property>
+														<DataColumn id="samplePic2">
+															<Property name="align">center</Property>
+															<Property name="caption">原样</Property>
+															<Property name="name">samplePic2</Property>
+															<Property name="property">samplePic2</Property>
+															<Editor/>
+														</DataColumn>
+														<DataColumn id="testSamplePic2">
+															<Property name="align">center</Property>
+															<Property name="caption">测试样</Property>
+															<Property name="name">testSamplePic2</Property>
+															<Property name="property">testSamplePic2</Property>
+															<Editor/>
+														</DataColumn>
+													</Grid>
+												</Container>
 											</ControlTab>
 										</TabControl>
 									</Children>

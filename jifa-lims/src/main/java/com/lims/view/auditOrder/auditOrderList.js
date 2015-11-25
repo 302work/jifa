@@ -158,22 +158,21 @@ function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
 
 //监听样品编号输入框的按键事件
 // @Bind #sampleNoInput.onKeyDown
-!function(self,arg,inputTestDataDialog,dsRecordTestCondition,dsOrderRecord,addResultIFrame,dsDevice) {
+!function(self,arg,inputTestDataDialog,dsRecordTestCondition,dsOrderRecord,addResultIFrame,dsDevice,samplePicDataGrid) {
     //如果是回车
     if(arg.keyCode==13){
         var sampleNoInput = $("#d_sampleNoInput input").val();
         if(sampleNoInput){
-            //根据样品编号查找recordId
-            var recordId;
             var entityList = dsOrderRecord.getData();
+            var currRecord;
             entityList.each(function(entity){
                 if(entity.get("sampleNo")==sampleNoInput){
-                    recordId = entity.get("id");
+                    currRecord = entity;
                     return false;
                 }
             });
-            if(recordId){
-                setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition,dsDevice);
+            if(currRecord){
+                setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestCondition,dsDevice,samplePicDataGrid);
                 inputTestDataDialog.show();
             }else{
                 dorado.MessageBox.alert("样品编号不存在");
@@ -184,28 +183,65 @@ function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
 
 //检测数据录入
 // @Bind #inputTestDataBtn.onClick
-!function(self,arg,dsOrderRecord,addResultIFrame,inputTestDataDialog,dsRecordTestCondition,dsDevice) {
+!function(self,arg,dsOrderRecord,addResultIFrame,inputTestDataDialog,dsRecordTestCondition,dsDevice,samplePicDataGrid) {
     var currRecord = dsOrderRecord.getData("#");
     if(currRecord) {
-        var recordId = currRecord.get("id");
-        setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition,dsDevice);
+        setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestCondition,dsDevice,samplePicDataGrid);
         inputTestDataDialog.show();
     }
 
 }
 
-//设置iframe的recordId
-function setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition,dsDevice){
+//设置iFrame的recordId
+function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestCondition,dsDevice,samplePicDataGrid){
     var path = addResultIFrame.get("path");
     var index = path.indexOf("?");
     if (index != -1) {
         path = path.substring(0, index);
     }
+    var recordId = currRecord.get("id");
     path += "?recordId=" + recordId;
     addResultIFrame.set("path", path);
     dsRecordTestCondition.set("parameter",recordId).flushAsync();
     dsDevice.set("parameter",{recordId:recordId}).flushAsync();
+    if(currRecord){
+        //显示图片
+        //原样
+        var samplePic = currRecord.get("samplePic");
+        //测试样
+        var testSamplePic = currRecord.get("testSamplePic");
+        var data = [{
+            samplePic2:samplePic,
+            testSamplePic2:testSamplePic
+        }];
+        samplePicDataGrid.set("items",data);
+    }
 }
+// @Bind #samplePicDataGrid.#samplePic2.onRenderCell
+!function(arg) {
+    var samplePic = arg.data.samplePic2;
+    $(arg.dom).empty();
+    if(samplePic){
+        $(arg.dom).empty().xCreate({
+            tagName: "IMG",
+            src: samplePic,
+            width:350
+        });
+    }
+};
+
+// @Bind #samplePicDataGrid.#testSamplePic2.onRenderCell
+!function(arg) {
+    var testSamplePic = arg.data.testSamplePic2;
+    $(arg.dom).empty();
+    if(testSamplePic){
+        $(arg.dom).empty().xCreate({
+            tagName: "IMG",
+            src: testSamplePic,
+            width:350
+        });
+    }
+};
 //关闭检测数据录入弹窗
 // @Bind #closeInputTestDataDialogBtn.onClick
 !function(self,arg,inputTestDataDialog) {
@@ -284,4 +320,27 @@ function setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition,
         }
     }
 
+}
+
+//上传原样图片
+// @Bind #uploadPicBtn.onClick
+!function(dsOrderRecord,samplePicDataGrid) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        alert("上传成功");
+        var data = [{
+            samplePic2:"",
+            testSamplePic2:""
+        }];
+        //samplePicDataGrid.set("items",data);
+    }
+}
+
+//上传测试样图片
+// @Bind #uploadTestPicBtn.onClick
+!function(dsOrderRecord,samplePicDataGrid) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        alert("上传成功");
+    }
 }
