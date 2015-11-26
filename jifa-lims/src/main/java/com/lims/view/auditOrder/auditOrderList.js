@@ -323,18 +323,18 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
 }
 
 //上传原样图片
-// @Bind #uploadPicBtn.onClick
-!function(dsOrderRecord,samplePicDataGrid) {
-    var currRecord = dsOrderRecord.getData("#");
-    if(currRecord){
-        alert("上传成功");
-        var data = [{
-            samplePic2:"",
-            testSamplePic2:""
-        }];
-        //samplePicDataGrid.set("items",data);
-    }
-}
+// @Bind #samplePicUploadAction.onFileUploaded
+!function(arg,samplePicDataGrid) {
+    var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
+
+    var data = [{
+        samplePic2:"/lims/bdf.commonUploadController.display.c?id="+info.id,
+        testSamplePic2:""
+    }];
+    var items = samplePicDataGrid.get("items");
+
+    samplePicDataGrid.set("items",data);
+};
 
 //上传测试样图片
 // @Bind #uploadTestPicBtn.onClick

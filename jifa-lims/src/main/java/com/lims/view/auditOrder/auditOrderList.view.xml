@@ -512,6 +512,7 @@
 												<Container>
 													<ToolBar>
 														<ToolBarButton id="uploadPicBtn">
+															<Property name="action">samplePicUploadAction</Property>
 															<Property name="caption">上传原样图片</Property>
 															<Property name="iconClass">fa fa-camera-retro</Property>
 														</ToolBarButton>
@@ -544,6 +545,11 @@
 															<Editor/>
 														</DataColumn>
 													</Grid>
+													<UploadAction id="samplePicUploadAction">
+														<Property name="caption">上传原样图片</Property>
+														<Property name="fileResolver">auditOrderService#processFile</Property>
+														<Filters/>
+													</UploadAction>
 												</Container>
 											</ControlTab>
 										</TabControl>

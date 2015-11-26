@@ -6,6 +6,8 @@ import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.uflo.client.service.TaskClient;
 import com.bstek.uflo.model.task.Task;
 import com.bstek.uflo.service.HistoryService;
@@ -18,6 +20,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -262,6 +265,17 @@ public class AuditOrderService {
             }
         }
         return null;
+    }
+
+    @FileResolver
+    public String processFile(UploadFile file, Map<String, Object> parameter) {
+        try {
+
+            file.transferTo(new File("/Users/june/Desktop/upload/"+file.getFileName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file.getFileName();
     }
 
 }
