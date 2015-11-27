@@ -362,7 +362,7 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
         testSamplePic2:items[0].testSamplePic2
     }];
     samplePicDataGrid.set("items",data);
-    dsOrderRecord.flushAsync();
+    dsOrderRecord.getData("#").set("samplePic",returnValue);
 };
 
 //上传测试样图片
@@ -375,5 +375,5 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
         testSamplePic2:returnValue
     }];
     samplePicDataGrid.set("items",data);
-    dsOrderRecord.flushAsync();
+    dsOrderRecord.getData("#").set("testSamplePic",returnValue);
 };
