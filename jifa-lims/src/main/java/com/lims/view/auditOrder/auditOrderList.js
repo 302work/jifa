@@ -322,25 +322,56 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
 
 }
 
+//上传原样照片前设置记录id
+// @Bind #samplePicUploadAction.beforeFileUpload
+!function(self,dsOrderRecord){
+    var currRecord = dsOrderRecord.getData("#");
+    if(!currRecord){
+        return false;
+    }
+    var recordId = currRecord.get("id");
+    //动态设置参数
+    self.set("parameter", {
+        recordId: recordId,
+        type:1
+    });
+};
+
+//上传测试样照片前设置记录id
+// @Bind #testSamplePicUploadAction.beforeFileUpload
+!function(self,dsOrderRecord){
+    var currRecord = dsOrderRecord.getData("#");
+    if(!currRecord){
+        return false;
+    }
+    var recordId = currRecord.get("id");
+    //动态设置参数
+    self.set("parameter", {
+        recordId: recordId,
+        type:2
+    });
+};
+
 //上传原样图片
 // @Bind #samplePicUploadAction.onFileUploaded
 !function(arg,samplePicDataGrid) {
     var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
-
-    var data = [{
-        samplePic2:"/lims/bdf.commonUploadController.display.c?id="+info.id,
-        testSamplePic2:""
-    }];
     var items = samplePicDataGrid.get("items");
-
+    var data = [{
+        samplePic2:returnValue,
+        testSamplePic2:items[0].testSamplePic2
+    }];
     samplePicDataGrid.set("items",data);
 };
 
 //上传测试样图片
-// @Bind #uploadTestPicBtn.onClick
-!function(dsOrderRecord,samplePicDataGrid) {
-    var currRecord = dsOrderRecord.getData("#");
-    if(currRecord){
-        alert("上传成功");
-    }
-}
+// @Bind #testSamplePicUploadAction.onFileUploaded
+!function(arg,samplePicDataGrid) {
+    var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
+    var items = samplePicDataGrid.get("items");
+    var data = [{
+        samplePic2:items[0].samplePic2,
+        testSamplePic2:returnValue
+    }];
+    samplePicDataGrid.set("items",data);
+};

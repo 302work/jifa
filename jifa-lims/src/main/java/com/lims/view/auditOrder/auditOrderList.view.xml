@@ -518,6 +518,7 @@
 														</ToolBarButton>
 														<Separator/>
 														<ToolBarButton id="uploadTestPicBtn">
+															<Property name="action">testSamplePicUploadAction</Property>
 															<Property name="caption">上传测试样图片</Property>
 															<Property name="iconClass">fa fa-tachometer</Property>
 														</ToolBarButton>
@@ -548,6 +549,13 @@
 													<UploadAction id="samplePicUploadAction">
 														<Property name="caption">上传原样图片</Property>
 														<Property name="fileResolver">auditOrderService#processFile</Property>
+														<Property name="maxFileSize">5M</Property>
+														<Filters/>
+													</UploadAction>
+													<UploadAction id="testSamplePicUploadAction">
+														<Property name="caption">上传测试样图片</Property>
+														<Property name="fileResolver">auditOrderService#processFile</Property>
+														<Property name="maxFileSize">5M</Property>
 														<Filters/>
 													</UploadAction>
 												</Container>

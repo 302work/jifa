@@ -8,11 +8,13 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileResolver;
+import com.bstek.dorado.web.DoradoContext;
 import com.bstek.uflo.client.service.TaskClient;
 import com.bstek.uflo.model.task.Task;
 import com.bstek.uflo.service.HistoryService;
 import com.bstek.uflo.service.TaskOpinion;
 import com.bstek.uflo.service.TaskService;
+import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.*;
@@ -269,13 +271,75 @@ public class AuditOrderService {
 
     @FileResolver
     public String processFile(UploadFile file, Map<String, Object> parameter) {
+        String fjlj = null;
         try {
+            String fileName = file.getFileName();
+            // 文件扩展名
+            String extName = fileName.substring(fileName.indexOf(".") + 1, fileName
+                    .length());
+            if (StringUtil.isEmpty(extName)
+                    || (!extName.equalsIgnoreCase("jpg")
+                    && !extName.equalsIgnoreCase("png")
+                    && !extName.equalsIgnoreCase("jpeg") && !extName
+                    .equalsIgnoreCase("bmp"))) {
+                throw new RuntimeException("只能上传图片格式为jpg、png、bmp的文件！");
+            }
 
-            file.transferTo(new File("/Users/june/Desktop/upload/"+file.getFileName()));
+            String folderName = DateUtil.getDateStr(new Date()).substring(0, 7);
+            //当天
+            String todayName = DateUtil.getDateStr(new Date()).substring(8, 10);
+            //新文件名
+            String newName = new Date().getTime() + "." + extName;
+            // 获取系统路径
+            String ctxDir = null;
+            ResourceBundle rb = ResourceBundle.getBundle("application");
+            if(rb.containsKey("upload.path") && !StringUtil.isEmpty(rb.getString("upload.path"))){
+                ctxDir = rb.getString("upload.path");
+            }else{
+                ctxDir = DoradoContext.getCurrent().getServletContext().getRealPath("/");
+            }
+            if (!ctxDir.endsWith(String.valueOf(File.separatorChar))) {
+                ctxDir = ctxDir + File.separatorChar;
+            }
+            String savePath = ctxDir + "upload" + File.separator + folderName
+                    + File.separator + todayName;
+            File folderFile = new File(savePath);
+            if (!folderFile.exists()) {
+                folderFile.mkdirs();
+            }
+            // 新文件路径
+            String newFilePath = savePath + File.separator + newName;
+            // 保存上传的文件
+            File newFile = new File(newFilePath);
+            // 返回前台的路径
+            fjlj = "upload" + File.separator + folderName + File.separator
+                    + todayName + File.separator + newName;
+            // 如果文件存在则删除
+            if (newFile.exists()) {
+                newFile.delete();
+            }
+            file.transferTo(newFile);
+            //记录id
+            Long recordId = Long.valueOf(parameter.get("recordId").toString());
+            Record record = dao.getObjectById(Record.class,recordId);
+            if(record==null){
+                throw new RuntimeException("没有找到该检测记录,recordId:"+recordId);
+            }
+            //上传字段类型
+            int type = Integer.valueOf(parameter.get("type").toString());
+            //更新原样图片
+            if(type==1){
+                record.setSamplePic(fjlj);
+            }
+            //更新测试样图片
+            if(type==2){
+                record.setTestSamplePic(fjlj);
+            }
+            dao.saveOrUpdate(record);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return file.getFileName();
+        return fjlj;
     }
 
 }

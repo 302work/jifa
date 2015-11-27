@@ -202,3 +202,12 @@ function refreshActions() {
 	}
 }
 
+//上传电子签名图片
+// @Bind #uploadNamePicUploadAction.onFileUploaded
+!function(arg,dsDepts) {
+	var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
+	var entity = dsDepts.getData("!CURRENT_DEPT");
+	var users = entity.get("users");
+	var current = users.current;
+	current.set("userNamePic",returnValue);
+};
