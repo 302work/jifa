@@ -354,7 +354,7 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
 
 //上传原样图片
 // @Bind #samplePicUploadAction.onFileUploaded
-!function(arg,samplePicDataGrid) {
+!function(arg,samplePicDataGrid,dsOrderRecord) {
     var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
     var items = samplePicDataGrid.get("items");
     var data = [{
@@ -362,11 +362,12 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
         testSamplePic2:items[0].testSamplePic2
     }];
     samplePicDataGrid.set("items",data);
+    dsOrderRecord.flushAsync();
 };
 
 //上传测试样图片
 // @Bind #testSamplePicUploadAction.onFileUploaded
-!function(arg,samplePicDataGrid) {
+!function(arg,samplePicDataGrid,dsOrderRecord) {
     var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
     var items = samplePicDataGrid.get("items");
     var data = [{
@@ -374,4 +375,5 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
         testSamplePic2:returnValue
     }];
     samplePicDataGrid.set("items",data);
+    dsOrderRecord.flushAsync();
 };
