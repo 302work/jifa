@@ -4,11 +4,12 @@ import com.dosola.core.dao.interfaces.IPojo;
 
 /**
  * 工作量统计结果
+ *
  * @author Song
  * @version 1.0
  * @since 2015-11-15 21:52
  */
-public class StatisticInfo implements IPojo{
+public class StatisticInfo implements IPojo {
 
     private String testUserName;//测试人员帐号
     private String testName;//测试人员姓名
@@ -42,7 +43,7 @@ public class StatisticInfo implements IPojo{
     }
 
     public Integer getActualTestCount() {
-        return actualTestCount;
+        return (passedCount == null ? 0 : passedCount)+(notPassedCount == null ? 0 : notPassedCount);
     }
 
     public void setActualTestCount(Integer actualTestCount) {

@@ -12,7 +12,7 @@ public class StatisticInfoItem implements IPojo{
     private String testUserName;//测试人员帐号
     private String testName;//测试人员姓名
     private Integer status;//状态
-    private Integer countByStatus;//审核结果
+    private Integer countByStatus;//审核结果数目
 
     public String getTestUserName() {
         return testUserName;

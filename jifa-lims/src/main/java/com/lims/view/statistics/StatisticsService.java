@@ -1,18 +1,13 @@
 package com.lims.view.statistics;
 
 import com.bstek.dorado.annotation.DataProvider;
-import com.bstek.dorado.data.provider.Page;
-import com.dorado.common.SqlKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.StatisticInfo;
 import com.lims.pojo.StatisticInfoItem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- *
  * 获取统计结果的service
  *
  * @author Song
@@ -24,7 +19,7 @@ public class StatisticsService {
     private IMasterDao dao;
 
     @DataProvider
-    public void queryStatisticsInfoItems(Map<String, Object> params) {
+    public Collection<StatisticInfo> queryStatisticsInfoItems(Map<String, Object> params) {
         List<StatisticInfoItem> items = new ArrayList<StatisticInfoItem>();
         StringBuilder sb = new StringBuilder();
         sb.append("select record.testUserName,u.cname as testName,result.status,count(*) as countByStatus ");
@@ -36,13 +31,36 @@ public class StatisticsService {
         sb.append("join lims_user u ");
         sb.append("on u.username=record.testUserName ");
         sb.append("group by record.testUserName, result.status");
-        items=dao.queryBySql(sb.toString(),params,StatisticInfoItem.class);
+        items = dao.queryBySql(sb.toString(), params, StatisticInfoItem.class);
 
-        for(StatisticInfoItem item:items){
-            String testUserName=item.getTestUserName();
-            Integer status=item.getStatus();
+        Map<String, StatisticInfo> infos = new HashMap<String, StatisticInfo>();
+        for (StatisticInfoItem item : items) {
+            String testUserName = item.getTestUserName();
+            Integer status = item.getStatus();
+            StatisticInfo info = infos.get(testUserName);
+            Integer count=item.getCountByStatus();
+            if (info != null) {
+                if(status==1){
+                    info.setPassedCount(count);
+                }else if(status==2){
+                    info.setNotPassedCount(count);
+                }
+                info.setActualTestCount(info.getActualTestCount());
+                infos.remove(testUserName);
+                infos.put(testUserName,info);
+            }else{
+                if(status==1){
+                    info.setPassedCount(count);
+                }else if(status==2){
+                    info.setNotPassedCount(count);
+                }
+                info.setTestUserName(testUserName);
+                info.setTestName(item.getTestName());
+                info.setActualTestCount(info.getActualTestCount());
+                infos.put(testUserName,info);
+            }
 
         }
-
+        return infos.values();
     }
 }
