@@ -85,6 +85,7 @@ public class OrderService {
         dao.pagingQueryBySql(page,sql,params);
     }
 
+    //todo 一个订单不能添加同一个项目两次
     @DataResolver
     public void saveOrder(Collection<Order> orders){
         for (Order  order: orders) {

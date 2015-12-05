@@ -859,5 +859,9 @@
 			<Property name="label">值</Property>
 			<Property name="required">true</Property>
 		</PropertyDef>
+		<PropertyDef name="sampleNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">样品编号</Property>
+		</PropertyDef>
 	</DataType>
 </Model>

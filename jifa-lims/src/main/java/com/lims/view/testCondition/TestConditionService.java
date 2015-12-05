@@ -69,6 +69,18 @@ public class TestConditionService {
         return (List<RecordTestCondition>) dao.query(sb.toString(),params);
     }
 
+    @DataProvider
+    public List<RecordTestCondition> queryProjectTestCondition(Long orderId,Long projectMethodStandardId){
+        if(orderId==null || orderId<=0){
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(" From "+RecordTestCondition.class.getName()+" where recordId=:recordId ");
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("recordId",orderId);
+        return (List<RecordTestCondition>) dao.query(sb.toString(),params);
+    }
+
     @DataResolver
     public void save(Collection<TestCondition> testConditions,Long projectId){
         if(projectId==null || projectId==0){

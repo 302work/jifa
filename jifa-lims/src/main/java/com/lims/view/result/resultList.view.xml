@@ -17,7 +17,7 @@
 		<DataSet id="dsResult">
 			<Property name="dataProvider">resultService#queryResult</Property>
 			<Property name="dataType">[dtResult]</Property>
-			<Property name="parameter">${param.recordId}</Property>
+			<Property name="parameter">{recordId:&apos;${param.recordId}&apos;,orderId:&apos;${param.orderId}&apos;,projectId:&apos;${param.projectId}&apos;}</Property>
 		</DataSet>
 	</View>
 </ViewConfig>
