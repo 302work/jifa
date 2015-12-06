@@ -66,6 +66,139 @@
 										<Editor/>
 									</DataColumn>
 								</DataGrid>
+								<Dialog id="projectResultDialog">
+									<Property name="caption">项目检测结果</Property>
+									<Property name="height">600</Property>
+									<Property name="iconClass">fa fa-cubes</Property>
+									<Property name="width">800</Property>
+									<Buttons>
+										<Button id="printProjectResultBtn">
+											<Property name="caption">打印</Property>
+											<Property name="iconClass">fa fa-print</Property>
+										</Button>
+										<Button id="closeProjectResultDialogBtn">
+											<Property name="caption">关闭</Property>
+											<Property name="iconClass">fa fa-times</Property>
+										</Button>
+									</Buttons>
+									<Children>
+										<GroupBox>
+											<Property name="caption">基本信息</Property>
+											<Buttons/>
+											<Children>
+												<AutoForm id="projectRecordAutoForm">
+													<Property name="labelAlign">right</Property>
+													<Property name="labelSeparator">:</Property>
+													<AutoFormElement>
+														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
+														<Property name="label">检测项目</Property>
+														<Property name="labelWidth">90</Property>
+														<Property name="property">projectName</Property>
+														<Editor/>
+													</AutoFormElement>
+													<AutoFormElement>
+														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
+														<Property name="label">方法标准名称</Property>
+														<Property name="labelWidth">90</Property>
+														<Property name="property">methodStandardName</Property>
+														<Editor/>
+													</AutoFormElement>
+													<AutoFormElement layoutConstraint="colSpan:2;">
+														<Property name="editable">false</Property>
+														<Property name="editorType">Label</Property>
+														<Property name="label">备注</Property>
+														<Property name="labelWidth">90</Property>
+														<Property name="property">remark</Property>
+														<Editor/>
+													</AutoFormElement>
+												</AutoForm>
+											</Children>
+										</GroupBox>
+										<GroupBox>
+											<Property name="caption">检测条件</Property>
+											<Property name="height">320</Property>
+											<Buttons/>
+											<Children>
+												<DataSet id="dsProjectRecordTestCondition">
+													<Property name="dataProvider">testConditionService#queryProjectTestCondition</Property>
+													<Property name="dataType">[dtRecordTestCondition]</Property>
+												</DataSet>
+												<DataGrid id="projectRecordTestConditionDataGrid">
+													<Property name="dataSet">dsProjectRecordTestCondition</Property>
+													<Property name="readOnly">true</Property>
+													<DataColumn>
+														<Property name="property">sampleNo</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">名称</Property>
+														<Property name="property">name</Property>
+														<Property name="width">150</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">值</Property>
+														<Property name="property">value</Property>
+														<Property name="width">150</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">备注</Property>
+														<Property name="property">remark</Property>
+														<Editor/>
+													</DataColumn>
+												</DataGrid>
+											</Children>
+										</GroupBox>
+										<GroupBox>
+											<Property name="caption">检测记录</Property>
+											<Buttons/>
+											<Children>
+												<IFrame id="projectResultIFrame">
+													<Property name="height">200</Property>
+													<Property name="path">com.lims.view.result.resultList.d</Property>
+												</IFrame>
+											</Children>
+										</GroupBox>
+										<GroupBox>
+											<Property name="caption">样品图片</Property>
+											<Buttons/>
+											<Children>
+												<Grid id="projectPicDataGrid">
+													<Property name="allowNoCurrent">true</Property>
+													<Property name="height">320</Property>
+													<Property name="highlightCurrentRow">false</Property>
+													<Property name="highlightHoverRow">false</Property>
+													<Property name="highlightSelectedRow">false</Property>
+													<Property name="readOnly">true</Property>
+													<Property name="rowHeight">300</Property>
+													<DataColumn id="projectSampleNo">
+														<Property name="name">sampleNo</Property>
+														<Property name="property">sampleNo</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn id="projectSamplePic">
+														<Property name="align">center</Property>
+														<Property name="caption">原样</Property>
+														<Property name="name">samplePic</Property>
+														<Property name="property">samplePic</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn id="projectTestSamplePic">
+														<Property name="align">center</Property>
+														<Property name="caption">测试样</Property>
+														<Property name="name">testSamplePic</Property>
+														<Property name="property">testSamplePic</Property>
+														<Editor/>
+													</DataColumn>
+												</Grid>
+											</Children>
+										</GroupBox>
+									</Children>
+									<Tools/>
+								</Dialog>
 							</Container>
 						</ControlTab>
 						<ControlTab>
@@ -137,6 +270,10 @@
 									<Property name="iconClass">fa fa-database</Property>
 									<Property name="width">800</Property>
 									<Buttons>
+										<Button id="printResultBtn">
+											<Property name="caption">打印</Property>
+											<Property name="iconClass">fa fa-print</Property>
+										</Button>
 										<Button id="closeResultDialogBtn">
 											<Property name="caption">关闭</Property>
 											<Property name="iconClass">fa fa-times</Property>
@@ -173,14 +310,6 @@
 														<Property name="label">方法标准名称</Property>
 														<Property name="labelWidth">90</Property>
 														<Property name="property">methodStandardName</Property>
-														<Editor/>
-													</AutoFormElement>
-													<AutoFormElement>
-														<Property name="editable">false</Property>
-														<Property name="editorType">Label</Property>
-														<Property name="label">仪器</Property>
-														<Property name="labelWidth">90</Property>
-														<Property name="property">deviceNames</Property>
 														<Editor/>
 													</AutoFormElement>
 													<AutoFormElement layoutConstraint="colSpan:2;">
@@ -238,7 +367,6 @@
 										</GroupBox>
 										<GroupBox>
 											<Property name="caption">样品图片</Property>
-											<Property name="height">320</Property>
 											<Buttons/>
 											<Children>
 												<Grid id="picDataGrid">

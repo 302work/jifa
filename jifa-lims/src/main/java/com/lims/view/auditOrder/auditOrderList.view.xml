@@ -11,6 +11,8 @@
 		</DataType>
 		<DataType name="dtRecordTestCondition" parent="recordTestConditionDataType">
 		</DataType>
+		<DataType name="dtDevice" parent="deviceDataType">
+		</DataType>
 	</Model>
 	<View>
 		<Property name="packages">font-awesome</Property>
@@ -242,6 +244,35 @@
 											</Children>
 										</GroupBox>
 										<GroupBox>
+											<Property name="caption">检测仪器</Property>
+											<Property name="height">250</Property>
+											<Buttons/>
+											<Children>
+												<DataGrid>
+													<Property name="dataSet">dsDevice</Property>
+													<Property name="filterMode">serverSide</Property>
+													<Property name="readOnly">true</Property>
+													<Property name="sortMode">serverSide</Property>
+													<DataColumn>
+														<Property name="caption">设备名称</Property>
+														<Property name="property">name</Property>
+														<Property name="width">120</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">设备编号</Property>
+														<Property name="property">deviceNo</Property>
+														<Editor/>
+													</DataColumn>
+													<DataColumn>
+														<Property name="caption">设备型号</Property>
+														<Property name="property">model</Property>
+														<Editor/>
+													</DataColumn>
+												</DataGrid>
+											</Children>
+										</GroupBox>
+										<GroupBox>
 											<Property name="caption">检测记录</Property>
 											<Buttons/>
 											<Children>
@@ -253,7 +284,6 @@
 										</GroupBox>
 										<GroupBox>
 											<Property name="caption">样品图片</Property>
-											<Property name="height">320</Property>
 											<Buttons/>
 											<Children>
 												<Grid id="picDataGrid">
@@ -386,6 +416,87 @@
 												</Container>
 											</ControlTab>
 											<ControlTab>
+												<Property name="caption">检测仪器</Property>
+												<Property name="iconClass">fa fa-desktop</Property>
+												<Container>
+													<DataSet id="dsDevice">
+														<Property name="dataProvider">deviceService#queryDevice</Property>
+														<Property name="dataType">[dtDevice]</Property>
+														<Property name="pageSize">20</Property>
+													</DataSet>
+													<ToolBar>
+														<DataPilot>
+															<Property name="dataSet">dsDevice</Property>
+														</DataPilot>
+														<Separator/>
+														<ToolBarButton id="addDeviceBtn">
+															<Property name="caption">添加</Property>
+															<Property name="iconClass">fa fa-plus</Property>
+														</ToolBarButton>
+														<Separator/>
+														<ToolBarButton id="delDeviceBtn">
+															<Property name="caption">删除</Property>
+															<Property name="iconClass">fa fa-minus</Property>
+														</ToolBarButton>
+													</ToolBar>
+													<DataGrid id="deviceDataGrid">
+														<Property name="dataSet">dsDevice</Property>
+														<Property name="filterMode">serverSide</Property>
+														<Property name="readOnly">true</Property>
+														<Property name="sortMode">serverSide</Property>
+														<DataColumn>
+															<Property name="caption">设备名称</Property>
+															<Property name="property">name</Property>
+															<Property name="width">120</Property>
+															<Editor/>
+														</DataColumn>
+														<DataColumn>
+															<Property name="caption">设备编号</Property>
+															<Property name="property">deviceNo</Property>
+															<Editor/>
+														</DataColumn>
+														<DataColumn>
+															<Property name="caption">设备型号</Property>
+															<Property name="property">model</Property>
+															<Editor/>
+														</DataColumn>
+													</DataGrid>
+													<Dialog id="selectDeviceDialog">
+														<Property name="caption">选择仪器</Property>
+														<Property name="height">400</Property>
+														<Property name="iconClass">fa fa-desktop</Property>
+														<Property name="width">680</Property>
+														<Buttons>
+															<Button id="saveDeviceBtn">
+																<Property name="caption">确定</Property>
+																<Property name="iconClass">fa fa-check</Property>
+															</Button>
+															<Button id="closeSelectDeviceDialogBtn">
+																<Property name="caption">取消</Property>
+																<Property name="iconClass">fa fa-times</Property>
+															</Button>
+														</Buttons>
+														<Children>
+															<SubViewHolder id="deviceSubView">
+																<Property name="subView">com.lims.view.device.device</Property>
+															</SubViewHolder>
+														</Children>
+														<Tools/>
+													</Dialog>
+													<AjaxAction id="addDeviceAjaxAction">
+														<Property name="executingMessage">正在操作</Property>
+														<Property name="service">deviceService#addDevice</Property>
+														<Property name="successMessage">添加仪器成功!</Property>
+													</AjaxAction>
+													<AjaxAction id="delDeviceAjaxAction">
+														<Property name="confirmMessage">真的删除当前仪器吗</Property>
+														<Property name="executingMessage">正在删除...</Property>
+														<Property name="service">deviceService#deleteDevice</Property>
+														<Property name="successMessage">删除成功！</Property>
+													</AjaxAction>
+												</Container>
+											</ControlTab>
+											<ControlTab>
 												<Property name="caption">检测记录</Property>
 												<Property name="iconClass">fa fa-bars</Property>
 												<Container>
@@ -398,7 +509,56 @@
 											<ControlTab>
 												<Property name="caption">样品图片</Property>
 												<Property name="iconClass">fa fa-camera-retro</Property>
-												<Container/>
+												<Container>
+													<ToolBar>
+														<ToolBarButton id="uploadPicBtn">
+															<Property name="action">samplePicUploadAction</Property>
+															<Property name="caption">上传原样图片</Property>
+															<Property name="iconClass">fa fa-camera-retro</Property>
+														</ToolBarButton>
+														<Separator/>
+														<ToolBarButton id="uploadTestPicBtn">
+															<Property name="action">testSamplePicUploadAction</Property>
+															<Property name="caption">上传测试样图片</Property>
+															<Property name="iconClass">fa fa-tachometer</Property>
+														</ToolBarButton>
+													</ToolBar>
+													<Grid id="samplePicDataGrid">
+														<Property name="allowNoCurrent">true</Property>
+														<Property name="height">320</Property>
+														<Property name="highlightCurrentRow">false</Property>
+														<Property name="highlightHoverRow">false</Property>
+														<Property name="highlightSelectedRow">false</Property>
+														<Property name="readOnly">true</Property>
+														<Property name="rowHeight">300</Property>
+														<DataColumn id="samplePic2">
+															<Property name="align">center</Property>
+															<Property name="caption">原样</Property>
+															<Property name="name">samplePic2</Property>
+															<Property name="property">samplePic2</Property>
+															<Editor/>
+														</DataColumn>
+														<DataColumn id="testSamplePic2">
+															<Property name="align">center</Property>
+															<Property name="caption">测试样</Property>
+															<Property name="name">testSamplePic2</Property>
+															<Property name="property">testSamplePic2</Property>
+															<Editor/>
+														</DataColumn>
+													</Grid>
+													<UploadAction id="samplePicUploadAction">
+														<Property name="caption">上传原样图片</Property>
+														<Property name="fileResolver">auditOrderService#processFile</Property>
+														<Property name="maxFileSize">5M</Property>
+														<Filters/>
+													</UploadAction>
+													<UploadAction id="testSamplePicUploadAction">
+														<Property name="caption">上传测试样图片</Property>
+														<Property name="fileResolver">auditOrderService#processFile</Property>
+														<Property name="maxFileSize">5M</Property>
+														<Filters/>
+													</UploadAction>
+												</Container>
 											</ControlTab>
 										</TabControl>
 									</Children>

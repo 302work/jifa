@@ -51,9 +51,12 @@
 };
 
 // @Bind #submitOrderBtn.onClick
-!function(self,arg,saveOrdersUpdateAction) {
+!function(self,arg,saveOrdersUpdateAction,orderAutoForm) {
+    var entity = orderAutoForm.get("entity");
+    debugger
     saveOrdersUpdateAction.execute(function(){
         //清空现有数据
     });
 };
+
 

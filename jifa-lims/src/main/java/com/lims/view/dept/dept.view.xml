@@ -117,6 +117,7 @@
 							</DataPilot>
 							<Separator/>
 							<ToolBarButton id="uploadUserNamePicBtn">
+								<Property name="action">uploadNamePicUploadAction</Property>
 								<Property name="caption">上传电子签名</Property>
 								<Property name="iconClass">fa fa-upload</Property>
 							</ToolBarButton>
@@ -179,6 +180,13 @@
 							<Property name="template">userDataGrid</Property>
 							<Property name="titleName">记录明细</Property>
 						</Export2ReportAction>
+						<UploadAction id="uploadNamePicUploadAction">
+							<Property name="caption">上传电子签名</Property>
+							<Property name="fileResolver">userMaintain#processFile</Property>
+							<Property name="maxFileSize">1M</Property>
+							<Property name="successMessage">上传成功</Property>
+							<Filters/>
+						</UploadAction>
 					</Container>
 				</CardBook>
 			</MainControl>

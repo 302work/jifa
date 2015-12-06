@@ -1,5 +1,7 @@
 package com.lims.view.result;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
@@ -17,11 +19,9 @@ import com.bstek.dorado.view.widget.grid.DataColumn;
 import com.bstek.dorado.view.widget.grid.DataGrid;
 import com.bstek.dorado.web.DoradoContext;
 import com.dosola.core.common.PojoKit;
+import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.Record;
-import com.lims.pojo.Result;
-import com.lims.pojo.ResultColumn;
-import com.lims.pojo.ResultValue;
+import com.lims.pojo.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -52,12 +52,33 @@ public class ResultService {
             return;
         }
         //获取全局参数
+        //这个js设置了才能获取到参数
         Object obj = DoradoContext.getCurrent().getAttribute(DoradoContext.VIEW, "recordId");
         if(obj==null){
-            obj = DoradoContext.getCurrent().getRequest().getParameter("recordId");;
+            //单个记录的查看结果
+            obj = DoradoContext.getCurrent().getRequest().getParameter("recordId");
         }
-        if(obj==null){
+        //查看某个项目的结果,需要传projectId和orderId
+        Object projectIdObj = DoradoContext.getCurrent().getRequest().getParameter("projectId");
+        Object orderIdObj = DoradoContext.getCurrent().getRequest().getParameter("orderId");
+        if(obj==null && (projectIdObj==null || orderIdObj==null)){
             return;
+        }
+
+        Long recordId = null;
+        List<Long> recordIds = new ArrayList<Long>();
+        if(obj==null){
+            Long projectId = Long.valueOf(projectIdObj.toString());
+            Long orderId = Long.valueOf(orderIdObj.toString());
+            recordIds = getRecordIdByOrderIdAndProjectId(orderId,projectId);
+            if(recordIds==null || recordIds.size()==0){
+                return;
+            }
+            //取第一条
+            recordId = recordIds.get(0);
+        }else{
+            recordId = Long.valueOf(obj.toString());
+            recordIds.add(recordId);
         }
 
         //创建result的属性
@@ -79,7 +100,6 @@ public class ResultService {
         resultDataGrid.addColumn(indexColumn);
 
         //动态创建检测属性
-        Long recordId = Long.valueOf(obj.toString());
         String sql = "select rc.* " +
                 " from "+ ResultColumn.TABLENAME+" as rc " +
                 " join "+ Record.TABLENAME+" as r" +
@@ -105,7 +125,7 @@ public class ResultService {
                 dataColumn.setProperty(colName);
                 dataColumn.setAlign(Align.center);
                 //平均值
-                String average = getColumnAverage(recordId,resultColumnId);
+                String average = getColumnAverage(recordIds,resultColumnId);
                 dataColumn.addClientEventListener("onRenderFooterCell",
                         new DefaultClientEvent("arg.dom.innerText = '"+average+"'"));
                 resultDataGrid.addColumn(dataColumn);
@@ -143,21 +163,21 @@ public class ResultService {
 
     /**
      * 计算该记录项的平均值
-     * @param recordId
+     * @param recordIds
      * @param resultColumnId
      * @return
      */
-    private String getColumnAverage(Long recordId, Long resultColumnId) {
-        if(recordId==null || resultColumnId==null){
+    private String getColumnAverage(List<Long> recordIds, Long resultColumnId) {
+        if(recordIds==null || recordIds.size()==0 || resultColumnId==null){
             return "";
         }
         //只取未删除的有效的数据
         String sql = "select id " +
                 " from "+ Result.TABLENAME+" " +
-                " where recordId=:recordId " +
+                " where recordId in(:recordIds) " +
                 " and `status`=1 and isDeleted<>1 ";
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put("recordId", recordId);
+        params.put("recordIds", recordIds);
         List<Map<String,Object>> list = dao.queryBySql(sql, params);
         if(list==null || list.size()==0){
             return "";
@@ -183,16 +203,38 @@ public class ResultService {
 
 
     @DataProvider
-    public List<Map<String,Object>> queryResult(Long recordId){
+    public List<Map<String,Object>> queryResult(String parameter){
+        JSONObject jsonObject = JSON.parseObject(parameter);
+        String projectIdStr = jsonObject.getString("projectId");
+        String orderIdStr = jsonObject.getString("orderId");
+        String recordIdStr = jsonObject.getString("recordId");
+        if(StringUtil.isEmpty(recordIdStr) && (StringUtil.isEmpty(orderIdStr)  || StringUtil.isEmpty(projectIdStr) )){
+            return null;
+        }
+        List<Long> recordIds = new ArrayList<Long>();
+        if(StringUtil.isEmpty(recordIdStr)){
+            Long projectId = Long.valueOf(projectIdStr);
+            Long orderId = Long.valueOf(orderIdStr);
+            recordIds = getRecordIdByOrderIdAndProjectId(orderId,projectId);
+        }else{
+            Long recordId = Long.valueOf(recordIdStr);
+            recordIds.add(recordId);
+        }
+        if(recordIds==null || recordIds.size()==0){
+            return null;
+        }
+
+//        List<Long> recordIds = new ArrayList<Long>();
+//        recordIds.add(recordId);
         //查询所有result
         String sql = "select re.* " +
                 " from "+ Result.TABLENAME+" as re " +
                 " join "+Record.TABLENAME+" as r " +
                 " on re.recordId=r.id " +
-                " where r.id=:recordId " +
+                " where r.id in(:recordIds) " +
                 " and re.isDeleted<>1 ";
         Map<String,Object> params = new HashMap<String,Object>();
-        params.put("recordId",recordId);
+        params.put("recordIds",recordIds);
         List<Map<String,Object>> list = dao.queryBySql(sql, params);
         if(list == null || list.size()==0){
             return list;
@@ -341,5 +383,42 @@ public class ResultService {
                 dao.saveOrUpdate(resultValue);
             }
         }
+    }
+
+    /**
+     * 根据订单id和项目id查询该项目的所有检测记录
+     * @param orderId
+     * @param projectId
+     * @return
+     */
+    private List<Long> getRecordIdByOrderIdAndProjectId(Long orderId,Long projectId){
+        if(orderId==null || projectId==null){
+            return null;
+        }
+        Order order = dao.getObjectById(Order.class,orderId);
+        String[] projectMethodStandardIds = order.getProjectMethodStandardIds().split(",");
+        //查找项目的方法标准
+        String sql = " select id From "+ProjectMethodStandard.TABLENAME+" " +
+                " where id in(:projectMethodStandardIds) " +
+                " and projectId=:projectId";
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("projectMethodStandardIds",projectMethodStandardIds);
+        params.put("projectId",projectId);
+        ProjectMethodStandard projectMethodStandard = dao.queryBySql(sql,params,ProjectMethodStandard.class).get(0);
+        //查找第一条record
+        sql = "select id from "+Record.TABLENAME+" " +
+                " where orderId=:orderId " +
+                " and projectMethodStandardId=:projectMethodStandard and isDeleted<>1";
+        params = new HashMap<String,Object>();
+        params.put("orderId",orderId);
+        params.put("projectMethodStandard",projectMethodStandard.getId());
+        List<Record> records = dao.queryBySql(sql,params,Record.class);
+        List<Long> recordIdList = new ArrayList<Long>();
+        if(records!=null && records.size()>0){
+            for (Record record : records){
+                recordIdList.add(record.getId());
+            }
+        }
+        return recordIdList;
     }
 }

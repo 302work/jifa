@@ -95,7 +95,7 @@ function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
 
 //记录的检测结果
 // @Bind #recordResultBtn.onClick
-!function(self,arg,resultDialog,dsOrderRecord,resultIFrame,picDataGrid,dsRecordTestCondition) {
+!function(self,arg,resultDialog,dsOrderRecord,resultIFrame,picDataGrid,dsRecordTestCondition,dsDevice) {
     var currRecord = dsOrderRecord.getData("#");
     if(currRecord){
         //
@@ -119,6 +119,7 @@ function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
         }];
         picDataGrid.set("items",data);
         dsRecordTestCondition.set("parameter",recordId).flushAsync();
+        dsDevice.set("parameter",recordId).flushAsync();
         resultDialog.show();
     }
 };
@@ -157,22 +158,21 @@ function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
 
 //监听样品编号输入框的按键事件
 // @Bind #sampleNoInput.onKeyDown
-!function(self,arg,inputTestDataDialog,dsRecordTestCondition,dsOrderRecord,addResultIFrame) {
+!function(self,arg,inputTestDataDialog,dsRecordTestCondition,dsOrderRecord,addResultIFrame,dsDevice,samplePicDataGrid) {
     //如果是回车
     if(arg.keyCode==13){
         var sampleNoInput = $("#d_sampleNoInput input").val();
         if(sampleNoInput){
-            //根据样品编号查找recordId
-            var recordId;
             var entityList = dsOrderRecord.getData();
+            var currRecord;
             entityList.each(function(entity){
                 if(entity.get("sampleNo")==sampleNoInput){
-                    recordId = entity.get("id");
+                    currRecord = entity;
                     return false;
                 }
             });
-            if(recordId){
-                setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition);
+            if(currRecord){
+                setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestCondition,dsDevice,samplePicDataGrid);
                 inputTestDataDialog.show();
             }else{
                 dorado.MessageBox.alert("样品编号不存在");
@@ -183,27 +183,65 @@ function audit(status,auditOrderAjaxAction,auditOrderDialog,auditOrderAutoForm){
 
 //检测数据录入
 // @Bind #inputTestDataBtn.onClick
-!function(self,arg,dsOrderRecord,addResultIFrame,inputTestDataDialog,dsRecordTestCondition) {
+!function(self,arg,dsOrderRecord,addResultIFrame,inputTestDataDialog,dsRecordTestCondition,dsDevice,samplePicDataGrid) {
     var currRecord = dsOrderRecord.getData("#");
     if(currRecord) {
-        var recordId = currRecord.get("id");
-        setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition);
+        setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestCondition,dsDevice,samplePicDataGrid);
         inputTestDataDialog.show();
     }
 
 }
 
-//设置iframe的recordId
-function setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition){
+//设置iFrame的recordId
+function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestCondition,dsDevice,samplePicDataGrid){
     var path = addResultIFrame.get("path");
     var index = path.indexOf("?");
     if (index != -1) {
         path = path.substring(0, index);
     }
+    var recordId = currRecord.get("id");
     path += "?recordId=" + recordId;
     addResultIFrame.set("path", path);
     dsRecordTestCondition.set("parameter",recordId).flushAsync();
+    dsDevice.set("parameter",{recordId:recordId}).flushAsync();
+    if(currRecord){
+        //显示图片
+        //原样
+        var samplePic = currRecord.get("samplePic");
+        //测试样
+        var testSamplePic = currRecord.get("testSamplePic");
+        var data = [{
+            samplePic2:samplePic,
+            testSamplePic2:testSamplePic
+        }];
+        samplePicDataGrid.set("items",data);
+    }
 }
+// @Bind #samplePicDataGrid.#samplePic2.onRenderCell
+!function(arg) {
+    var samplePic = arg.data.samplePic2;
+    $(arg.dom).empty();
+    if(samplePic){
+        $(arg.dom).empty().xCreate({
+            tagName: "IMG",
+            src: samplePic,
+            width:350
+        });
+    }
+};
+
+// @Bind #samplePicDataGrid.#testSamplePic2.onRenderCell
+!function(arg) {
+    var testSamplePic = arg.data.testSamplePic2;
+    $(arg.dom).empty();
+    if(testSamplePic){
+        $(arg.dom).empty().xCreate({
+            tagName: "IMG",
+            src: testSamplePic,
+            width:350
+        });
+    }
+};
 //关闭检测数据录入弹窗
 // @Bind #closeInputTestDataDialogBtn.onClick
 !function(self,arg,inputTestDataDialog) {
@@ -225,4 +263,117 @@ function setAddResultIFrameParam(recordId,addResultIFrame,dsRecordTestCondition)
     dsRecordTestCondition.flushAsync();
 }
 
+//添加检测仪器
+// @Bind #addDeviceBtn.onClick
+!function(selectDeviceDialog) {
+    selectDeviceDialog.show();
+}
 
+//关闭选择检测仪器弹窗
+// @Bind #closeSelectDeviceDialogBtn.onClick
+!function(selectDeviceDialog) {
+    selectDeviceDialog.hide();
+}
+
+//选择检测仪器
+// @Bind #saveDeviceBtn.onClick
+!function(deviceSubView,dsOrderRecord,selectDeviceDialog,addDeviceAjaxAction,dsDevice) {
+    var subView = deviceSubView.get("subView");
+    var currDevice = subView.id("dsDevice").getData("#");
+    var currRecord = dsOrderRecord.getData("#");
+    if(!currRecord){
+        return false;
+    }
+    if(currDevice){
+        var status = currDevice.get("status");
+        if(status==2){
+            dorado.MessageBox.alert("该仪器已停用,无法使用");
+            return false;
+        }
+        var deviceId = currDevice.get("id");
+        var recordId = currRecord.get("id");
+        if(deviceId && recordId){
+            addDeviceAjaxAction.set("parameter",{recordId:recordId,deviceId:deviceId}).execute(function(){
+                dsDevice.flushAsync();
+                selectDeviceDialog.hide();
+            });
+        }
+    }
+
+}
+
+//删除检测仪器
+// @Bind #delDeviceBtn.onClick
+!function(dsOrderRecord,dsDevice,delDeviceAjaxAction) {
+    var currDevice = dsDevice.getData("#");
+    var currRecord = dsOrderRecord.getData("#");
+    if(!currRecord){
+        return false;
+    }
+    if(currDevice){
+        var deviceId = currDevice.get("id");
+        var recordId = currRecord.get("id");
+        if(deviceId && recordId){
+            delDeviceAjaxAction.set("parameter",{recordId:recordId,deviceId:deviceId}).execute(function(){
+                dsDevice.flushAsync();
+            });
+        }
+    }
+
+}
+
+//上传原样照片前设置记录id
+// @Bind #samplePicUploadAction.beforeFileUpload
+!function(self,dsOrderRecord){
+    var currRecord = dsOrderRecord.getData("#");
+    if(!currRecord){
+        return false;
+    }
+    var recordId = currRecord.get("id");
+    //动态设置参数
+    self.set("parameter", {
+        recordId: recordId,
+        type:1
+    });
+};
+
+//上传测试样照片前设置记录id
+// @Bind #testSamplePicUploadAction.beforeFileUpload
+!function(self,dsOrderRecord){
+    var currRecord = dsOrderRecord.getData("#");
+    if(!currRecord){
+        return false;
+    }
+    var recordId = currRecord.get("id");
+    //动态设置参数
+    self.set("parameter", {
+        recordId: recordId,
+        type:2
+    });
+};
+
+//上传原样图片
+// @Bind #samplePicUploadAction.onFileUploaded
+!function(arg,samplePicDataGrid,dsOrderRecord) {
+    var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
+    var items = samplePicDataGrid.get("items");
+    var data = [{
+        samplePic2:returnValue,
+        testSamplePic2:items[0].testSamplePic2
+    }];
+    samplePicDataGrid.set("items",data);
+    dsOrderRecord.getData("#").set("samplePic",returnValue);
+};
+
+//上传测试样图片
+// @Bind #testSamplePicUploadAction.onFileUploaded
+!function(arg,samplePicDataGrid,dsOrderRecord) {
+    var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
+    var items = samplePicDataGrid.get("items");
+    var data = [{
+        samplePic2:items[0].samplePic2,
+        testSamplePic2:returnValue
+    }];
+    samplePicDataGrid.set("items",data);
+    dsOrderRecord.getData("#").set("testSamplePic",returnValue);
+};

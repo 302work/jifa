@@ -5,5 +5,6 @@
         <replace key="jdbc.url">jdbc:mysql://127.0.0.1:3306/lims?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;zeroDateTimeBehavior=convertToNull</replace>
         <replace key="jdbc.name">jifa</replace>
         <replace key="jdbc.password">jifaadmin</replace>
+        <replace key="upload.path">/home/server1</replace>
     </config-file>
 </portable-config>
