@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+	<Arguments/>
+	<Context/>
+	<Model>
+		<DataType name="dtStatisticInfo" parent="statisticInfoDataType">
+		</DataType>
+	</Model>
+	<View>
+		<DataSet id="dsStatisticInfo">
+			<Property name="dataProvider">statisticsService#queryStatisticsInfo</Property>
+			<Property name="dataType">[dtStatisticInfo]</Property>
+		</DataSet>
+		<AutoForm id="queryParamsAutoForm">
+			<AutoFormElement id="testUserName">
+				<Property name="label">帐号：</Property>
+				<Property name="name">testUserName</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement id="client">
+				<Property name="label">客户：</Property>
+				<Property name="name">client</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement id="testDateStart">
+				<Property name="label">检测时间：</Property>
+				<Property name="name">testDateStart</Property>
+				<Property name="trigger">defaultDateTimeDropDown</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement id="testDateEnd">
+				<Property name="label">至</Property>
+				<Property name="name">testDateEnd</Property>
+				<Property name="trigger">defaultDateTimeDropDown</Property>
+				<Editor/>
+			</AutoFormElement>
+		</AutoForm>
+		<ToolBar>
+			<ToolBarButton id="queryBtn">
+				<Property name="caption">查询</Property>
+			</ToolBarButton>
+		</ToolBar>
+		<DataGrid>
+			<Property name="dataSet">dsStatisticInfo</Property>
+			<Property name="readOnly">true</Property>
+			<DataColumn>
+				<Property name="caption">帐号</Property>
+				<Property name="property">testUserName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">检测人员</Property>
+				<Property name="property">testName</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">已检测次数</Property>
+				<Property name="property">actualTestCount</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">通过次数</Property>
+				<Property name="property">passedCount</Property>
+				<Editor/>
+			</DataColumn>
+			<DataColumn>
+				<Property name="caption">未通过次数</Property>
+				<Property name="property">notPassedCount</Property>
+				<Editor/>
+			</DataColumn>
+		</DataGrid>
+	</View>
+</ViewConfig>
