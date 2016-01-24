@@ -10,7 +10,6 @@
         <module>jifa-core</module>
         <module>yun-account</module>
         <module>elective</module>
-    <module>jifa-cmp</module>
         <module>jifa-lims</module>
     </modules>
     <properties>

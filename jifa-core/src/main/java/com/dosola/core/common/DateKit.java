@@ -448,6 +448,23 @@ public final class DateKit {
 		calendar.set(Calendar.MINUTE,min+n);
 		return calendar.getTime();
     }
+
+
+	/**
+	 * 计算前后n个月
+	 * @param date
+	 * @param n 负数为前n月，正数为后n月
+     * @return
+     */
+	public static Date getBeforeMonth(Date date , int n){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int month = calendar.get(Calendar.MONTH);
+		calendar.add(Calendar.MONTH, month+n);
+		return calendar.getTime();
+	}
+
+
     
     /**
      * 计算2个日期相隔多少天
@@ -479,4 +496,21 @@ public final class DateKit {
 		}
 		return days;
 	}
+
+	/**
+	 * 计算两个日期相差月数
+	 * @param date1
+	 * @param date2
+     * @return
+     */
+	public static int getMonthsBetween(Date date1,Date date2){
+		Calendar c1 = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		int result = 0;
+		c1.setTime(date1);
+		c2.setTime(date2);
+		result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
+		return Math.abs(result);
+	}
+
 }

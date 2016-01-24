@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<portable-config>
-    <!-- 数据库链接 -->
-    <config-file path="WEB-INF/classes/application.properties">
-        <replace key="jdbc.url">jdbc:mysql://localhost:3306/cmp?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;zeroDateTimeBehavior=convertToNull</replace>
-        <replace key="jdbc.name">root</replace>
-        <replace key="jdbc.password"></replace>
-    </config-file>
-</portable-config>
