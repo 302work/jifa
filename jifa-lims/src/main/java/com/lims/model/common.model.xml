@@ -864,4 +864,35 @@
 			<Property name="label">样品编号</Property>
 		</PropertyDef>
 	</DataType>
+	<DataType name="statisticInfoDataType">
+		<Property name="creationType">com.lims.pojo.StatisticInfo</Property>
+		<PropertyDef name="actualTestCount">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">0</Property>
+			<Property name="label">已检测次数</Property>
+		</PropertyDef>
+		<PropertyDef name="notPassedCount">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">0</Property>
+			<Property name="label">未通过次数</Property>
+		</PropertyDef>
+		<PropertyDef name="passedCount">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">0</Property>
+			<Property name="label">通过次数</Property>
+		</PropertyDef>
+		<PropertyDef name="testCount">
+			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">0</Property>
+			<Property name="label">应检测次数</Property>
+		</PropertyDef>
+		<PropertyDef name="testName">
+			<Property name="dataType">String</Property>
+			<Property name="label">检测人员</Property>
+		</PropertyDef>
+		<PropertyDef name="testUserName">
+			<Property name="dataType">String</Property>
+			<Property name="label">帐号</Property>
+		</PropertyDef>
+	</DataType>
 </Model>
