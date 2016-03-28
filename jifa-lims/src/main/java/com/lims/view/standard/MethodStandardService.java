@@ -6,13 +6,20 @@ import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
+import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
+import com.dorado.common.ParseResult;
+import com.dorado.common.SqlKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.MethodStandard;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Song
@@ -26,14 +33,24 @@ public class MethodStandardService {
     private IMasterDao dao;
 
     @DataProvider
-    public void queryMethodStandards(Page<MethodStandard> page, Long standardId) {
+    public void queryMethodStandards(Page<MethodStandard> page, Criteria criteria, Long standardId) {
         StringBuilder sb = new StringBuilder();
         sb.append(" From " + MethodStandard.class.getName() + " WHERE isDeleted<>1 ");
         sb.append("AND standardId =:standardId ");
-        sb.append("ORDER BY crTime DESC");
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("standardId", standardId);
-        dao.pagingQuery(page, sb.toString(), map);
+        ParseResult result = SqlKit.parseCriteria(criteria, true, null, false);
+        String orderSql = SqlKit.buildOrderHql(criteria, null);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("standardId", standardId);
+        if (result != null) {
+            sb.append(" AND ");
+            sb.append(result.getAssemblySql());
+            params.putAll(result.getValueMap());
+        }
+        if (StringUtils.isEmpty(orderSql)) {
+            sb.append(" ORDER BY crTime desc");
+        }
+        sb.append(orderSql);
+        dao.pagingQuery(page, sb.toString(), params);
     }
 
     @DataResolver

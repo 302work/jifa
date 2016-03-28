@@ -52,6 +52,7 @@
 								</ToolBar>
 								<DataGrid id="methodStandardDataGrid">
 									<Property name="dataSet">dsMethodStandards</Property>
+									<Property name="filterMode">serverSide</Property>
 									<Property name="readOnly">true</Property>
 									<Property name="showFilterBar">true</Property>
 									<Property name="sortMode">serverSide</Property>
