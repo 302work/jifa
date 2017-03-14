@@ -11,19 +11,31 @@ import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.web.DoradoContext;
 import com.bstek.uflo.client.service.TaskClient;
 import com.bstek.uflo.model.task.Task;
+import com.bstek.uflo.model.task.TaskState;
 import com.bstek.uflo.service.HistoryService;
 import com.bstek.uflo.service.TaskOpinion;
 import com.bstek.uflo.service.TaskService;
 import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.*;
+import com.lims.pojo.Order;
+import com.lims.pojo.ProjectMethodStandard;
+import com.lims.pojo.Record;
+import com.lims.pojo.RecordTestCondition;
+import com.lims.pojo.ResultColumn;
+import com.lims.pojo.TestCondition;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * 申请单或报告service
@@ -62,59 +74,72 @@ public class AuditOrderService {
 
     @Expose
     public void auditOrder(int status,String taskIds,String remark){
-        if(StringUtil.isEmpty(taskIds) || status==0){
-            return;
-        }
-        String[] taskIdArray = taskIds.split(",");
 
-        for(String taskIdStr : taskIdArray){
-            if(StringUtil.isEmpty(taskIdStr)){
-                continue;
+            if (StringUtil.isEmpty(taskIds) || status == 0) {
+                return;
             }
-            long taskId = Long.valueOf(taskIdStr);
-            Task task = taskService.getTask(taskId);
-            if(task==null){
-                continue;
-            }
-            Order order = dao.getObjectById(Order.class,Long.valueOf(task.getBusinessId()));
-            if(order==null || order.getIsDeleted().intValue()==1){
-                continue;
-            }
-            String taskName = task.getTaskName();
-            //审批意见
-            TaskOpinion taskOpinion = new TaskOpinion(remark);
+            String[] taskIdArray = taskIds.split(",");
 
-            //下个节点名称
-            String flowName = getFlowName(taskName,status);
-            if(flowName==null){
-                continue;
+            for (String taskIdStr : taskIdArray) {
+                if (StringUtil.isEmpty(taskIdStr)) {
+                    continue;
+                }
+                long taskId = Long.valueOf(taskIdStr);
+                Task task = taskService.getTask(taskId);
+                if (task == null) {
+                    continue;
+                }
+                Order order = dao.getObjectById(Order.class, Long.valueOf(task.getBusinessId()));
+                if (order == null || order.getIsDeleted() == 1) {
+                    continue;
+                }
+                //当前处理人
+                String assignee = task.getAssignee();
+                //订单原状态
+                String orderOldStatus = order.getStatus();
+                String taskName = task.getTaskName();
+                //回滚的节点
+                String backFlowName = "to "+taskName;
+
+                //审批意见
+                TaskOpinion taskOpinion = new TaskOpinion(remark);
+
+                //下个节点名称
+                String flowName = getFlowName(taskName, status);
+                if (flowName == null) {
+                    continue;
+                }
+
+                Map<String, Object> variables = new HashMap<String, Object>();
+                variables.put("msg", status == 1 ? "【正审】" : "【退回】");
+
+                //如果没有生成检测记录则生成检测记录
+                if (taskName.equals("审核检测单") && status == 1) {
+                    createRecords(order);
+                }
+                //如果是结果审核,则更新record的auditUserName字段
+                if (taskName.equals("结果审核") && status == 1) {
+                    updateRecordsAuditUserName(order);
+                }
+
+                //开始任务,只有状态是Created或Reserved才能开始任务
+                TaskState taskState = task.getState();
+                if(taskState.equals(TaskState.Created) || taskState.equals(TaskState.Reserved)) {
+                    taskService.start(taskId);
+                }
+                //完成任务
+                taskService.complete(taskId, flowName, variables, taskOpinion);
+
+                //更新订单状态
+                String statusStr = flowName.substring(3);
+                if (statusStr.equals("结束")) {
+                    statusStr = "审核通过";
+                }
+                order.setStatus(statusStr);
+                dao.saveOrUpdate(order);
+
             }
 
-            Map<String,Object> variables = new HashMap<String, Object>();
-            variables.put("msg", status==1?"【正审】":"【退回】");
-
-            //如果没有生成检测记录则生成检测记录
-            if(taskName.equals("审核检测单") && status==1){
-                createRecords(order);
-            }
-            //如果是结果审核,则更新record的auditUserName字段
-            if(taskName.equals("结果审核") && status==1){
-                updateRecordsAuditUserName(order);
-            }
-            //开始任务
-            taskService.start(taskId);
-            //完成任务
-            taskService.complete(taskId,flowName,variables,taskOpinion);
-
-            //更新订单状态
-            String statusStr = flowName.substring(3);
-            if(statusStr.equals("结束")){
-                statusStr = "审核通过";
-            }
-            order.setStatus(statusStr);
-            dao.saveOrUpdate(order);
-
-        }
     }
 
     /**
@@ -170,9 +195,11 @@ public class AuditOrderService {
                 record.setResultColumnIds(resultColumnIds);
                 record.setSampleNo(generateSampleNo());
                 record.setCrUser(userName);
+                record.setProjectId(projectId);
+                record.setMethodStandardId(projectMethodStandard.getMethodStandardId());
                 record = dao.saveOrUpdate(record).get(0);
                 //添加检测条件
-                addTestCondition(record.getId(),projectId);
+                addTestCondition(record.getId(),projectId,projectMethodStandard.getMethodStandardId(),record.getSampleNo());
             }
         }
     }
@@ -182,7 +209,7 @@ public class AuditOrderService {
      * @param recordId
      * @param projectId
      */
-    private void addTestCondition(Long recordId, Long projectId) {
+    private void addTestCondition(Long recordId, Long projectId,Long methodStandardId,String sampleNo) {
         String hql = "From "+TestCondition.class.getName()+" where projectId=:projectId";
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("projectId",projectId);
@@ -194,6 +221,9 @@ public class AuditOrderService {
                 recordTestCondition.setName(testCondition.getName());
                 recordTestCondition.setValue(testCondition.getValue());
                 recordTestCondition.setRemark(testCondition.getRemark());
+                recordTestCondition.setProjectId(projectId);
+                recordTestCondition.setMethodStandardId(methodStandardId);
+                recordTestCondition.setSampleNo(sampleNo);
                 dao.saveOrUpdate(recordTestCondition);
             }
         }

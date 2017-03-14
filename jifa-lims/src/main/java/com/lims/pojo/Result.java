@@ -2,7 +2,12 @@ package com.lims.pojo;
 
 import com.dosola.core.dao.interfaces.IPojo;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -20,6 +25,15 @@ public class Result implements IPojo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
+    private Long orderId;//所属订单id
+
+    @Column(nullable = false)
+    private Long projectId;//项目id
+
+    @Column(nullable = false)
+    private Long methodStandardId;//方法标准id
 
     @Column(nullable = false)
     private Long recordId;//所属检测数据
@@ -104,5 +118,29 @@ public class Result implements IPojo {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Long getMethodStandardId() {
+        return methodStandardId;
+    }
+
+    public void setMethodStandardId(Long methodStandardId) {
+        this.methodStandardId = methodStandardId;
     }
 }

@@ -21,12 +21,22 @@ import com.bstek.dorado.web.DoradoContext;
 import com.dosola.core.common.PojoKit;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.*;
+import com.lims.pojo.Order;
+import com.lims.pojo.ProjectMethodStandard;
+import com.lims.pojo.Record;
+import com.lims.pojo.Result;
+import com.lims.pojo.ResultColumn;
+import com.lims.pojo.ResultValue;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 检测结果相关
@@ -310,6 +320,10 @@ public class ResultService {
         result.setStatus(map.get("status")==null?1:Integer.valueOf(map.get("status").toString()));
         result.setRemark(map.get("remark")==null?null:map.get("remark").toString());
         result.setIsDeleted(0);
+        Record record = dao.getObjectById(Record.class,recordId);
+        result.setOrderId(record.getOrderId());
+        result.setMethodStandardId(record.getMethodStandardId());
+        result.setProjectId(record.getProjectId());
         //查找检测次数
         String sql = "select max(`index`) as maxIndex from "+Result.TABLENAME+" where isDeleted<>1 and recordId=:recordId ";
         Map<String,Object> paramMap = new HashMap<String,Object>();
@@ -421,4 +435,6 @@ public class ResultService {
         }
         return recordIdList;
     }
+
+
 }

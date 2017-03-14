@@ -86,6 +86,7 @@
      <tx:advice id="masterTxAdvice" transaction-manager="masterTransactionManager">
         <tx:attributes>
             <tx:method name="add*" read-only="false" propagation="REQUIRED" />
+            <!--todo 审核订单和新建订单添加事务后收不到审核消息 -->
             <tx:method name="saveOrder" read-only="false" propagation="NOT_SUPPORTED" />
             <tx:method name="auditOrder" read-only="false" propagation="NOT_SUPPORTED" />
             <tx:method name="save*" read-only="false" propagation="REQUIRED" />

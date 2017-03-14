@@ -4,6 +4,7 @@ import com.bstek.bdf2.core.business.IUser;
 import com.bstek.bdf2.core.context.ContextHolder;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
@@ -13,7 +14,15 @@ import com.bstek.uflo.service.StartProcessInfo;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.*;
+import com.lims.pojo.Consumer;
+import com.lims.pojo.Device;
+import com.lims.pojo.MethodStandard;
+import com.lims.pojo.Order;
+import com.lims.pojo.Project;
+import com.lims.pojo.ProjectMethodStandard;
+import com.lims.pojo.Record;
+import com.lims.pojo.Standard;
+import com.lims.pojo.User;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +30,7 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -85,14 +95,24 @@ public class OrderService {
         dao.pagingQueryBySql(page,sql,params);
     }
 
-    //todo 一个订单不能添加同一个项目两次
     @DataResolver
     public void saveOrder(Collection<Order> orders){
         for (Order  order: orders) {
             EntityState state = EntityUtils.getState(order);
             IUser user = ContextHolder.getLoginUser();
             String userName = user.getUsername();
-            if (EntityState.NEW.equals(state)) {
+            //项目的方法标准，多个逗号隔开
+            String projectMethodStandardIds = order.getProjectMethodStandardIds();
+            String[] pmsIds = projectMethodStandardIds.split(",");
+            Map<String,String> map = new HashMap<>();
+            for (String pmsId : pmsIds) {
+                map.put(pmsId,pmsId);
+            }
+            if(map.size() != pmsIds.length){
+                throw new RuntimeException("不能重复添加项目的方法标准");
+            }
+            //if (EntityState.NEW.equals(state) && order.getId()==null) {
+            if (order.getId()==null) {
                 order.setCrTime(new Date());
                 order.setCrUser(userName);
                 order.setOrderNo(generatorOrderNo("QDTTC"));
@@ -117,12 +137,14 @@ public class OrderService {
                 variables.put("msg", "【正审】");
                 info.setVariables(variables);
                 processClient.startProcessByName("普通审批流程", info);
-            } else if (EntityState.MODIFIED.equals(state)) {
+            } else if (EntityState.MODIFIED.equals(state) && order.getId()!=null) {
                 dao.saveOrUpdate(order);
             } else if (EntityState.DELETED.equals(state)) {
                 //删除，逻辑删除
                 order.setIsDeleted(1);
                 dao.saveOrUpdate(order);
+            }else{
+                throw new RuntimeException("干啥呢");
             }
         }
     }
@@ -235,5 +257,17 @@ public class OrderService {
         }
         sql += orderSql;
         dao.pagingQueryBySql(page,sql,params);
+    }
+
+    @Expose
+    public List<Record> queryOrderRecordByOrderIdAndProjectId(Long orderId,Long projectId){
+        if(orderId==null || projectId==null){
+            return null;
+        }
+        String hql = " From "+Record.class.getName()+" where orderId=:orderId and projectId=:projectId and isDeleted<>1";
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put("projectId",projectId);
+        params.put("orderId",orderId);
+        return (List<Record>) dao.query(hql,params);
     }
 }

@@ -87,6 +87,7 @@
 											<Buttons/>
 											<Children>
 												<AutoForm id="projectRecordAutoForm">
+													<Property name="dataSet">dsOrderProject</Property>
 													<Property name="labelAlign">right</Property>
 													<Property name="labelSeparator">:</Property>
 													<AutoFormElement>
@@ -94,7 +95,7 @@
 														<Property name="editorType">Label</Property>
 														<Property name="label">检测项目</Property>
 														<Property name="labelWidth">90</Property>
-														<Property name="property">projectName</Property>
+														<Property name="property">name</Property>
 														<Editor/>
 													</AutoFormElement>
 													<AutoFormElement>
@@ -105,12 +106,10 @@
 														<Property name="property">methodStandardName</Property>
 														<Editor/>
 													</AutoFormElement>
-													<AutoFormElement layoutConstraint="colSpan:2;">
+													<AutoFormElement>
 														<Property name="editable">false</Property>
 														<Property name="editorType">Label</Property>
-														<Property name="label">备注</Property>
-														<Property name="labelWidth">90</Property>
-														<Property name="property">remark</Property>
+														<Property name="property">methodStandardNo</Property>
 														<Editor/>
 													</AutoFormElement>
 												</AutoForm>
@@ -175,6 +174,8 @@
 													<Property name="readOnly">true</Property>
 													<Property name="rowHeight">300</Property>
 													<DataColumn id="projectSampleNo">
+														<Property name="align">center</Property>
+														<Property name="caption">样品编号</Property>
 														<Property name="name">sampleNo</Property>
 														<Property name="property">sampleNo</Property>
 														<Editor/>
@@ -196,6 +197,9 @@
 												</Grid>
 											</Children>
 										</GroupBox>
+										<AjaxAction id="queryOrderRecordAjaxAction">
+											<Property name="service">orderService#queryOrderRecordByOrderIdAndProjectId</Property>
+										</AjaxAction>
 									</Children>
 									<Tools/>
 								</Dialog>

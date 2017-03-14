@@ -785,6 +785,12 @@
 			<Property name="dataType">String</Property>
 			<Property name="label">检测人电子签名</Property>
 		</PropertyDef>
+		<PropertyDef name="methodStandardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="projectId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
 	</DataType>
 	<DataType name="resultDataType">
 		<Property name="creationType">com.lims.pojo.Result</Property>
@@ -812,6 +818,15 @@
 		<PropertyDef name="status">
 			<Property name="dataType">Integer</Property>
 			<Property name="defaultValue">1</Property>
+		</PropertyDef>
+		<PropertyDef name="methodStandardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="orderId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="projectId">
+			<Property name="dataType">Long</Property>
 		</PropertyDef>
 	</DataType>
 	<DataType name="testConditionDataType">
@@ -862,6 +877,15 @@
 		<PropertyDef name="sampleNo">
 			<Property name="dataType">String</Property>
 			<Property name="label">样品编号</Property>
+		</PropertyDef>
+		<PropertyDef name="methodStandardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="orderId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
+		<PropertyDef name="projectId">
+			<Property name="dataType">Long</Property>
 		</PropertyDef>
 	</DataType>
 	<DataType name="statisticInfoDataType">

@@ -285,7 +285,85 @@
 
 //项目的检测结果
 // @Bind #projectResultBtn.onClick
-!function(self,arg,projectResultDialog) {
-    projectResultDialog.show();
+!function(self,arg,projectResultDialog,dsOrder,queryOrderRecordAjaxAction,dsOrderProject,projectResultIFrame,projectPicDataGrid,dsProjectRecordTestCondition) {
+    var currOrder = dsOrder.getData("#");
+    if(currOrder){
+        //当前订单id
+        var orderId = currOrder.get("id");
+        var currOrderProject = dsOrderProject.getData("#");
+        if(currOrderProject) {
+            //项目id
+            var projectId = currOrderProject.get("id");
+            //刷新检测条件
+            dsProjectRecordTestCondition.set("parameter", {orderId:orderId,projectId:projectId}).flushAsync();
+
+            var path = projectResultIFrame.get("path");
+            var index = path.indexOf("?");
+            if (index != -1) {
+                path = path.substring(0, index);
+            }
+            path += "?orderId=" + orderId+"&projectId="+projectId;
+            projectResultIFrame.set("path", path);
+            var data = [];
+            //所有检查记录
+            queryOrderRecordAjaxAction.set("parameter",{orderId:orderId,projectId:projectId}).execute(function(recordList){
+                recordList.each(function (record) {
+                    //显示图片
+                    //原样
+                    var samplePic = record.get("samplePic");
+                    //测试样
+                    var testSamplePic = record.get("testSamplePic");
+                    //样品编号
+                    var sampleNo = record.get("sampleNo");
+                    data.push({
+                        sampleNo:sampleNo,
+                        samplePic: samplePic,
+                        testSamplePic: testSamplePic
+                    });
+                })
+            });
+            projectPicDataGrid.set("items", data);
+            projectResultDialog.show();
+        }
+    }
 };
 
+//项目检测结果 原样图片
+// @Bind #projectPicDataGrid.#samplePic.onRenderCell
+!function(arg) {
+    var samplePic = arg.data.samplePic;
+    $(arg.dom).empty();
+    if(samplePic){
+        $(arg.dom).empty().xCreate({
+            tagName: "IMG",
+            src: samplePic,
+            width:350
+        });
+    }
+}
+
+//项目检测结果 测试样图片
+// @Bind #projectPicDataGrid.#testSamplePic.onRenderCell
+!function(arg) {
+    var testSamplePic = arg.data.testSamplePic;
+    $(arg.dom).empty();
+    if(testSamplePic){
+        $(arg.dom).empty().xCreate({
+            tagName: "IMG",
+            src: testSamplePic,
+            width:350
+        });
+    }
+}
+
+//关闭项目的检测结果弹层
+// @Bind #closeProjectResultDialogBtn.onClick
+!function(self,arg,projectResultDialog) {
+    projectResultDialog.hide();
+};
+
+//打印项目的检测结果
+// @Bind #printProjectResultBtn.onClick
+!function(self,arg,projectResultDialog) {
+    alert("想打啥");
+};

@@ -9,12 +9,20 @@ import com.bstek.uflo.process.handler.AssignmentHandler;
 import com.bstek.uflo.process.node.TaskNode;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.*;
+import com.lims.pojo.Order;
+import com.lims.pojo.Project;
+import com.lims.pojo.ProjectMethodStandard;
+import com.lims.pojo.ProjectRole;
+import com.lims.pojo.User;
 import com.lims.service.RoleUtil;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -40,7 +48,7 @@ public abstract class AbstractHandler implements AssignmentHandler{
 		if(order==null){
 			throw new RuntimeException("没有找到order,orderId:"+processInstance.getBusinessId());
 		}
-		order.getProjectMethodStandardIds();
+		//order.getProjectMethodStandardIds();
 
 		String roleId = getRoleId();
 
@@ -60,7 +68,7 @@ public abstract class AbstractHandler implements AssignmentHandler{
 			//当前项目的用户
 			List<User> projectUsers = getUsers(order.getProjectMethodStandardIds());
 			if(projectUsers==null || projectUsers.size()==0){
-				throw new RuntimeException("下节点没有处理人员");
+				throw new RuntimeException("需要指定项目的检测人员角色");
 			}
 			for(User user : projectUsers){
 				if(users.contains(user)){

@@ -70,14 +70,15 @@ public class TestConditionService {
     }
 
     @DataProvider
-    public List<RecordTestCondition> queryProjectTestCondition(Long orderId,Long projectMethodStandardId){
-        if(orderId==null || orderId<=0){
+    public List<RecordTestCondition> queryProjectTestCondition(Long orderId,Long projectId){
+        if(orderId==null || orderId<=0 || projectId==null){
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(" From "+RecordTestCondition.class.getName()+" where recordId=:recordId ");
+        sb.append(" From "+RecordTestCondition.class.getName()+" where orderId=:orderId and projectId=:projectId ");
         Map<String,Object> params = new HashMap<String, Object>();
-        params.put("recordId",orderId);
+        params.put("projectId",projectId);
+        params.put("orderId",orderId);
         return (List<RecordTestCondition>) dao.query(sb.toString(),params);
     }
 

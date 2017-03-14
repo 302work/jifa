@@ -661,7 +661,7 @@
 					</DataGrid>
 					<Dialog id="orderDetailDialog">
 						<Property name="caption">订单详情</Property>
-						<Property name="height">600</Property>
+						<Property name="height">480</Property>
 						<Property name="iconClass">fa fa-tasks</Property>
 						<Property name="width">800</Property>
 						<Buttons>
