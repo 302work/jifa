@@ -73,8 +73,10 @@
 									<Property name="width">800</Property>
 									<Buttons>
 										<Button id="printProjectResultBtn">
-											<Property name="caption">打印</Property>
+											<Property name="caption">打印已隐藏</Property>
+											<Property name="hideMode">display</Property>
 											<Property name="iconClass">fa fa-print</Property>
+											<Property name="visible">false</Property>
 										</Button>
 										<Button id="closeProjectResultDialogBtn">
 											<Property name="caption">关闭</Property>
@@ -176,22 +178,22 @@
 													<DataColumn id="projectSampleNo">
 														<Property name="align">center</Property>
 														<Property name="caption">样品编号</Property>
-														<Property name="name">sampleNo</Property>
-														<Property name="property">sampleNo</Property>
+														<Property name="name">projectSampleNo</Property>
+														<Property name="property">projectSampleNo</Property>
 														<Editor/>
 													</DataColumn>
 													<DataColumn id="projectSamplePic">
 														<Property name="align">center</Property>
 														<Property name="caption">原样</Property>
-														<Property name="name">samplePic</Property>
-														<Property name="property">samplePic</Property>
+														<Property name="name">projectSamplePic</Property>
+														<Property name="property">projectSamplePic</Property>
 														<Editor/>
 													</DataColumn>
 													<DataColumn id="projectTestSamplePic">
 														<Property name="align">center</Property>
 														<Property name="caption">测试样</Property>
-														<Property name="name">testSamplePic</Property>
-														<Property name="property">testSamplePic</Property>
+														<Property name="name">projectTestSamplePic</Property>
+														<Property name="property">projectTestSamplePic</Property>
 														<Editor/>
 													</DataColumn>
 												</Grid>
@@ -463,6 +465,11 @@
 						<ToolBarButton id="orderDetailBtn">
 							<Property name="caption">查看详情</Property>
 							<Property name="iconClass">fa fa-search</Property>
+						</ToolBarButton>
+						<Separator/>
+						<ToolBarButton id="jiancexieyiBtn">
+							<Property name="caption">查看检测协议</Property>
+							<Property name="iconClass">fa fa-file-word-o</Property>
 						</ToolBarButton>
 						<Separator/>
 						<ToolBarButton>
@@ -751,6 +758,32 @@
 									<Editor/>
 								</AutoFormElement>
 							</AutoForm>
+						</Children>
+						<Tools/>
+					</Dialog>
+					<Dialog id="jiancexieyiDialog">
+						<Property name="caption">检测协议</Property>
+						<Property name="height">500</Property>
+						<Property name="iconClass">fa fa-file-word-o</Property>
+						<Property name="width">800</Property>
+						<Buttons>
+							<Button id="printJiancexieyiBtn">
+								<Property name="caption">打印</Property>
+								<Property name="iconClass">fa fa-print</Property>
+							</Button>
+							<Button id="closeJiancexieyiBtn">
+								<Property name="caption">关闭</Property>
+								<Property name="iconClass">fa fa-times</Property>
+							</Button>
+						</Buttons>
+						<Children>
+							<HtmlContainer>
+								<Property name="contentFile">classpath:jiancexieyi.html</Property>
+							</HtmlContainer>
+							<AjaxAction id="jiancexieyiAjaxAction">
+								<Property name="caption">查询检测协议内容</Property>
+								<Property name="service">orderService#queryJiancexieyiByOrderId</Property>
+							</AjaxAction>
 						</Children>
 						<Tools/>
 					</Dialog>

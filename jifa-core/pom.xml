@@ -151,7 +151,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.1.41</version>
+            <version>1.2.28</version>
         </dependency>
         <!-- redis jar start-->
         <dependency>
@@ -266,6 +266,10 @@
                     <artifactId>dorado-core</artifactId>
                     <groupId>com.bstek.dorado</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -296,6 +300,12 @@
             <groupId>com.bstek.bdf2</groupId>
             <artifactId>bdf2-export</artifactId>
             <version>${bdf2-export.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>com.bstek.bdf2</groupId>-->

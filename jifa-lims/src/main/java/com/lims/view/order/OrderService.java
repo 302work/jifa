@@ -13,6 +13,7 @@ import com.bstek.uflo.client.service.ProcessClient;
 import com.bstek.uflo.service.StartProcessInfo;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
+import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.Consumer;
 import com.lims.pojo.Device;
@@ -23,10 +24,13 @@ import com.lims.pojo.ProjectMethodStandard;
 import com.lims.pojo.Record;
 import com.lims.pojo.Standard;
 import com.lims.pojo.User;
+import com.lims.service.UserService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +51,9 @@ public class OrderService {
 
     @Resource(name=ProcessClient.BEAN_ID)
     private ProcessClient processClient;
+
+    @Autowired
+    private UserService userService;
 
     @DataProvider
     public void queryOrder(Page<Map<String,Object>> page,Criteria criteria,Long businessId){
@@ -258,7 +265,7 @@ public class OrderService {
         sql += orderSql;
         dao.pagingQueryBySql(page,sql,params);
     }
-
+    //查询检测记录
     @Expose
     public List<Record> queryOrderRecordByOrderIdAndProjectId(Long orderId,Long projectId){
         if(orderId==null || projectId==null){
@@ -269,5 +276,37 @@ public class OrderService {
         params.put("projectId",projectId);
         params.put("orderId",orderId);
         return (List<Record>) dao.query(hql,params);
+    }
+
+    //查询检测协议
+    @Expose
+    public Map<String,Object> queryJiancexieyiByOrderId(Long orderId){
+        Map<String,Object> map = new HashMap<>();
+        Order order = dao.getObjectById(Order.class,orderId);
+        map.put("order",order);
+        //批准人
+        String auditUserName = order.getAuditUserName();
+        if(!StringUtil.isEmpty(auditUserName)){
+            //签名图片
+            String auditUserPic = userService.queryUser(auditUserName).getUserNamePic();
+            map.put("auditUserPic",auditUserPic);
+        }
+        //客户信息
+        Consumer consumer = dao.getObjectById(Consumer.class,order.getConsumerId());
+        map.put("consumer",consumer);
+        //订单所属检测项目
+        String projectMethodStandardIds = order.getProjectMethodStandardIds();
+        List<Map<String,Object>> projectList = new ArrayList<>();
+        for (String projectMethodStandardId : projectMethodStandardIds.split(",")) {
+            ProjectMethodStandard projectMethodStandard = dao.getObjectById(ProjectMethodStandard.class,Long.valueOf(projectMethodStandardId));
+            Project project = dao.getObjectById(Project.class,projectMethodStandard.getProjectId());
+            MethodStandard methodStandard = dao.getObjectById(MethodStandard.class,projectMethodStandard.getMethodStandardId());
+            Map<String,Object> projectMap = new HashMap<>();
+            projectMap.put("project",project);
+            projectMap.put("methodStandard",methodStandard);
+            projectList.add(projectMap);
+        }
+        map.put("projectList",projectList);
+        return map;
     }
 }

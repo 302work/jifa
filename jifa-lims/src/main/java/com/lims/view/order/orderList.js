@@ -310,28 +310,31 @@
                 recordList.each(function (record) {
                     //显示图片
                     //原样
-                    var samplePic = record.get("samplePic");
+                    var samplePic = record.samplePic;
+                    console.log("samplePic:"+samplePic);
                     //测试样
-                    var testSamplePic = record.get("testSamplePic");
+                    var testSamplePic = record.testSamplePic;
                     //样品编号
-                    var sampleNo = record.get("sampleNo");
+                    var sampleNo = record.sampleNo;
                     data.push({
-                        sampleNo:sampleNo,
-                        samplePic: samplePic,
-                        testSamplePic: testSamplePic
+                        projectSampleNo:sampleNo,
+                        projectSamplePic: samplePic,
+                        projectTestSamplePic: testSamplePic
                     });
-                })
+                });
+                console.log("dataLength:"+data.length);
+                console.log("dataLength:"+data);
+                projectPicDataGrid.set("items", data);
+                projectResultDialog.show();
             });
-            projectPicDataGrid.set("items", data);
-            projectResultDialog.show();
         }
     }
 };
 
 //项目检测结果 原样图片
-// @Bind #projectPicDataGrid.#samplePic.onRenderCell
+// @Bind #projectPicDataGrid.#projectSamplePic.onRenderCell
 !function(arg) {
-    var samplePic = arg.data.samplePic;
+    var samplePic = arg.data.projectSamplePic;
     $(arg.dom).empty();
     if(samplePic){
         $(arg.dom).empty().xCreate({
@@ -343,9 +346,9 @@
 }
 
 //项目检测结果 测试样图片
-// @Bind #projectPicDataGrid.#testSamplePic.onRenderCell
+// @Bind #projectPicDataGrid.#projectTestSamplePic.onRenderCell
 !function(arg) {
-    var testSamplePic = arg.data.testSamplePic;
+    var testSamplePic = arg.data.projectTestSamplePic;
     $(arg.dom).empty();
     if(testSamplePic){
         $(arg.dom).empty().xCreate({
@@ -367,3 +370,60 @@
 !function(self,arg,projectResultDialog) {
     alert("想打啥");
 };
+
+//查看检测协议
+// @Bind #jiancexieyiBtn.onClick
+!function(self,arg,dsOrder,jiancexieyiDialog,jiancexieyiAjaxAction) {
+    var currOrder = dsOrder.getData("#");
+    if(currOrder){
+        var orderId = currOrder.get("id");
+        jiancexieyiDialog.show();
+        jiancexieyiAjaxAction.set("parameter",{orderId:orderId}).execute(function(data){
+            var order = data.order;
+            var consumer = data.consumer;
+            $("#consumerName").html(consumer.name);
+            $("#consumerAddress").html(consumer.address);
+            $("#orderNo").html(order.orderNo);
+            $("#testType").html(order.testType);
+            $("#client").html(order.client);
+            $("#clientPhone").html(order.clientPhone);
+            $("#clientFax").html(order.clientFax);
+            $("#clientZip").html(order.clientZip);
+            $("#payer").html(order.payer);
+            $("#payerPhone").html(order.payerPhone);
+            $("#payerFax").html(order.payerFax);
+            $("#payerZip").html(order.payerZip);
+            $("#deliveryDate").html(order.deliveryDate);
+            $("#finishDate").html(order.finishDate);
+            $("#area").html(order.area);
+            $("#sampleName").html(order.sampleName);
+            $("#sampleCount").html(order.sampleCount);
+            $("#sampleDesc").html(order.sampleDesc);
+            $("#fibreComponent").html(order.fibreComponent);
+            $("#weight").html(order.weight);
+            $("#timeLimit").html(order.timeLimit);
+            $("#sampleHandleType").html(order.sampleHandleType);
+            $("#reportSendWay").html(order.reportSendWay);
+            $("#reportLanguage").html(order.reportLanguage);
+            $("#testResult").html(order.testResult);
+            $("#signDate").html(order.signDate);
+            $("#crTime").html(order.crTime);
+            $("#auditUserPic").html(data.auditUserPic);
+        });
+
+    }
+};
+
+
+//打印检测协议
+// @Bind #printJiancexieyiBtn.onClick
+!function(self,arg) {
+    $("#jiancexieyiDiv").printArea();
+};
+
+//关闭检测协议
+// @Bind #closeJiancexieyiBtn.onClick
+!function(self,arg,jiancexieyiDialog) {
+    jiancexieyiDialog.hide();
+};
+

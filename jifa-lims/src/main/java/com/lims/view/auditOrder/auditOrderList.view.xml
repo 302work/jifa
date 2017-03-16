@@ -597,6 +597,16 @@
 							<Property name="caption">审核</Property>
 							<Property name="iconClass">fa fa-compass</Property>
 						</ToolBarButton>
+						<Separator/>
+						<ToolBarButton id="jiancexieyiBtn">
+							<Property name="caption">查看检测协议</Property>
+							<Property name="iconClass">fa fa-file-word-o</Property>
+						</ToolBarButton>
+						<Separator/>
+						<ToolBarButton id="createReportBtn">
+							<Property name="caption">生成报告</Property>
+							<Property name="iconClass">fa fa-file-pdf-o</Property>
+						</ToolBarButton>
 					</ToolBar>
 					<Export2ReportAction id="orderExportAction">
 						<Property name="confirmMessage">是否导出所有订单（最多一万条）</Property>

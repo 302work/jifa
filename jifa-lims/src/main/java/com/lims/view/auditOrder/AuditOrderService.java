@@ -199,7 +199,7 @@ public class AuditOrderService {
                 record.setMethodStandardId(projectMethodStandard.getMethodStandardId());
                 record = dao.saveOrUpdate(record).get(0);
                 //添加检测条件
-                addTestCondition(record.getId(),projectId,projectMethodStandard.getMethodStandardId(),record.getSampleNo());
+                addTestCondition(record.getId(),projectId,projectMethodStandard.getMethodStandardId(),record.getSampleNo(),order.getId());
             }
         }
     }
@@ -209,7 +209,7 @@ public class AuditOrderService {
      * @param recordId
      * @param projectId
      */
-    private void addTestCondition(Long recordId, Long projectId,Long methodStandardId,String sampleNo) {
+    private void addTestCondition(Long recordId, Long projectId,Long methodStandardId,String sampleNo,Long orderId) {
         String hql = "From "+TestCondition.class.getName()+" where projectId=:projectId";
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("projectId",projectId);
@@ -224,6 +224,7 @@ public class AuditOrderService {
                 recordTestCondition.setProjectId(projectId);
                 recordTestCondition.setMethodStandardId(methodStandardId);
                 recordTestCondition.setSampleNo(sampleNo);
+                recordTestCondition.setOrderId(orderId);
                 dao.saveOrUpdate(recordTestCondition);
             }
         }

@@ -214,10 +214,18 @@ public class ResultService {
 
     @DataProvider
     public List<Map<String,Object>> queryResult(String parameter){
-        JSONObject jsonObject = JSON.parseObject(parameter);
-        String projectIdStr = jsonObject.getString("projectId");
-        String orderIdStr = jsonObject.getString("orderId");
-        String recordIdStr = jsonObject.getString("recordId");
+        String projectIdStr = null;
+        String orderIdStr = null;
+        String recordIdStr = null;
+
+        if(parameter !=null && parameter.contains("{")){
+            JSONObject jsonObject = JSON.parseObject(parameter);
+            projectIdStr = jsonObject.getString("projectId");
+            orderIdStr = jsonObject.getString("orderId");
+            recordIdStr = jsonObject.getString("recordId");
+        }else{
+            recordIdStr = parameter;
+        }
         if(StringUtil.isEmpty(recordIdStr) && (StringUtil.isEmpty(orderIdStr)  || StringUtil.isEmpty(projectIdStr) )){
             return null;
         }

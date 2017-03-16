@@ -377,3 +377,11 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
     samplePicDataGrid.set("items",data);
     dsOrderRecord.getData("#").set("testSamplePic",returnValue);
 };
+
+
+//生成报告
+// @Bind #createReportBtn.onClick
+!function() {
+
+
+};

@@ -182,7 +182,6 @@
 				<Editor/>
 			</AutoFormElement>
 			<AutoFormElement>
-				<Property name="label">申请时间</Property>
 				<Property name="property">deliveryDate</Property>
 				<Editor/>
 			</AutoFormElement>
