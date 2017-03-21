@@ -555,6 +555,7 @@
 		</PropertyDef>
 		<PropertyDef name="reportLanguage">
 			<Property name="dataType">String</Property>
+			<Property name="defaultValue">ch</Property>
 			<Property name="label">报告语言</Property>
 			<Property name="mapping">
 				<Property name="mapValues">
@@ -578,6 +579,7 @@
 		</PropertyDef>
 		<PropertyDef name="reportSendWay">
 			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">1</Property>
 			<Property name="label">报告发送方式</Property>
 			<Property name="mapping">
 				<Property name="mapValues">
@@ -606,6 +608,7 @@
 		</PropertyDef>
 		<PropertyDef name="sampleHandleType">
 			<Property name="dataType">Integer</Property>
+			<Property name="defaultValue">2</Property>
 			<Property name="label">剩余样品处理方式</Property>
 			<Property name="mapping">
 				<Property name="mapValues">
@@ -646,6 +649,7 @@
 		</PropertyDef>
 		<PropertyDef name="timeLimit">
 			<Property name="dataType">int</Property>
+			<Property name="defaultValue">0</Property>
 			<Property name="label">要求完成时间</Property>
 			<Property name="mapping">
 				<Property name="mapValues">
@@ -697,11 +701,24 @@
 		</PropertyDef>
 		<PropertyDef name="testType">
 			<Property name="dataType">String</Property>
+			<Property name="defaultValue">委托检测</Property>
 			<Property name="label">检测性质</Property>
 		</PropertyDef>
 		<PropertyDef name="status">
 			<Property name="dataType">String</Property>
 			<Property name="label">状态</Property>
+		</PropertyDef>
+		<PropertyDef name="consumerOrderNo">
+			<Property name="dataType">String</Property>
+			<Property name="label">客户订单号</Property>
+		</PropertyDef>
+		<PropertyDef name="guoHao">
+			<Property name="dataType">String</Property>
+			<Property name="label">锅号</Property>
+		</PropertyDef>
+		<PropertyDef name="oldSamplePic">
+			<Property name="dataType">String</Property>
+			<Property name="label">原样图片</Property>
 		</PropertyDef>
 	</DataType>
 	<DataType name="recordDataType">

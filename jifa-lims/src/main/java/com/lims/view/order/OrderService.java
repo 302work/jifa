@@ -9,10 +9,14 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Criteria;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileResolver;
+import com.bstek.dorado.web.DoradoContext;
 import com.bstek.uflo.client.service.ProcessClient;
 import com.bstek.uflo.service.StartProcessInfo;
 import com.dorado.common.ParseResult;
 import com.dorado.common.SqlKit;
+import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.lims.pojo.Consumer;
@@ -30,12 +34,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * 申请单或报告service
@@ -110,6 +116,9 @@ public class OrderService {
             String userName = user.getUsername();
             //项目的方法标准，多个逗号隔开
             String projectMethodStandardIds = order.getProjectMethodStandardIds();
+            if(projectMethodStandardIds==null){
+                throw new RuntimeException("必须添加检测项目");
+            }
             String[] pmsIds = projectMethodStandardIds.split(",");
             Map<String,String> map = new HashMap<>();
             for (String pmsId : pmsIds) {
@@ -122,7 +131,7 @@ public class OrderService {
             if (order.getId()==null) {
                 order.setCrTime(new Date());
                 order.setCrUser(userName);
-                order.setOrderNo(generatorOrderNo("QDTTC"));
+                order.setOrderNo(generatorOrderNo());
                 order.setIsDeleted(0);
                 order.setStatus("审核检测单");
                 order = dao.saveOrUpdate(order).get(0);
@@ -158,11 +167,13 @@ public class OrderService {
 
     /**
      * 生成订单号
-     * @param prefix 订单号开头的部分,如prefix为“QDTTC”，则订单号为“QDTTC*******”
-     * @return
+     * @return QDTTC-170000001
      */
-    private String generatorOrderNo(String prefix){
-        return prefix+System.currentTimeMillis();
+    private String generatorOrderNo(){
+        String count = dao.queryCount("From "+Order.class.getName(),null)+"";
+        String init = "0000000";
+        String result = init.substring(0,init.length()-count.length())+count;
+        return "QDTTC"+ DateUtil.getDateStr(new Date(),"yy")+result;
     }
 
     //查询订单的检测项目
@@ -309,4 +320,62 @@ public class OrderService {
         map.put("projectList",projectList);
         return map;
     }
+
+    //上传原样照片
+    @FileResolver
+    public String processFile(UploadFile file, Map<String, Object> parameter) {
+        String fjlj = null;
+        try {
+            String fileName = file.getFileName();
+            // 文件扩展名
+            String extName = fileName.substring(fileName.indexOf(".") + 1, fileName
+                    .length());
+            if (StringUtil.isEmpty(extName)
+                    || (!extName.equalsIgnoreCase("jpg")
+                    && !extName.equalsIgnoreCase("png")
+                    && !extName.equalsIgnoreCase("jpeg") && !extName
+                    .equalsIgnoreCase("bmp"))) {
+                throw new RuntimeException("只能上传图片格式为jpg、png、bmp的文件！");
+            }
+
+            String folderName = DateUtil.getDateStr(new Date()).substring(0, 7);
+            //当天
+            String todayName = DateUtil.getDateStr(new Date()).substring(8, 10);
+            //新文件名
+            String newName = new Date().getTime() + "." + extName;
+            // 获取系统路径
+            String ctxDir = null;
+            ResourceBundle rb = ResourceBundle.getBundle("application");
+            if(rb.containsKey("upload.path") && !StringUtil.isEmpty(rb.getString("upload.path"))){
+                ctxDir = rb.getString("upload.path");
+            }else{
+                ctxDir = DoradoContext.getCurrent().getServletContext().getRealPath("/");
+            }
+            if (!ctxDir.endsWith(String.valueOf(File.separatorChar))) {
+                ctxDir = ctxDir + File.separatorChar;
+            }
+            String savePath = ctxDir + "upload" + File.separator + folderName
+                    + File.separator + todayName;
+            File folderFile = new File(savePath);
+            if (!folderFile.exists()) {
+                folderFile.mkdirs();
+            }
+            // 新文件路径
+            String newFilePath = savePath + File.separator + newName;
+            // 保存上传的文件
+            File newFile = new File(newFilePath);
+            // 返回前台的路径
+            fjlj = "upload" + File.separator + folderName + File.separator
+                    + todayName + File.separator + newName;
+            // 如果文件存在则删除
+            if (newFile.exists()) {
+                newFile.delete();
+            }
+            file.transferTo(newFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fjlj;
+    }
+
 }

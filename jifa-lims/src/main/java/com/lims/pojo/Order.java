@@ -2,7 +2,12 @@ package com.lims.pojo;
 
 import com.dosola.core.dao.interfaces.IPojo;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -120,6 +125,15 @@ public class Order implements IPojo {
 
     @Column(nullable = false, length = 60)
     private String crUser;//创建人
+
+    @Column
+    private String consumerOrderNo;//客户订单编号
+
+    @Column
+    private String guoHao;//锅号
+
+    @Column
+    private String oldSamplePic;//原样照片
 
 
     public String getArea() {
@@ -392,6 +406,30 @@ public class Order implements IPojo {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getConsumerOrderNo() {
+        return consumerOrderNo;
+    }
+
+    public void setConsumerOrderNo(String consumerOrderNo) {
+        this.consumerOrderNo = consumerOrderNo;
+    }
+
+    public String getGuoHao() {
+        return guoHao;
+    }
+
+    public void setGuoHao(String guoHao) {
+        this.guoHao = guoHao;
+    }
+
+    public String getOldSamplePic() {
+        return oldSamplePic;
+    }
+
+    public void setOldSamplePic(String oldSamplePic) {
+        this.oldSamplePic = oldSamplePic;
     }
 }
 

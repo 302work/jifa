@@ -1,11 +1,8 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>检测协议</title>
+
+<div id="jiancexieyiDiv">
     <style>
         #jiancexieyiDiv{
-            font-family:Microsoft YaHei;
+            font-family:微软雅黑;
             font-size:12px;
         }
         #jiancexieyiDiv h1,h2,h3{
@@ -44,84 +41,83 @@
             list-style:none;
             line-height:22px;
         }
-    </style>
-</head>
+        #jiancexieyiDiv .title{
 
-<body>
-<div id="jiancexieyiDiv">
+        }
+    </style>
 <h1>青岛纺织服装材料检测中心</h1>
 <h2 style="font-family:Arial;font-size:16px;">QINGDAOTEXTILE&nbsp;&nbsp;TESTING&nbsp;&nbsp;CENTER</h2>
 
 <h3 style="margin-top:30px;font-size:18px;">委托检测协议书</h3>
 <table class="box">
     <tr>
-        <td width="90">委托单位：</td>
+        <td class="title" width="90">委托单位</td>
         <td colspan="3"><span id="consumerName"></span></td>
-        <td width="109">地址：</td>
+        <td class="title" width="109">地址</td>
         <td colspan="3"><span id="consumerAddress"></span></td>
     </tr>
     <tr>
-        <td>申请人：</td>
+        <td class="title">申请人</td>
         <td width="61"><span id="client"></span></td>
-        <td width="71">电话：</td>
+        <td class="title" width="71">电话</td>
         <td width="75"><span id="clientPhone"></span></td>
-        <td>传真：</td>
+        <td class="title">传真</td>
         <td width="50"><span id="clientFax"></span></td>
-        <td width="49">邮编：</td>
+        <td class="title" width="49">邮编</td>
         <td width="72"><span id="clientZip"></span></td>
     </tr>
     <tr>
-        <td>付款人：</td>
+        <td class="title">付款人</td>
         <td width="61"><span id="payer"></span></td>
-        <td width="71">电话：</td>
+        <td class="title" width="71">电话</td>
         <td width="75"><span id="payerPhone"></span></td>
-        <td>传真：</td>
+        <td class="title">传真</td>
         <td width="50"><span id="payerFax"></span></td>
-        <td width="49">邮编：</td>
+        <td class="title" width="49">邮编</td>
         <td width="72"><span id="payerZip"></span></td>
     </tr>
     <tr>
-        <td>申请日期：</td>
-        <td width="61"><span id="crTime"></span></td>
-        <td width="71">订单号：</td>
-        <td colspan="5"><span id="orderNo"></span></td>
+        <td class="title">申请日期</td>
+        <td width="71" colspan="2"><span id="crTime"></span></td>
+        <td class="title" width="71">客户订单号</td>
+        <td colspan="2"><span id="consumerOrderNo"></span></td>
+        <td class="title">锅号</td>
+        <td colspan="2"><span id="guoHao"></span></td>
 
     </tr>
     <tr>
-        <td>样品名称：</td>
+        <td class="title">样品名称</td>
         <td width="61"><span id="sampleName"></span></td>
-        <td width="71">样品数量：</td>
+        <td class="title" width="71">样品数量</td>
         <td><span id="sampleCount"></span></td>
-        <td>收样日期：</td>
+        <td class="title">收样日期</td>
         <td colspan="3"><span id="deliveryDate"></span></td>
     </tr>
     <tr>
-        <td>样品描述（颜色）：</td>
+        <td class="title">样品描述（颜色）</td>
         <td colspan="8"><span id="sampleDesc"></span></td>
     </tr>
     <tr>
-        <td>纤维成分：</td>
+        <td class="title">纤维成分</td>
         <td width="61"><span id="fibreComponent"></span></td>
-        <td width="71">克重：</td>
+        <td class="title" width="71">克重</td>
         <td><span id="weight"></span></td>
-        <td>检测性质：</td>
+        <td class="title">检测性质</td>
         <td colspan="3"><span id="testType"></span></td>
     </tr>
     <tr>
         <td colspan="8">
-            <table width="100%" class="container">
+            <table width="100%" class="container" id="projectList">
+
                 <tr>
                     <td>检测项目</td>
-                    <td>检测内容</td>
                     <td>检测标准</td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>&nbsp;</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -129,34 +125,25 @@
         </td>
     </tr>
     <tr>
-        <td>测试时间:</td>
+        <td class="title">测试时间</td>
         <td colspan="3"><span id="timeLimit"></span></td>
-        <td>剩余样品处置:</td>
+        <td class="title">剩余样品处置</td>
         <td colspan="3"><span id="sampleHandleType"></span></td>
     </tr>
     <tr>
-        <td>报告发送方式:</td>
+        <td class="title">报告发送方式</td>
         <td colspan="3"><span id="reportSendWay"></span></td>
-        <td>报告语言文字:</td>
+        <td class="title">报告语言文字</td>
         <td colspan="3"><span id="reportLanguage"></span></td>
     </tr>
     <tr>
-        <td>样品符合要求:</td>
-        <td colspan="7">是</td>
-
-    </tr>
-    <tr>
-        <td>申请人签字:</td>
+        <td class="title">申请人签字</td>
         <td colspan="3"><span id="clientName"></span></td>
-        <td>检测中心签字:</td>
-        <td colspan="3"><span id="auditUserPic"></span></td>
+        <td class="title">检测中心签字</td>
+        <td colspan="3" id="auditUserPic"></td>
     </tr>
     <tr>
-        <td colspan="4"><span >2017-03-12</span></td>
-        <td colspan="4"><span >2017-03-12</span></td>
-    </tr>
-    <tr>
-        <td>客户要求：</td>
+        <td class="title">客户要求</td>
         <td colspan="7"></td>
     </tr>
 </table>
@@ -168,5 +155,3 @@
     </ul>
 </div>
 </div>
-</body>
-</html>

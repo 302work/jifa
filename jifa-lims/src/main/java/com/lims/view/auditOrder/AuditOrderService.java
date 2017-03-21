@@ -24,7 +24,6 @@ import com.lims.pojo.Record;
 import com.lims.pojo.RecordTestCondition;
 import com.lims.pojo.ResultColumn;
 import com.lims.pojo.TestCondition;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -174,6 +173,7 @@ public class AuditOrderService {
         int sampleCount = order.getSampleCount();
         IUser user = ContextHolder.getLoginUser();
         String userName = user.getUsername();
+        int sampleIndex = 0;
         for(String projectMethodStandardIdStr : projectMethodStandardIds.split(",")){
             Long projectMethodStandardId = Long.valueOf(projectMethodStandardIdStr);
             ProjectMethodStandard projectMethodStandard = dao.getObjectById(ProjectMethodStandard.class,projectMethodStandardId);
@@ -187,13 +187,15 @@ public class AuditOrderService {
             //记录项
             String resultColumnIds = getResultColumnIds(projectId);
             for(int i=1;i<=sampleCount;i++){
+                sampleIndex++;
                 Record record = new Record();
                 record.setCrTime(new Date());
                 record.setIsDeleted(0);
                 record.setOrderId(order.getId());
                 record.setProjectMethodStandardId(projectMethodStandardId);
                 record.setResultColumnIds(resultColumnIds);
-                record.setSampleNo(generateSampleNo());
+                //样品编号
+                record.setSampleNo(order.getOrderNo().substring(5)+"-"+sampleIndex);
                 record.setCrUser(userName);
                 record.setProjectId(projectId);
                 record.setMethodStandardId(projectMethodStandard.getMethodStandardId());
@@ -230,13 +232,6 @@ public class AuditOrderService {
         }
     }
 
-    /**
-     * 随机生成16位样品编号
-     * @return
-     */
-    private String generateSampleNo(){
-        return RandomStringUtils.randomNumeric(16);
-    }
 
     /**
      * 查找项目的记录项

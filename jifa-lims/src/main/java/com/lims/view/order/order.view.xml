@@ -49,7 +49,7 @@
 			<Property name="pageSize">20</Property>
 		</DataSet>
 		<DataSetDropDown id="consumerDropDown">
-			<Property name="assignmentMap">consumerId=id,consumerAddress=address</Property>
+			<Property name="assignmentMap">consumerId=id,consumerAddress=address,client=contacts,clientPhone=tel</Property>
 			<Property name="autoOpen">true</Property>
 			<Property name="dataSet">dsConsumers</Property>
 			<Property name="displayProperty">name</Property>
@@ -68,16 +68,22 @@
 			<Property name="cols">*,*,*,*</Property>
 			<Property name="dataSet">dsOrders</Property>
 			<AutoFormElement layoutConstraint="colSpan:2;">
+				<Property name="editable">false</Property>
 				<Property name="label">委托单位</Property>
 				<Property name="name">consumerName</Property>
 				<Property name="property">consumerName</Property>
 				<Property name="trigger">consumerDropDown</Property>
 				<Editor/>
 			</AutoFormElement>
-			<AutoFormElement layoutConstraint="colSpan:2;">
+			<AutoFormElement>
 				<Property name="editable">false</Property>
 				<Property name="label">地址</Property>
 				<Property name="property">consumerAddress</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="name">consumerOrderNo</Property>
+				<Property name="property">consumerOrderNo</Property>
 				<Editor/>
 			</AutoFormElement>
 			<AutoFormElement>
@@ -185,11 +191,28 @@
 				<Property name="property">deliveryDate</Property>
 				<Editor/>
 			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="name">guoHao</Property>
+				<Property name="property">guoHao</Property>
+				<Editor/>
+			</AutoFormElement>
+			<AutoFormElement>
+				<Property name="editable">false</Property>
+				<Property name="name">oldSamplePic</Property>
+				<Property name="property">oldSamplePic</Property>
+				<Editor/>
+			</AutoFormElement>
 		</AutoForm>
 		<ToolBar id="toolbar">
 			<ToolBarButton id="selectProjectBtn">
 				<Property name="caption">选择项目</Property>
 				<Property name="iconClass">fa fa-search</Property>
+			</ToolBarButton>
+			<Separator/>
+			<ToolBarButton id="uploadOldSamplePicBtn">
+				<Property name="action">uploadOldSamplePicAction</Property>
+				<Property name="caption">上传原样照片</Property>
+				<Property name="iconClass">fa fa-file-image-o</Property>
 			</ToolBarButton>
 			<Separator/>
 			<ToolBarButton id="submitOrderBtn">
@@ -254,5 +277,11 @@
 				<Property name="dataSet">dsOrders</Property>
 			</UpdateItem>
 		</UpdateAction>
+		<UploadAction id="uploadOldSamplePicAction">
+			<Property name="caption">上传原样照片</Property>
+			<Property name="fileResolver">orderService#processFile</Property>
+			<Property name="maxFileSize">5M</Property>
+			<Filters/>
+		</UploadAction>
 	</View>
 </ViewConfig>

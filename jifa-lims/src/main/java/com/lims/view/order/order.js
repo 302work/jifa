@@ -51,12 +51,22 @@
 };
 
 // @Bind #submitOrderBtn.onClick
-!function(self,arg,saveOrdersUpdateAction,orderAutoForm) {
+!function(self,arg,saveOrdersUpdateAction,orderAutoForm,dsOrders,dsProjects) {
     var entity = orderAutoForm.get("entity");
-    debugger
     saveOrdersUpdateAction.execute(function(){
         //清空现有数据
+        dsOrders.flush();
+        dsProjects.set("parameter",null).flush();
+        // debugger
+        // orderView.refresh();
     });
 };
 
 
+//上传原样图片
+// @Bind #uploadOldSamplePicAction.onFileUploaded
+!function(arg,orderAutoForm) {
+    var returnValue = arg.returnValue;//获取FileResolver方法返回的信息
+    var entity = orderAutoForm.get("entity");
+    entity.set("oldSamplePic", returnValue);
+};

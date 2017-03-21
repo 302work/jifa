@@ -401,24 +401,98 @@
             $("#sampleDesc").html(order.sampleDesc);
             $("#fibreComponent").html(order.fibreComponent);
             $("#weight").html(order.weight);
-            $("#timeLimit").html(order.timeLimit);
-            $("#sampleHandleType").html(order.sampleHandleType);
-            $("#reportSendWay").html(order.reportSendWay);
-            $("#reportLanguage").html(order.reportLanguage);
+            //要求完成时间
+            var timeLimit = order.timeLimit;
+            var timeLimitStr = "";
+            if(timeLimit=="5"){
+                timeLimitStr = "常规";
+            }
+            if(timeLimit=="3"){
+                timeLimitStr = "加急";
+            }
+            if(timeLimit=="2"){
+                timeLimitStr = "特快";
+            }
+            if(timeLimit=="0"){
+                timeLimitStr = "当天";
+            }
+            $("#timeLimit").html(timeLimitStr);
+            //剩余样品处理方式
+            var sampleHandleType = order.sampleHandleType;
+            var sampleHandleTypeStr = "";
+            if(sampleHandleType=="1"){
+                sampleHandleTypeStr = "自取";
+            }
+            if(sampleHandleType=="2"){
+                sampleHandleTypeStr = "不退";
+            }
+            if(sampleHandleType=="3"){
+                sampleHandleTypeStr = "寄回";
+            }
+            $("#sampleHandleType").html(sampleHandleTypeStr);
+            //报告发送方式
+            var reportSendWay = order.reportSendWay;
+            var reportSendWayStr = "";
+            if(reportSendWay=="1"){
+                reportSendWayStr = "自取";
+            }
+            if(reportSendWay=="2"){
+                reportSendWayStr = "邮寄";
+            }
+            $("#reportSendWay").html(reportSendWayStr);
+            //报告语言
+            var reportLanguage = order.reportLanguage;
+            var reportLanguageStr = "";
+            if(reportLanguage=="ch"){
+                reportLanguageStr = "中文";
+            }
+            if(reportLanguage=="en"){
+                reportLanguageStr = "英文";
+            }
+            if(reportLanguage=="ch,en"){
+                reportLanguageStr = "中英文";
+            }
+            $("#reportLanguage").html(reportLanguageStr);
+
             $("#testResult").html(order.testResult);
             $("#signDate").html(order.signDate);
-            $("#crTime").html(order.crTime);
-            $("#auditUserPic").html(data.auditUserPic);
+            $("#crTime").html(changeDate(order.crTime));
+            if(data.auditUserPic) {
+                $("#auditUserPic").html("<img width=\"50\" src=\""+data.auditUserPic+"\">");
+            }
+
+            //检测项目
+            var projectList = data.projectList;
+            if(projectList){
+                var projectHtml = "<tr style='font-weight:bold;'><td>检测项目</td><td>检测标准</td></tr>";
+                projectList.each(function (projectData) {
+                    var project = projectData.project;
+                    var projectName = project.name;
+
+                    var methodStandard = projectData.methodStandard;
+                    var methodStandardName = methodStandard.name;
+                    var methodStandardNo = methodStandard.standardNo;
+                    projectHtml += "<tr><td>"+projectName+"</td><td>"+methodStandardName+"（"+methodStandardNo+"）</td></tr>";
+                });
+                $("#projectList").html(projectHtml);
+            }
         });
 
     }
 };
-
+//转换日期格式 原格式2017-03-21T13:08:03Z
+//替换成2017-03-21
+function changeDate(date) {
+    // date = date.replace("T"," ");
+    // date = date.replace("Z","");
+    date = date.substring(0,10);
+    return date;
+}
 
 //打印检测协议
 // @Bind #printJiancexieyiBtn.onClick
 !function(self,arg) {
-    $("#jiancexieyiDiv").printArea();
+    $("#jiancexieyiDiv").printArea({mode:"popup"});
 };
 
 //关闭检测协议

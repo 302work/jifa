@@ -75,6 +75,7 @@ public class ConsumerService {
                 consumer.setIsDeleted(0);
                 dao.saveOrUpdate(consumer);
             } else if (EntityState.MODIFIED.equals(state)) {
+                consumer.setIsDeleted(0);
                 dao.saveOrUpdate(consumer);
             } else if (EntityState.DELETED.equals(state)) {
                 //删除，逻辑删除

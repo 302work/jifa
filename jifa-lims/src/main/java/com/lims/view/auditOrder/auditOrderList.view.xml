@@ -710,6 +710,11 @@
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
+									<Property name="name">consumerOrderNo</Property>
+									<Property name="property">consumerOrderNo</Property>
+									<Editor/>
+								</AutoFormElement>
+								<AutoFormElement>
 									<Property name="label">申请人</Property>
 									<Property name="property">client</Property>
 									<Editor/>
@@ -874,6 +879,11 @@
 									<Property name="editable">false</Property>
 									<Property name="label">报告发送方式</Property>
 									<Property name="property">reportSendWay</Property>
+									<Editor/>
+								</AutoFormElement>
+								<AutoFormElement>
+									<Property name="name">guoHao</Property>
+									<Property name="property">guoHao</Property>
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
