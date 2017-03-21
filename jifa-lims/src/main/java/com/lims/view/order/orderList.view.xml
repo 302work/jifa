@@ -13,6 +13,7 @@
 		</DataType>
 	</Model>
 	<View>
+		<Property name="javaScriptFile">classpath:JsBarcode.all.min.js,classpath:jQuery.print.js</Property>
 		<Property name="packages">font-awesome</Property>
 		<SplitPanel>
 			<Property name="direction">top</Property>
