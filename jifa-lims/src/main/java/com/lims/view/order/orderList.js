@@ -323,17 +323,20 @@
 function changeDate(date) {
     // date = date.replace("T"," ");
     // date = date.replace("Z","");
-    date = date.substring(0,10);
-    return date;
+    if(date){
+        date = date.substring(0,10);
+        return date;
+    }
+    return "";
 }
 
 //打印检测协议
 // @Bind #printJiancexieyiBtn.onClick
 !function(self,arg) {
-    // $("#jiancexieyiDiv").printArea({mode:"popup"});
     // jQuery.print("#jiancexieyiDiv");
     $("#jiancexieyiDiv").print({
-        iframe : false
+        // iframe : false,
+        globalStyles:false
     });
 
 

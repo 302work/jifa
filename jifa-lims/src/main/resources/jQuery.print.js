@@ -35,7 +35,7 @@
                 } catch (e) {
                     frameWindow.print();
                 }
-                // frameWindow.close();
+                frameWindow.close();
                 def.resolve();
             }, 250);
         } catch (err) {
@@ -48,7 +48,7 @@
         // Open a new window and print selected content
         var w = window.open();
         w.document.write(content);
-        // w.document.close();
+        w.document.close();
         return printFrame(w);
     }
 
