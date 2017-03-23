@@ -539,6 +539,11 @@
 							<Property name="property">standardNo</Property>
 							<Editor/>
 						</DataColumn>
+						<DataColumn>
+							<Property name="name">crTime</Property>
+							<Property name="property">crTime</Property>
+							<Editor/>
+						</DataColumn>
 					</DataGrid>
 					<Dialog id="orderDetailDialog">
 						<Property name="caption">订单详情</Property>
