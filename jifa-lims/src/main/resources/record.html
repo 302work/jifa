@@ -3,18 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <title>原始记录</title>
+    <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.20/JsBarcode.all.min.js"></script>
 </head>
 <body>
-    <table>
-        <tr>
-            <td>样品编号</td>
-            <td>170000001-1</td>
-            <td>检测项目</td>
-            <td>色牢度</td>
-            <td>方法标准</td>
-            <td>170000001-1</td>
-        </tr>
-    </table>
-<div id="yuanshijiluDiv"></div>
+
+<div id="yuanshijiluDiv">
+    <style>
+        .m_table h1,h2,h3{
+            text-align:center;
+            font-weight:normal;
+            color:#333;
+            line-height:10px;
+        }
+        .m_table h1,h2{
+            color:#999
+        }
+        .m_table .box,
+        .m_table table{
+            border-collapse:collapse;
+            border:none;
+            margin:0 auto;
+            font-family:微软雅黑;
+            font-size:12px;
+        }
+        .m_table .box td,
+        .m_table table td{
+            border:1px solid #999;
+            border-collapse:collapse;
+            padding:10px 5px
+        }
+        .m_table .container td{
+            border:0 none;
+            text-align:center
+        }
+        .m_table .bottombox{
+            width:595px;
+            margin:0 auto;
+        }
+        .m_table ul{
+            float:left;
+            margin-left: -26px;
+            margin-top: -10px;
+        }
+        .m_table ul li{
+            list-style:none;
+            line-height:22px;
+        }
+        .m_table .title{
+
+        }
+        .m_table .last_table{
+            width:690px;
+        }
+        .m_table .last_table td{
+            border: 0;
+        }
+        .m_table .noborder td{
+            border-bottom: 0;
+        }
+    </style>
+    <div class="m_table">
+        <h1>青岛纺织服装材料检测中心</h1>
+        <h2 style="font-family:Arial;font-size:16px;">QINGDAOTEXTILE&nbsp;&nbsp;TESTING&nbsp;&nbsp;CENTER</h2>
+
+        <h3 style="margin-top:30px;font-size:18px;">原始记录表</h3>
+
+        <table style="width: 690px">
+            <tr>
+                <td >样品编号</td>
+                <td >170000001-1</td>
+                <td >检测项目</td>
+                <td >色牢度</td>
+                <td >方法标准</td>
+                <td style="max-width: 180px;">纺织品 机织物接缝处纱线抗滑移的测定 第1部分：定滑移量法（GB/T 13772.1-2008）</td>
+            </tr>
+            <tr>
+                <td>检测条件</td>
+                <td colspan="5"></td>
+            </tr>
+            <tr>
+                <td>检测仪器</td>
+                <td colspan="5"></td>
+            </tr>
+            <tr>
+                <td>检测记录</td>
+                <td colspan="5" style="overflow: hidden;padding-bottom: 0;">
+                    <table style="width: 103%;margin-top: -11px;margin-left: -6px;">
+                        <tr>
+                            <td>记录项\次数</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>平均值</td>
+                        </tr>
+                        <tr>
+                            <td>领宽</td>
+                            <td>12</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>12</td>
+                            <td>16</td>
+                            <td>15</td>
+                            <td>13</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>身长</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>11</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>袖长</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>11.2</td>
+                            <td>12.4</td>
+                            <td>12</td>
+                            <td>16</td>
+                            <td>15</td>
+                            <td>13.4</td>
+                            <td>12.53</td>
+                        </tr>
+                        <tr>
+                            <td>领宽</td>
+                            <td>12</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>12</td>
+                            <td>16</td>
+                            <td>15</td>
+                            <td>13</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>身长</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>11</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>袖长</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>11.2</td>
+                            <td>12.4</td>
+                            <td>12</td>
+                            <td>16</td>
+                            <td>15</td>
+                            <td>13.4</td>
+                            <td>12.53</td>
+                        </tr>
+                        <tr>
+                            <td>身长</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>11</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>袖长</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>11.2</td>
+                            <td>12.4</td>
+                            <td>12</td>
+                            <td>16</td>
+                            <td>15</td>
+                            <td>13.4</td>
+                            <td>12.53</td>
+                        </tr>
+                        <tr>
+                            <td>状态</td>
+                            <td>有效</td>
+                            <td>无效</td>
+                            <td>有效</td>
+                            <td>有效</td>
+                            <td>有效</td>
+                            <td>有效</td>
+                            <td>有效</td>
+                            <td>有效</td>
+                            <td></td>
+                        </tr>
+                        <tr class="noborder">
+                            <td>备注</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>备注</td>
+                <td colspan="5"></td>
+            </tr>
+            <tr>
+                <td>原样</td>
+                <td colspan="5" height="80px"></td>
+            </tr>
+            <tr>
+                <td>测试样</td>
+                <td colspan="5" height="80px"></td>
+            </tr>
+        </table>
+        <table class="last_table">
+            <tr>
+                <td style="text-align: right;">检测人：</td>
+                <td><img width="50" src="http://localhost:8080/lims/testUser.png"></td>
+                <td style="text-align: right;">审核人：</td>
+                <td><img width="50" src="http://localhost:8080/lims/testUser.png"></td>
+                <td style="text-align: right;">检测日期：</td>
+                <td>2017-03-26</td>
+            </tr>
+        </table>
+        <div style="width: 690px;margin: 0 auto;">
+            <svg id="barcode"></svg>
+        </div>
+    </div>
+</div>
+<script>
+     JsBarcode("#barcode", "170000001-1", {
+         height:40
+     });
+</script>
 </body>
 </html>
