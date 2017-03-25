@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -245,6 +246,21 @@ public class ResultService {
 //        List<Long> recordIds = new ArrayList<Long>();
 //        recordIds.add(recordId);
         //查询所有result
+
+        return queryResultList(recordIds.toArray(new Long[0]));
+    }
+
+    /**
+     * 查询检测结果
+     * @param recordId 记录id
+     * @return 结果
+     */
+    public List<Map<String,Object>> queryResultList(Long... recordId){
+        if(recordId == null){
+            return null;
+        }
+        List<Long> recordIds = Arrays.asList(recordId);
+        //查询所有result
         String sql = "select re.* " +
                 " from "+ Result.TABLENAME+" as re " +
                 " join "+Record.TABLENAME+" as r " +
@@ -261,10 +277,10 @@ public class ResultService {
         for (Map<String,Object> map : list){
             Long resultId = Long.valueOf(map.get("id").toString());
             sql = " select rv.`value` as rValue ,rc.id as rId " +
-                  " from "+ ResultValue.TABLENAME+" as rv " +
-                  " join "+ResultColumn.TABLENAME+" as rc " +
-                  " on rv.resultColumnId=rc.id " +
-                  " where rv.resultId=:resultId";
+                    " from "+ ResultValue.TABLENAME+" as rv " +
+                    " join "+ResultColumn.TABLENAME+" as rc " +
+                    " on rv.resultColumnId=rc.id " +
+                    " where rv.resultId=:resultId";
             params = new HashMap<String,Object>();
             params.put("resultId",resultId);
             List<Map<String,Object>> valueList = dao.queryBySql(sql, params);

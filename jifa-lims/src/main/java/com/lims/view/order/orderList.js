@@ -348,3 +348,49 @@ function changeDate(date) {
     jiancexieyiDialog.hide();
 };
 
+//查看原始记录
+// @Bind #yuanshijiluBtn.onClick
+!function(self,arg,dsOrderRecord,yuanshijiluDialog,yuanshijiluAjaxAction) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord){
+        var recordId = currRecord.get("id");
+        yuanshijiluDialog.show();
+        yuanshijiluAjaxAction.set("parameter",{recordId:recordId}).execute(function(data){
+            var record = data.record;
+            //检测人
+            var testUserNamePic = data.testUserNamePic;
+            //审核人
+            var auditUserPic = data.auditUserPic;
+            //检测条件
+            var recordTestConditionList = data.recordTestConditionList;
+            //检测仪器
+            var deviceList =  data.deviceList;
+            //所有列
+            var resultColumnList = data.resultColumnList;
+            //检测结果
+            var resultList = data.resultList;
+            $("#yuanshijiluDiv").html(JSON.stringify(data));
+            //条形码
+            // JsBarcode("#barcode", record.sampleNo, {
+            //     height:40
+            // });
+        });
+
+    }
+};
+
+//打印原始记录
+// @Bind #printYuanshijiluBtn.onClick
+!function(self,arg) {
+    $("#yuanshijiluDiv").print({
+        globalStyles:false
+    });
+
+
+};
+
+//关闭原始记录
+// @Bind #closeYuanshijiluBtn.onClick
+!function(self,arg,yuanshijiluDialog) {
+    yuanshijiluDialog.hide();
+};

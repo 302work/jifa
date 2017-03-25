@@ -227,6 +227,11 @@
 										<Property name="caption">检测结果</Property>
 										<Property name="iconClass">fa fa-search</Property>
 									</ToolBarButton>
+									<Separator/>
+									<ToolBarButton id="yuanshijiluBtn">
+										<Property name="caption">原始记录</Property>
+										<Property name="iconClass">fa fa-bars</Property>
+									</ToolBarButton>
 								</ToolBar>
 								<DataGrid id="orderRecordDataGrid">
 									<Property name="dataSet">dsOrderRecord</Property>
@@ -445,6 +450,31 @@
 									</Children>
 									<Tools/>
 								</Dialog>
+								<Dialog id="yuanshijiluDialog">
+									<Property name="caption">原始记录</Property>
+									<Property name="height">600</Property>
+									<Property name="iconClass">fa fa-bars</Property>
+									<Property name="width">800</Property>
+									<Buttons>
+										<Button id="printYuanshijiluBtn">
+											<Property name="caption">打印</Property>
+											<Property name="iconClass">fa fa-print</Property>
+										</Button>
+										<Button id="closeYuanshijiluBtn">
+											<Property name="caption">关闭</Property>
+											<Property name="iconClass">fa fa-times</Property>
+										</Button>
+									</Buttons>
+									<Children>
+										<HtmlContainer>
+											<Property name="contentFile">classpath:record.html</Property>
+										</HtmlContainer>
+									</Children>
+									<Tools/>
+								</Dialog>
+								<AjaxAction id="yuanshijiluAjaxAction">
+									<Property name="service">orderService#queryYuanshijiluByRecordId</Property>
+								</AjaxAction>
 							</Container>
 						</ControlTab>
 					</TabControl>

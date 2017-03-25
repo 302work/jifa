@@ -19,6 +19,7 @@ import com.dorado.common.SqlKit;
 import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
+import com.google.common.collect.ImmutableMap;
 import com.lims.pojo.Consumer;
 import com.lims.pojo.Device;
 import com.lims.pojo.MethodStandard;
@@ -26,9 +27,12 @@ import com.lims.pojo.Order;
 import com.lims.pojo.Project;
 import com.lims.pojo.ProjectMethodStandard;
 import com.lims.pojo.Record;
+import com.lims.pojo.RecordTestCondition;
+import com.lims.pojo.ResultColumn;
 import com.lims.pojo.Standard;
 import com.lims.pojo.User;
 import com.lims.service.UserService;
+import com.lims.view.result.ResultService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +64,8 @@ public class OrderService {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ResultService resultService;
 
     @DataProvider
     public void queryOrder(Page<Map<String,Object>> page,Criteria criteria,Long businessId){
@@ -376,6 +382,62 @@ public class OrderService {
             e.printStackTrace();
         }
         return fjlj;
+    }
+
+    //查询原始记录
+    @Expose
+    public Map<String,Object> queryYuanshijiluByRecordId(Long recordId){
+        Map<String,Object> map = new HashMap<>();
+        Record record = dao.getObjectById(Record.class,recordId);
+        map.put("record",record);
+        //检测人
+        String testUserName = record.getTestUserName();
+        if(!StringUtil.isEmpty(testUserName)){
+            //签名图片
+            String testUserNamePic = userService.queryUser(testUserName).getUserNamePic();
+            map.put("testUserNamePic",testUserNamePic);
+        }
+        //审核人
+        String auditUserName = record.getAuditUserName();
+        if(!StringUtil.isEmpty(auditUserName)){
+            //签名图片
+            String auditUserPic = userService.queryUser(auditUserName).getUserNamePic();
+            map.put("auditUserPic",auditUserPic);
+        }
+        //检测条件
+        String hql = "From "+ RecordTestCondition.class.getName()+" where recordId=:recordId";
+        List<RecordTestCondition> recordTestConditionList = (List<RecordTestCondition>) dao.query(hql, ImmutableMap.<String, Object>of("recordId",recordId));
+        map.put("recordTestConditionList",recordTestConditionList);
+
+        //检测仪器
+        List<Device> deviceList = new ArrayList<>();
+        String deviceIds = record.getDeviceIds();
+        if(!StringUtil.isEmpty(deviceIds)) {
+            hql = "From " + Device.class.getName() + " where id in(:deviceIds) and isDeleted<>1";
+            List<Long> deviceIdList = new ArrayList<>();
+            for (String deviceId : deviceIds.split(",")) {
+                deviceIdList.add(Long.valueOf(deviceId));
+            }
+            deviceList = (List<Device>) dao.query(hql, ImmutableMap.<String, Object>of("deviceIds", deviceIdList));
+        }
+        map.put("deviceList",deviceList);
+        //检测记录
+        //所有列
+        String resultColumnIds = record.getResultColumnIds();
+        List<ResultColumn> resultColumnList = new ArrayList<>();
+        if(!StringUtil.isEmpty(resultColumnIds)) {
+            hql = "From " + ResultColumn.class.getName() + " where id in(:resultColumnIds) and isDeleted<>1";
+            List<Long> resultColumnIdList = new ArrayList<>();
+            for (String reId : resultColumnIds.split(",")) {
+                resultColumnIdList.add(Long.valueOf(reId));
+            }
+            resultColumnList = (List<ResultColumn>) dao.query(hql, ImmutableMap.<String, Object>of("resultColumnIds", resultColumnIdList));
+        }
+        map.put("resultColumnList",resultColumnList);
+        //结果
+        List<Map<String,Object>> resultList = resultService.queryResultList(recordId);
+        map.put("resultList",resultList);
+        return map;
     }
 
 }
