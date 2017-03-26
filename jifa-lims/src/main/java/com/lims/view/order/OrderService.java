@@ -390,6 +390,10 @@ public class OrderService {
         Map<String,Object> map = new HashMap<>();
         Record record = dao.getObjectById(Record.class,recordId);
         map.put("record",record);
+        //检测项目
+        map.put("project",dao.getObjectById(Project.class,record.getProjectId()));
+        //方法标准
+        map.put("methodStandard",dao.getObjectById(MethodStandard.class,record.getMethodStandardId()));
         //检测人
         String testUserName = record.getTestUserName();
         if(!StringUtil.isEmpty(testUserName)){

@@ -304,7 +304,7 @@ public class ResultService {
             EntityState state = EntityUtils.getState(map);
             if (EntityState.NEW.equals(state)) {
                 addResult(map,recordId);
-                //更新record表的testUserName
+                //更新record表的testUserName和testDate
                 updateRecordTestUserName(recordId);
             } else if (EntityState.MODIFIED.equals(state)) {
                 if(Long.valueOf(map.get("recordId").toString()).longValue()!=recordId.longValue()){
@@ -318,16 +318,17 @@ public class ResultService {
     }
 
     /**
-     * 更新record表的testUserName
+     * 更新record表的testUserName 和testDate
      * @param recordId
      */
     private void updateRecordTestUserName(Long recordId) {
         String sql = "  update "+Record.TABLENAME+" " +
-                "  set testUserName=:testUserName " +
+                "  set testUserName=:testUserName,testDate=:testDate " +
                 "   where id=:recordId and isDeleted<>1";
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("recordId",recordId);
         params.put("testUserName",ContextHolder.getLoginUser().getUsername());
+        params.put("testDate",new Date());
         dao.executeSQL(sql,params);
     }
 

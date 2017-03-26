@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>原始记录</title>
-    <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.20/JsBarcode.all.min.js"></script>
 </head>
 <body>
-
 <div id="yuanshijiluDiv">
     <style>
         .m_table h1,h2,h3,h4{
@@ -76,183 +74,39 @@
         <h2 style="margin-top: 18px;">青岛纺织服装材料检测中心</h2>
         <h3 style="font-family:Arial;font-size:16px;">QINGDAOTEXTILE&nbsp;&nbsp;TESTING&nbsp;&nbsp;CENTER</h3>
 
-        <h4 style="margin-top:15px;font-size:15px;">原始记录表</h3>
+        <h4 style="margin-top:15px;font-size:15px;">原始记录表</h4>
 
             <table style="width: 1190px">
                 <tr>
-                    <td>样品编号</td>
-                    <td>170000001-1</td>
+                    <td >样品编号</td>
+                    <td id="sampleNo"></td>
                     <td >检测项目</td>
-                    <td >色牢度</td>
+                    <td id="projectName"></td>
                     <td>方法标准</td>
-                    <td>纺织品 机织物接缝处纱线抗滑移的测定机织物接缝处纱线抗滑移的测定 第1部分：定滑移量法（GB/T 13772.1-2008）</td>
+                    <td id="methodStandard"></td>
                 </tr>
                 <tr>
                     <td>检测条件</td>
-                    <td colspan="5"></td>
+                    <td colspan="5" id="recordTestCondition"></td>
                 </tr>
                 <tr>
                     <td>检测仪器</td>
-                    <td colspan="5"></td>
+                    <td colspan="5" id="deviceList"></td>
                 </tr>
                 <tr>
                     <td width="5%">检测记录</td>
                     <td  colspan="5" style="overflow: hidden;padding: 0;">
-                        <table style="margin-left: -1px;">
-                            <tr class="noborder-top">
-                                <td>次数</td>
-                                <td>径向—阴燃时间</td>
-                                <td>径向—损毁长度</td>
-                                <td>径向—燃烧性能CPSC代码</td>
-                                <td>径向—阴燃时间</td>
-                                <td>径向—损毁长度</td>
-                                <td>径向—燃烧性能CPSC代码</td>
-                                <td>径向—阴燃时间</td>
-                                <td>径向—损毁长度</td>
-                                <td>径向—燃烧性能CPSC代码</td>
-                                <td>径向—阴燃时间</td>
-                                <td>径向—损毁长度</td>
-                                <td>径向—燃烧性能CPSC代码</td>
-                                <td>径向—阴燃时间</td>
-                                <td>径向—损毁长度</td>
-                                <td>状态</td>
-                                <td class="noborder-right">备注</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>7</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>操作不规范</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>7</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                            </tr>
+                        <table style="margin-left: -1px;width: 100%;">
+                            <thead>
+                                <tr id="resultColumn" class="noborder-top">
 
-                            <tr>
-                                <td>3</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>7</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>7</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>7</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>6</td>
-                                <td>7</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
-                            </tr>
-                            <tr class="noborder-bottom">
-                                <td>avg</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>4</td>
-                                <td>5</td>
-                                <td>5</td>
+                                </tr>
+                            </thead>
+                            <tbody id="resultValue">
 
-                            </tr>
+                            </tbody>
+
+
                         </table>
                     </td>
                 </tr>
@@ -272,11 +126,11 @@
             <table class="last_table">
                 <tr>
                     <td style="text-align: right;">检测人：</td>
-                    <td><img width="50" src="http://localhost:8080/lims/testUser.png"></td>
+                    <td id="testUserNamePic"></td>
                     <td style="text-align: right;">审核人：</td>
-                    <td><img width="50" src="http://localhost:8080/lims/testUser.png"></td>
+                    <td id="auditUserPic"></td>
                     <td style="text-align: right;">检测日期：</td>
-                    <td>2017-03-26</td>
+                    <td id="testDate"></td>
                 </tr>
             </table>
             <div style="float: left;margin-left: 23px;margin-top: 1px;">
@@ -284,10 +138,5 @@
             </div>
     </div>
 </div>
-<script>
-    JsBarcode("#barcode", "170000001-1", {
-        height:30
-    });
-</script>
 </body>
 </html>

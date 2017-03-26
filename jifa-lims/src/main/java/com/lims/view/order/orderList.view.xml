@@ -454,7 +454,7 @@
 									<Property name="caption">原始记录</Property>
 									<Property name="height">600</Property>
 									<Property name="iconClass">fa fa-bars</Property>
-									<Property name="width">800</Property>
+									<Property name="width">1000</Property>
 									<Buttons>
 										<Button id="printYuanshijiluBtn">
 											<Property name="caption">打印</Property>
@@ -467,7 +467,7 @@
 									</Buttons>
 									<Children>
 										<HtmlContainer>
-											<Property name="contentFile">classpath:record.html</Property>
+											<Property name="contentFile">classpath:yuanshijilu.html</Property>
 										</HtmlContainer>
 									</Children>
 									<Tools/>
