@@ -15,6 +15,7 @@
 		</DataType>
 	</Model>
 	<View>
+		<Property name="javaScriptFile">classpath:JsBarcode.all.min.js,classpath:jQuery.print.js</Property>
 		<Property name="packages">font-awesome</Property>
 		<SplitPanel>
 			<Property name="direction">top</Property>
@@ -92,6 +93,11 @@
 									<ToolBarButton id="recordResultBtn">
 										<Property name="caption">检测结果</Property>
 										<Property name="iconClass">fa fa-search</Property>
+									</ToolBarButton>
+									<Separator/>
+									<ToolBarButton id="yuanshijiluBtn">
+										<Property name="caption">原始记录</Property>
+										<Property name="iconClass">fa fa-bars</Property>
 									</ToolBarButton>
 									<Separator/>
 									<ToolBarButton id="deleteRecordBtn">
@@ -574,6 +580,31 @@
 									<Property name="executingMessage">正在删除...</Property>
 									<Property name="service">auditOrderService#deleteRecord</Property>
 								</AjaxAction>
+								<Dialog id="yuanshijiluDialog">
+									<Property name="caption">原始记录</Property>
+									<Property name="height">530</Property>
+									<Property name="iconClass">fa fa-bars</Property>
+									<Property name="width">1000</Property>
+									<Buttons>
+										<Button id="printYuanshijiluBtn">
+											<Property name="caption">打印</Property>
+											<Property name="iconClass">fa fa-print</Property>
+										</Button>
+										<Button id="closeYuanshijiluBtn">
+											<Property name="caption">关闭</Property>
+											<Property name="iconClass">fa fa-times</Property>
+										</Button>
+									</Buttons>
+									<Children>
+										<HtmlContainer>
+											<Property name="contentFile">classpath:yuanshijilu.html</Property>
+										</HtmlContainer>
+									</Children>
+									<Tools/>
+								</Dialog>
+								<AjaxAction id="yuanshijiluAjaxAction">
+									<Property name="service">orderService#queryYuanshijiluByRecordId</Property>
+								</AjaxAction>
 							</Container>
 						</ControlTab>
 					</TabControl>
@@ -611,11 +642,6 @@
 						<ToolBarButton id="jiancexieyiBtn">
 							<Property name="caption">查看检测协议</Property>
 							<Property name="iconClass">fa fa-file-word-o</Property>
-						</ToolBarButton>
-						<Separator/>
-						<ToolBarButton id="createReportBtn">
-							<Property name="caption">生成报告</Property>
-							<Property name="iconClass">fa fa-file-pdf-o</Property>
 						</ToolBarButton>
 					</ToolBar>
 					<Export2ReportAction id="orderExportAction">
@@ -962,6 +988,32 @@
 								<Property name="executingMessage">正在审核...</Property>
 								<Property name="service">auditOrderService#auditOrder</Property>
 								<Property name="successMessage">审核成功！</Property>
+							</AjaxAction>
+						</Children>
+						<Tools/>
+					</Dialog>
+					<Dialog id="jiancexieyiDialog">
+						<Property name="caption">检测协议</Property>
+						<Property name="height">500</Property>
+						<Property name="iconClass">fa fa-file-word-o</Property>
+						<Property name="width">800</Property>
+						<Buttons>
+							<Button id="printJiancexieyiBtn">
+								<Property name="caption">打印</Property>
+								<Property name="iconClass">fa fa-print</Property>
+							</Button>
+							<Button id="closeJiancexieyiBtn">
+								<Property name="caption">关闭</Property>
+								<Property name="iconClass">fa fa-times</Property>
+							</Button>
+						</Buttons>
+						<Children>
+							<HtmlContainer>
+								<Property name="contentFile">classpath:jiancexieyi.html</Property>
+							</HtmlContainer>
+							<AjaxAction id="jiancexieyiAjaxAction">
+								<Property name="caption">查询检测协议内容</Property>
+								<Property name="service">orderService#queryJiancexieyiByOrderId</Property>
 							</AjaxAction>
 						</Children>
 						<Tools/>
