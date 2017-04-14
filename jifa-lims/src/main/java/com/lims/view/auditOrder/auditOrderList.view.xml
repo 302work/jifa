@@ -94,6 +94,11 @@
 										<Property name="iconClass">fa fa-search</Property>
 									</ToolBarButton>
 									<Separator/>
+									<ToolBarButton id="deleteRecordBtn">
+										<Property name="caption">删除记录</Property>
+										<Property name="iconClass">fa fa-minus</Property>
+									</ToolBarButton>
+									<Separator/>
 									<ToolBarButton id="inputTestDataBtn">
 										<Property name="caption">录入检测数据</Property>
 										<Property name="iconClass">fa fa-flask</Property>
@@ -564,6 +569,11 @@
 									</Children>
 									<Tools/>
 								</Dialog>
+								<AjaxAction id="deleteRecordAjaxAction">
+									<Property name="confirmMessage">确定删除记录吗</Property>
+									<Property name="executingMessage">正在删除...</Property>
+									<Property name="service">auditOrderService#deleteRecord</Property>
+								</AjaxAction>
 							</Container>
 						</ControlTab>
 					</TabControl>
@@ -772,6 +782,7 @@
 									<Editor/>
 								</AutoFormElement>
 								<AutoFormElement>
+									<Property name="editable">false</Property>
 									<Property name="label">样品数量</Property>
 									<Property name="property">sampleCount</Property>
 									<Property name="tags">readOnly</Property>

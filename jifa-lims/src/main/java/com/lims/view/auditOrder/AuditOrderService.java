@@ -18,23 +18,12 @@ import com.bstek.uflo.service.TaskService;
 import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
-import com.lims.pojo.Order;
-import com.lims.pojo.ProjectMethodStandard;
-import com.lims.pojo.Record;
-import com.lims.pojo.RecordTestCondition;
-import com.lims.pojo.ResultColumn;
-import com.lims.pojo.TestCondition;
+import com.lims.pojo.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * 申请单或报告service
@@ -113,9 +102,9 @@ public class AuditOrderService {
                 variables.put("msg", status == 1 ? "【正审】" : "【退回】");
 
                 //如果没有生成检测记录则生成检测记录
-                if (taskName.equals("审核检测单") && status == 1) {
-                    createRecords(order);
-                }
+//                if (taskName.equals("审核检测单") && status == 1) {
+//                    createRecords(order);
+//                }
                 //如果是结果审核,则更新record的auditUserName字段
                 if (taskName.equals("结果审核") && status == 1) {
                     updateRecordsAuditUserName(order);
@@ -159,7 +148,7 @@ public class AuditOrderService {
      * 生成订单的检测记录
      * @param order
      */
-    private void createRecords(Order order) {
+    public void createRecords(Order order) {
         //先检测是否生成过record
         Map<String,Object> params = new HashMap<String, Object>();
         params.put("orderId",order.getId());
@@ -175,6 +164,7 @@ public class AuditOrderService {
         String userName = user.getUsername();
         int sampleIndex = 0;
         for(String projectMethodStandardIdStr : projectMethodStandardIds.split(",")){
+            sampleIndex++;
             Long projectMethodStandardId = Long.valueOf(projectMethodStandardIdStr);
             ProjectMethodStandard projectMethodStandard = dao.getObjectById(ProjectMethodStandard.class,projectMethodStandardId);
             if(projectMethodStandard==null){
@@ -187,7 +177,6 @@ public class AuditOrderService {
             //记录项
             String resultColumnIds = getResultColumnIds(projectId);
             for(int i=1;i<=sampleCount;i++){
-                sampleIndex++;
                 Record record = new Record();
                 record.setCrTime(new Date());
                 record.setIsDeleted(0);
@@ -195,7 +184,12 @@ public class AuditOrderService {
                 record.setProjectMethodStandardId(projectMethodStandardId);
                 record.setResultColumnIds(resultColumnIds);
                 //样品编号
-                record.setSampleNo(order.getOrderNo().substring(5)+"-"+sampleIndex);
+                String sampleNo = order.getOrderNo().substring(5);
+                sampleNo += "-";
+                sampleNo += numToLetter(i);
+                sampleNo += "-";
+                sampleNo += sampleIndex;
+                record.setSampleNo(sampleNo);
                 record.setCrUser(userName);
                 record.setProjectId(projectId);
                 record.setMethodStandardId(projectMethodStandard.getMethodStandardId());
@@ -204,6 +198,38 @@ public class AuditOrderService {
                 addTestCondition(record.getId(),projectId,projectMethodStandard.getMethodStandardId(),record.getSampleNo(),order.getId());
             }
         }
+    }
+
+    /**
+     * 根据 样品的序号生成字母
+     * @param sampleIndex 序号
+     * @return ABC
+     */
+    private String numToLetter(int sampleIndex){
+        switch (sampleIndex){
+            case 1:
+                return "A";
+            case 2:
+                return "B";
+            case 3:
+                return "C";
+            case 4:
+                return "D";
+            case 5:
+                return "E";
+            case 6:
+                return "F";
+            case 7:
+                return "G";
+            case 8:
+                return "H";
+            case 9:
+                return "I";
+            case 10:
+                return "J";
+
+        }
+        return "K";
     }
 
     /**
@@ -366,6 +392,14 @@ public class AuditOrderService {
             e.printStackTrace();
         }
         return fjlj;
+    }
+
+    //逻辑删除记录
+    @Expose
+    public void deleteRecord(Long recordId){
+        Record record = dao.getObjectById(Record.class,recordId);
+        record.setIsDeleted(1);
+        dao.saveOrUpdate(record);
     }
 
 }

@@ -379,9 +379,15 @@ function setAddResultIFrameParam(currRecord,addResultIFrame,dsRecordTestConditio
 };
 
 
-//生成报告
-// @Bind #createReportBtn.onClick
-!function() {
+//删除记录
+// @Bind #deleteRecordBtn.onClick
+!function(dsOrderRecord,deleteRecordAjaxAction) {
+    var currRecord = dsOrderRecord.getData("#");
+    if(currRecord) {
+        var recordId = currRecord.get("id");
+        deleteRecordAjaxAction.set("parameter", {recordId: recordId}).execute(function () {
 
+        });
+    }
 
 };

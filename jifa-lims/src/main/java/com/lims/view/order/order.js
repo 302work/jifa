@@ -70,3 +70,26 @@
     var entity = orderAutoForm.get("entity");
     entity.set("oldSamplePic", returnValue);
 };
+
+//删除项目
+// @Bind #deleteProjectBtn.onClick
+!function(self,arg,dsProjects,dsOrders) {
+    var orderData = dsOrders.getData("#");
+    var currData= dsProjects.getData("#");
+    var projectMethodStandardId;
+    if(currData){
+        var projectMethodStandardId = currData.get("projectMethodStandardId");
+        var allData = dsProjects.getData();
+        var allPsId = [];
+        allData.each(function(data){
+            var psId = data.get("projectMethodStandardId");
+            if(psId != projectMethodStandardId){
+                allPsId.push(psId);
+            }
+        });
+        var projectMethodStandardIds = allPsId.join(",");
+        orderData.set("projectMethodStandardIds",projectMethodStandardIds);
+        dsProjects.set("parameter",projectMethodStandardIds).flushAsync();
+    }
+
+};

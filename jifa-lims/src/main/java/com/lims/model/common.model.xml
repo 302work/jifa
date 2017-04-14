@@ -54,6 +54,9 @@
 		<PropertyDef name="methodStandardNo">
 			<Property name="label">方法标准号</Property>
 		</PropertyDef>
+		<PropertyDef name="projectMethodStandardId">
+			<Property name="dataType">Long</Property>
+		</PropertyDef>
 	</DataType>
 	<DataType name="deviceDataType">
 		<Property name="creationType">com.lims.pojo.Device</Property>

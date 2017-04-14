@@ -20,18 +20,9 @@ import com.dosola.core.common.DateUtil;
 import com.dosola.core.common.StringUtil;
 import com.dosola.core.dao.interfaces.IMasterDao;
 import com.google.common.collect.ImmutableMap;
-import com.lims.pojo.Consumer;
-import com.lims.pojo.Device;
-import com.lims.pojo.MethodStandard;
-import com.lims.pojo.Order;
-import com.lims.pojo.Project;
-import com.lims.pojo.ProjectMethodStandard;
-import com.lims.pojo.Record;
-import com.lims.pojo.RecordTestCondition;
-import com.lims.pojo.ResultColumn;
-import com.lims.pojo.Standard;
-import com.lims.pojo.User;
+import com.lims.pojo.*;
 import com.lims.service.UserService;
+import com.lims.view.auditOrder.AuditOrderService;
 import com.lims.view.result.ResultService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +30,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * 申请单或报告service
@@ -66,6 +51,8 @@ public class OrderService {
     private UserService userService;
     @Autowired
     private ResultService resultService;
+    @Autowired
+    private AuditOrderService auditOrderService;
 
     @DataProvider
     public void queryOrder(Page<Map<String,Object>> page,Criteria criteria,Long businessId){
@@ -141,6 +128,9 @@ public class OrderService {
                 order.setIsDeleted(0);
                 order.setStatus("审核检测单");
                 order = dao.saveOrUpdate(order).get(0);
+                //生成检测记录
+                auditOrderService.createRecords(order);
+
                 //进入流程
                 //提交工作流
                 StartProcessInfo info = new StartProcessInfo();
@@ -277,7 +267,7 @@ public class OrderService {
         }
         sql += " group by r.id ";//分组
         if(StringUtils.isEmpty(orderSql)){
-            orderSql = " ORDER BY r.crTime desc";
+            orderSql = " order by r.sampleNo ";
         }
         sql += orderSql;
         dao.pagingQueryBySql(page,sql,params);

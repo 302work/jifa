@@ -209,6 +209,11 @@
 				<Property name="iconClass">fa fa-search</Property>
 			</ToolBarButton>
 			<Separator/>
+			<ToolBarButton id="deleteProjectBtn">
+				<Property name="caption">删除项目</Property>
+				<Property name="iconClass">fa fa-minus</Property>
+			</ToolBarButton>
+			<Separator/>
 			<ToolBarButton id="uploadOldSamplePicBtn">
 				<Property name="action">uploadOldSamplePicAction</Property>
 				<Property name="caption">上传原样照片</Property>
