@@ -53,11 +53,11 @@
 			<Property name="autoOpen">true</Property>
 			<Property name="dataSet">dsConsumers</Property>
 			<Property name="displayProperty">name</Property>
-			<Property name="dynaFilter">true</Property>
 			<Property name="filterMode">clientSide</Property>
 			<Property name="filterOnOpen">true</Property>
 			<Property name="filterOnTyping">true</Property>
 			<Property name="property">name</Property>
+			<Property name="useDataBinding">false</Property>
 		</DataSetDropDown>
 		<DataSetDropDown id="standardDataSetDropDown">
 			<Property name="assignmentMap">standardId=id</Property>
