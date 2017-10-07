@@ -309,6 +309,14 @@
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>bdf2-orm-hibernate3</artifactId>
+                    <groupId>com.bstek.bdf2</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.bstek.bdf2</groupId>
+                    <artifactId>bdf2-swfviewer</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!--<dependency>-->
